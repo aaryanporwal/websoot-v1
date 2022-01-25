@@ -2,8 +2,12 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: Inter var, ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans,
+    sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol,
+    Noto Color Emoji;
+  /* background-color: #17171f; */
+  @apply bg-body;
 }
 
 a {
@@ -13,6 +17,30 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+.animated-gradient {
+  /* bg-clip-text text-transparent  */
+
+  background: linear-gradient(
+    to right,
+    #d946ef 20%,
+    #8b5cf6 40%,
+    #d946ef 60%,
+    #8b5cf6 80%,
+    #d946ef 100%
+  );
+
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% auto;
+  animation: shine 10s ease infinite;
+}
+@keyframes shine {
+  to {
+    background-position: 200%;
+  }
 }
 
 @tailwind base;
