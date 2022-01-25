@@ -37,17 +37,16 @@ export default function Home() {
 
           <div className="md:hidden">
             <svg
-              className="stroke-cyan-500 "
-              width="34"
-              height="34"
+              className="stroke-cyan-500 hover:fill-cyan-500 duration-300"
+              width="40"
+              height="40"
               viewBox="0 0 26 18"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
+              fill="white"
             >
               <path
-                className="hover:fill-cyan-500 duration-300"
                 d="M13 17.5H0.25V14.6667H13V17.5ZM25.75 10.4167H0.25V7.58333H25.75V10.4167ZM25.75 3.33333H13V0.5H25.75V3.33333Z"
-                fill="white"
               />
             </svg>
           </div>
