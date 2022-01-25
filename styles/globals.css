@@ -6,6 +6,7 @@ body {
     BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans,
     sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol,
     Noto Color Emoji;
+  -webkit-font-smoothing: antialiased;
   /* background-color: #17171f; */
   @apply bg-body;
 }
