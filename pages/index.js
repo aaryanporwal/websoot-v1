@@ -16,25 +16,17 @@ export default function Home() {
 
       <NavBar />
 
-      <div className={"bg-dark-100 px-4 sm:px-8 font-Walsheim"}>
-        <div
-          className={
-            "mx-auto flex w-full max-w-prose flex-col justify-center py-16"
-          }
-        >
-          <section
-            className={
-              "mt-16 w-full self-start text-dark-900 dark:text-gray-50"
-            }
-          >
-            <h1 className={"text-4xl font-bold"}>Hi I'm Aaryan 👋.</h1>
+      <div className="bg-dark-100 px-4 sm:px-8 font-Walsheim">
+        <div className="mx-auto flex w-full max-w-prose flex-col justify-center py-16">
+          <section className="mt-16 w-full self-start text-dark-900 dark:text-gray-50">
+            <h1 className="text-4xl font-bold">Hi I'm Aaryan 👋.</h1>
             <br />
-            <p className={"text-2xl font-semibold"}>
-              A Computer Science student, passionate developer and always
+            <p className="text-2xl font-semibold">
+              A Computer Science student, passionate developer who&apos;s always
               exploring the unexplored.
             </p>
             <br />
-            <h3 className={"text-2xl"}>
+            <h3 className="text-2xl">
               Interested in:{" "}
               <Typical
                 steps={[
