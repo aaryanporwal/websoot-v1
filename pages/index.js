@@ -1,11 +1,13 @@
-import { Signature } from "../components/Signature";
 import Head from "next/head";
 import NavBar from "../components/NavBar";
 import Typical from "react-typical";
 
+import { Signature } from "../components/Signature";
+import { Footer } from "../components/Footer";
+
 export default function Home() {
   return (
-    <div className="text-white  pb-12">
+    <div className="text-white pb-12">
       <Head>
         <title>Welcome to Aaryan&apos;s Personal Website</title>
         <meta name="description" content="Welcome! 😁" />
@@ -40,7 +42,7 @@ export default function Home() {
                   1200,
                   "Node.js",
                   1200,
-                  "System Administration",
+                  "Sys admin",
                   1200,
                 ]}
                 loop={Infinity}
@@ -51,9 +53,7 @@ export default function Home() {
           </section>
         </div>
       </div>
-      {/* TODO:
-       * Add Social icons in the footer with gopher animation
-       */}
+      <Footer />
     </div>
   );
 }
