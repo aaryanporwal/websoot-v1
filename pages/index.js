@@ -49,6 +49,9 @@ export default function Home() {
           </section>
         </div>
       </div>
+      {/* TODO:
+       * Add Social icons in the footer with gopher animation
+       */}
     </div>
   );
 }
