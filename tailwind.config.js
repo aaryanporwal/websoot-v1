@@ -16,7 +16,8 @@ module.exports = {
         input: "#2A2A35",
       },
       fontFamily: {
-        Inter: ["'Inter'", "sans-serif"],
+        Inter: ["Inter", "sans-serif"],
+        Walsheim: ["'GT Walsheim Pro'", "sans-serif"],
       },
     },
   },
