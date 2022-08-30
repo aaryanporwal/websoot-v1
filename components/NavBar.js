@@ -9,7 +9,7 @@ export default function Header() {
   const LINKEDIN_URL = "https://www.linkedin.com/in/aaryan-porwal/";
   const TWITTER_URL = "https://twitter.com/aaryan7476";
   const RESUME_URL =
-    "https://drive.google.com/file/d/1gBwvHKA1lcsBXp2xMIm2kX4adsdUV0Hm/view?usp=sharing";
+    "https://drive.google.com/file/d/1ARuthi5F4SXO4m0ZnyOK2aj95SVf7Ehc/view?usp=sharing";
   const SCRAPBOOK_URL = "https://scrapbook.hackclub.com/aaryan";
   const PROJECTS_URL = "https://github.com/aaryanporwal?tab=repositories";
 
