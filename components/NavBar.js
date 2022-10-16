@@ -6,7 +6,7 @@ export default function Header() {
 
   const BLOG_URL = "https://blog.aaryanporwal.com/";
   const RESUME_URL =
-    "https://drive.google.com/file/d/1ARuthi5F4SXO4m0ZnyOK2aj95SVf7Ehc/view?usp=sharing";
+    "https://drive.google.com/file/d/1ARuthi5F4SXO4m0ZnyOK2aj95SVf7Ehc/view";
   const SCRAPBOOK_URL = "https://scrapbook.hackclub.com/aaryan";
   const PROJECTS_URL = "https://github.com/aaryanporwal?tab=repositories";
 
