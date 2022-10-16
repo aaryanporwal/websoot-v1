@@ -5,9 +5,6 @@ export default function Header() {
   };
 
   const BLOG_URL = "https://blog.aaryanporwal.com/";
-  const GITHUB_URL = "https://github.com/aaryanporwal";
-  const LINKEDIN_URL = "https://www.linkedin.com/in/aaryan-porwal/";
-  const TWITTER_URL = "https://twitter.com/aaryan7476";
   const RESUME_URL =
     "https://drive.google.com/file/d/1ARuthi5F4SXO4m0ZnyOK2aj95SVf7Ehc/view?usp=sharing";
   const SCRAPBOOK_URL = "https://scrapbook.hackclub.com/aaryan";
