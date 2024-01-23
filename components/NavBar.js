@@ -5,8 +5,8 @@ export default function Header() {
   };
 
   const BLOG_URL = "https://blog.aaryanporwal.com/";
-  const RESUME_URL =
-    "https://drive.google.com/file/d/1ARuthi5F4SXO4m0ZnyOK2aj95SVf7Ehc/view";
+  const LINKEDIN_URL =
+    "https://www.linkedin.com/in/aaryan-porwal/";
   const SCRAPBOOK_URL = "https://scrapbook.hackclub.com/aaryan";
   const PROJECTS_URL = "https://github.com/aaryanporwal?tab=repositories";
 
@@ -43,9 +43,9 @@ export default function Header() {
             >
               Blog
             </a>
-            <a href={RESUME_URL} className="" target="_blank">
+            <a href={LINKEDIN_URL} className="" target="_blank">
               <button className="rounded-md px-6 py-2 bg-theme font-bold hover:scale-125 ease-in-out duration-300 ">
-                Resume
+                Contact
               </button>
             </a>
           </div>
@@ -92,11 +92,11 @@ export default function Header() {
             Blog
           </a>
           <a
-            href={RESUME_URL}
+            href={LINKEDIN_URL}
             className="rounded-md inline-block bg-theme font-bold hover:scale-110 ease-in-out duration-300 py-2 px-3"
             target="_blank"
           >
-            Resume
+            Contact
           </a>
         </div>
       </header>
