@@ -18,6 +18,7 @@ const LINKS = [
 export default function NavBar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [heroVisible, setHeroVisible] = useState(true);
   const sounds = useSiteSounds();
 
   useEffect(() => {
@@ -25,6 +26,19 @@ export default function NavBar() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const hero = document.getElementById("top");
+    if (!hero) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setHeroVisible(entry.isIntersecting),
+      { rootMargin: "-72px 0px -55% 0px", threshold: 0 },
+    );
+
+    observer.observe(hero);
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -40,7 +54,13 @@ export default function NavBar() {
           <a
             href="#top"
             onClick={sounds.tap}
-            className="font-display text-2xl font-bold tracking-tightest text-white sm:text-3xl"
+            aria-hidden={heroVisible}
+            tabIndex={heroVisible ? -1 : undefined}
+            className={`font-display text-2xl font-bold tracking-tightest text-white transition-all duration-300 sm:text-3xl ${
+              heroVisible
+                ? "pointer-events-none opacity-0"
+                : "pointer-events-auto opacity-100"
+            }`}
           >
             <span className="font-semibold text-white">Aaryan Porwal</span>
           </a>
