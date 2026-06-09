@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { KeyboardEvent } from "react";
+import type { KeyboardEvent, PointerEvent } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -46,9 +46,21 @@ export default function Contact() {
   const neutralRef = useRef<HTMLImageElement>(null);
   const revealRef = useRef<HTMLDivElement>(null);
   const dragInstance = useRef<Draggable | null>(null);
+  const chaseModeRef = useRef(false);
+  const difficultyRef = useRef(4);
   const [phase, setPhase] = useState<Phase>(STATE.IDLE);
+  const [chaseMode, setChaseMode] = useState(false);
+  const [difficulty, setDifficulty] = useState(4);
   const phaseRef = useRef<Phase>(STATE.IDLE);
   const { tick, tap, off, shake, chime } = useSiteSounds();
+
+  useEffect(() => {
+    chaseModeRef.current = chaseMode;
+  }, [chaseMode]);
+
+  useEffect(() => {
+    difficultyRef.current = difficulty;
+  }, [difficulty]);
 
   useEffect(() => {
     phaseRef.current = phase;
@@ -89,11 +101,23 @@ export default function Contact() {
     });
   }, []);
 
+  const resetCatPosition = useCallback((duration = 0.45) => {
+    if (!catTargetRef.current) return;
+    gsap.to(catTargetRef.current, {
+      x: 0,
+      y: 0,
+      duration,
+      ease: "expo.out",
+      overwrite: "auto",
+    });
+  }, []);
+
   const triggerApproval = useCallback(() => {
     if (phaseRef.current === STATE.APPROVED) return;
     chime();
     setPhase(STATE.APPROVED);
     setHeadFrame(STATE.APPROVED);
+    resetCatPosition();
 
     if (bagRef.current) {
       gsap.to(bagRef.current, {
@@ -112,7 +136,7 @@ export default function Contact() {
         },
       });
     }
-  }, [chime, setHeadFrame]);
+  }, [chime, resetCatPosition, setHeadFrame]);
 
   const hasTreatReachedAnya = useCallback(() => {
     if (!bagRef.current || !catTargetRef.current) return false;
@@ -132,9 +156,46 @@ export default function Contact() {
     );
   }, []);
 
+  const moveTreatToAnya = useCallback(() => {
+    if (!bagRef.current || !catTargetRef.current) return;
+    if (phaseRef.current === STATE.APPROVED) return;
+    if (chaseModeRef.current) {
+      setPhase(STATE.ALERT);
+      setHeadFrame(STATE.ALERT);
+      shake();
+      return;
+    }
+
+    const bag = bagRef.current.getBoundingClientRect();
+    const target = catTargetRef.current.getBoundingClientRect();
+    const bagCenterX = bag.left + bag.width / 2;
+    const bagCenterY = bag.top + bag.height / 2;
+    const targetCenterX = target.left + target.width / 2;
+    const targetCenterY = target.top + target.height / 2;
+    const currentX = Number(gsap.getProperty(bagRef.current, "x"));
+    const currentY = Number(gsap.getProperty(bagRef.current, "y"));
+
+    setPhase(STATE.ALERT);
+    setHeadFrame(STATE.ALERT);
+
+    gsap.to(bagRef.current, {
+      x: currentX + targetCenterX - bagCenterX,
+      y: currentY + targetCenterY - bagCenterY,
+      rotation: 8,
+      duration: 0.55,
+      ease: "expo.out",
+      onComplete: () => {
+        if (hasTreatReachedAnya()) {
+          triggerApproval();
+        }
+      },
+    });
+  }, [hasTreatReachedAnya, setHeadFrame, shake, triggerApproval]);
+
   const resetToIdle = useCallback(() => {
     setPhase(STATE.IDLE);
     setHeadFrame(STATE.IDLE);
+    resetCatPosition();
     if (bagRef.current) {
       off();
       gsap.to(bagRef.current, {
@@ -145,7 +206,84 @@ export default function Contact() {
         ease: "expo.out",
       });
     }
-  }, [off, setHeadFrame]);
+  }, [off, resetCatPosition, setHeadFrame]);
+
+  const onChaseModeChange = (checked: boolean) => {
+    tap();
+    chaseModeRef.current = checked;
+    setChaseMode(checked);
+    resetToIdle();
+  };
+
+  const onDifficultyChange = (value: number) => {
+    difficultyRef.current = value;
+    setDifficulty(value);
+  };
+
+  const dodgeAnyaFromPoint = useCallback((clientX: number, clientY: number) => {
+    if (!chaseModeRef.current || phaseRef.current === STATE.APPROVED) return;
+    if (!stage.current || !catTargetRef.current) return;
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) return;
+
+    const stageBounds = stage.current.getBoundingClientRect();
+    const catBounds = catTargetRef.current.getBoundingClientRect();
+    const catCenterX = catBounds.left + catBounds.width / 2;
+    const catCenterY = catBounds.top + catBounds.height / 2;
+    const deltaX = catCenterX - clientX;
+    const deltaY = catCenterY - clientY;
+    const distance = Math.hypot(deltaX, deltaY);
+    const difficultyLevel = difficultyRef.current;
+    const dangerZone = Math.min(
+      stageBounds.width * (0.34 + difficultyLevel * 0.035),
+      210 + difficultyLevel * 22,
+    );
+
+    if (distance > dangerZone || distance === 0) return;
+
+    const currentX = Number(gsap.getProperty(catTargetRef.current, "x"));
+    const currentY = Number(gsap.getProperty(catTargetRef.current, "y"));
+    const push = (dangerZone - distance) * (0.22 + difficultyLevel * 0.055);
+    const maxLeft = stageBounds.width * -(0.12 + difficultyLevel * 0.025);
+    const maxRight = stageBounds.width * (0.04 + difficultyLevel * 0.014);
+    const maxUp = stageBounds.height * -(0.09 + difficultyLevel * 0.018);
+    const maxDown = stageBounds.height * (0.04 + difficultyLevel * 0.012);
+
+    gsap.to(catTargetRef.current, {
+      x: gsap.utils.clamp(
+        maxLeft,
+        maxRight,
+        currentX + (deltaX / distance) * push,
+      ),
+      y: gsap.utils.clamp(
+        maxUp,
+        maxDown,
+        currentY + (deltaY / distance) * push,
+      ),
+      duration: Math.max(0.1, 0.28 - difficultyLevel * 0.034),
+      ease: "power2.out",
+      overwrite: "auto",
+    });
+  }, []);
+
+  const getEventPoint = (event: Event | undefined) => {
+    if (!event) return null;
+
+    const mouseEvent = event as MouseEvent;
+    if (
+      typeof mouseEvent.clientX === "number" &&
+      typeof mouseEvent.clientY === "number"
+    ) {
+      return { x: mouseEvent.clientX, y: mouseEvent.clientY };
+    }
+
+    const touchEvent = event as TouchEvent;
+    const touch = touchEvent.touches?.[0] || touchEvent.changedTouches?.[0];
+    if (!touch) return null;
+
+    return { x: touch.clientX, y: touch.clientY };
+  };
 
   useGSAP(
     () => {
@@ -201,12 +339,13 @@ export default function Contact() {
         draggable: Draggable,
         shouldEndDrag = false,
       ) => {
-        if (phaseRef.current === STATE.APPROVED) return;
-        if (!hasTreatReachedAnya()) return;
+        if (phaseRef.current === STATE.APPROVED) return true;
+        if (!hasTreatReachedAnya()) return false;
         triggerApproval();
         if (shouldEndDrag) {
           draggable.endDrag(draggable.pointerEvent);
         }
+        return true;
       };
 
       dragInstance.current = Draggable.create(bagRef.current, {
@@ -228,13 +367,16 @@ export default function Contact() {
           didDrag = true;
         },
         onDrag(this: Draggable) {
-          approveIfTreatReachedAnya(this, true);
+          if (approveIfTreatReachedAnya(this, true)) return;
+          const point = getEventPoint(this.pointerEvent);
+          if (point) {
+            dodgeAnyaFromPoint(point.x, point.y);
+          }
         },
         onRelease() {
           if (phaseRef.current === STATE.APPROVED) return;
           if (!didDrag) {
-            // Treat a press-without-drag as the same approval as click/keyboard.
-            triggerApproval();
+            moveTreatToAnya();
             return;
           }
           setHeadFrame(STATE.IDLE);
@@ -251,18 +393,30 @@ export default function Contact() {
     },
     {
       scope: root,
-      dependencies: [hasTreatReachedAnya, setHeadFrame, shake, triggerApproval],
+      dependencies: [
+        hasTreatReachedAnya,
+        dodgeAnyaFromPoint,
+        moveTreatToAnya,
+        setHeadFrame,
+        shake,
+        triggerApproval,
+      ],
     },
   );
 
   const onBagKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === " " || e.key === "Enter") {
       e.preventDefault();
-      triggerApproval();
+      tap();
+      moveTreatToAnya();
     } else if (e.key === "Escape") {
       e.preventDefault();
       resetToIdle();
     }
+  };
+
+  const onStagePointerMove = (e: PointerEvent<HTMLDivElement>) => {
+    dodgeAnyaFromPoint(e.clientX, e.clientY);
   };
 
   return (
@@ -291,6 +445,7 @@ export default function Contact() {
         {/* Interactive shell */}
         <div
           ref={stage}
+          onPointerMove={onStagePointerMove}
           className="contact-stagger relative min-h-[430px] w-full select-none overflow-hidden rounded-2xl border border-line bg-surface/40 sm:min-h-[520px] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:min-h-[620px]"
         >
           <p
@@ -299,7 +454,7 @@ export default function Contact() {
             }`}
           >
             <span className="motion-reduce:hidden">
-              Drag the treat to Anya.
+              {chaseMode ? "Catch Anya with the treat." : "Drag the treat to Anya."}
             </span>
             <span className="hidden motion-reduce:inline">
               Tap the treat to wake her.
@@ -310,8 +465,47 @@ export default function Contact() {
               phase === STATE.ALERT ? "opacity-100" : "opacity-0"
             }`}
           >
-            shaking…
+            {chaseMode ? "she noticed." : "shaking..."}
           </p>
+          <div
+            className={`absolute right-5 top-5 z-40 w-[min(13rem,calc(100%-2.5rem))] rounded-2xl border border-line bg-ink/75 p-3 font-sans text-xs text-muted backdrop-blur transition-opacity duration-300 sm:right-6 sm:top-6 ${
+              phase === STATE.APPROVED
+                ? "pointer-events-none opacity-0"
+                : "opacity-100"
+            }`}
+          >
+            <div className="flex items-center justify-between gap-3">
+              <label className="flex items-center gap-2 transition-colors hover:text-white">
+                <input
+                  type="checkbox"
+                  checked={chaseMode}
+                  onChange={(e) => onChaseModeChange(e.currentTarget.checked)}
+                  className="h-3.5 w-3.5 accent-voltage"
+                />
+                chase mode
+              </label>
+            </div>
+            {chaseMode ? (
+              <label className="mt-3 block">
+                <span className="mb-2 flex items-center justify-between gap-3">
+                  <span>difficulty</span>
+                  <span className="font-mono text-voltage">{difficulty}</span>
+                </span>
+                <input
+                  type="range"
+                  min={1}
+                  max={5}
+                  value={difficulty}
+                  aria-label="Chase difficulty"
+                  onChange={(e) =>
+                    onDifficultyChange(Number(e.currentTarget.value))
+                  }
+                  onMouseEnter={tick}
+                  className="h-1.5 w-full cursor-pointer accent-voltage"
+                />
+              </label>
+            ) : null}
+          </div>
           <p
             className={`pointer-events-none absolute left-5 top-5 z-20 font-sans text-sm text-voltage transition-opacity duration-300 sm:left-6 sm:top-6 ${
               phase === STATE.APPROVED ? "opacity-100" : "opacity-0"
@@ -322,7 +516,7 @@ export default function Contact() {
 
           <div
             ref={catTargetRef}
-            className="absolute bottom-4 right-0 h-[68%] w-[78%] max-w-[560px] sm:bottom-6 sm:right-4 lg:h-[76%] lg:w-[70%]"
+            className="absolute bottom-4 right-0 h-[54%] w-[64%] max-w-[430px] sm:bottom-6 sm:right-4 lg:h-[60%] lg:w-[56%]"
           >
             <div className="relative h-full w-full">
               <Image
@@ -364,7 +558,7 @@ export default function Contact() {
             onClick={() => {
               // Click without drag (Draggable suppresses native click after a real drag).
               tap();
-              triggerApproval();
+              moveTreatToAnya();
             }}
             onMouseEnter={tick}
             className="absolute bottom-8 left-6 z-30 cursor-grab touch-none rounded-xl outline-none ring-voltage/70 focus-visible:ring-2 active:cursor-grabbing motion-reduce:cursor-pointer sm:bottom-10 sm:left-10"
@@ -381,6 +575,23 @@ export default function Contact() {
               priority={false}
             />
           </div>
+
+          {phase === STATE.APPROVED ? (
+            <div className="absolute inset-0 z-[80] flex items-end justify-center bg-ink/15 p-6 backdrop-blur-[1px] sm:items-center">
+              <button
+                type="button"
+                onPointerDown={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  resetToIdle();
+                }}
+                onMouseEnter={tick}
+                className="pointer-events-auto rounded-full border border-voltage/70 bg-ink/85 px-5 py-3 font-sans text-sm font-medium text-white shadow-[0_18px_46px_rgba(0,0,0,0.35)] transition-colors hover:bg-voltage hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-voltage/70"
+              >
+                Retry
+              </button>
+            </div>
+          ) : null}
         </div>
 
         {/* Reveal panel — after Anya on mobile; below copy on desktop */}
@@ -469,14 +680,6 @@ export default function Contact() {
               </a>
             </li>
           </ul>
-          <button
-            type="button"
-            onClick={resetToIdle}
-            onMouseEnter={tick}
-            className="mt-6 font-sans text-sm text-muted underline decoration-line decoration-1 underline-offset-4 transition-colors hover:text-voltage hover:decoration-voltage"
-          >
-            put her back to sleep
-          </button>
         </div>
       </div>
     </section>
