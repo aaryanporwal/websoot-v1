@@ -37,3 +37,10 @@ yarn-error.log*
 .netlify
 
 .vercel
+
+.agents
+.claude
+.cursor
+.codex
+.gemini
+

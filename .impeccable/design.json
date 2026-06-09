@@ -1,0 +1,228 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-09T07:32:00.000Z",
+  "title": "Design System: Aaryan Porwal — Web Engineer",
+  "extensions": {
+    "colorMeta": {
+      "body": {
+        "role": "neutral",
+        "displayName": "Stage Black",
+        "canonical": "oklch(11% 0.005 280)",
+        "tonalRamp": ["#000000", "#04040A", "#08080B", "#0B0B10", "#121219", "#1A1A23", "#23232E", "#2E2E3A"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "oklch(13% 0.008 280)",
+        "tonalRamp": ["#04040A", "#08080B", "#0B0B10", "#121219", "#1A1A23", "#23232E", "#2E2E3A", "#3A3A45"]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "canonical": "oklch(17% 0.01 280)",
+        "tonalRamp": ["#08080B", "#0B0B10", "#121219", "#1A1A23", "#23232E", "#2E2E3A", "#3A3A45", "#4A4A58"]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "oklch(24% 0.014 280)",
+        "tonalRamp": ["#121219", "#1A1A23", "#23232E", "#2E2E3A", "#3A3A45", "#4A4A58", "#5C5C6E", "#737386"]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted",
+        "canonical": "oklch(70% 0.025 280)",
+        "tonalRamp": ["#3A3A45", "#4A4A58", "#5C5C6E", "#737386", "#8A8AA0", "#9A9AB0", "#B4B4C5", "#D0D0DA"]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "Stage Light",
+        "canonical": "oklch(97% 0.003 280)",
+        "tonalRamp": ["#9A9AB0", "#B4B4C5", "#D0D0DA", "#E4E4ED", "#EEEEF3", "#F5F5F7", "#FAFAFC", "#FFFFFF"]
+      },
+      "voltage-lime": {
+        "role": "primary",
+        "displayName": "Voltage Lime",
+        "canonical": "oklch(93% 0.23 125)",
+        "tonalRamp": ["#3A4D0E", "#536B14", "#6E8D1A", "#8AAF22", "#A5D02D", "#C6FF3D", "#D4FF6A", "#E5FF9C"]
+      },
+      "selected-text": {
+        "role": "tertiary",
+        "displayName": "Selected Indigo",
+        "canonical": "oklch(72% 0.13 285)",
+        "tonalRamp": ["#1F1F4F", "#2E2E6E", "#3E3E8C", "#5252AA", "#7676C8", "#A3A3FF", "#C0C0FF", "#DCDCFF"]
+      },
+      "ramp-electric": {
+        "role": "tertiary",
+        "displayName": "Legacy Electric",
+        "canonical": "oklch(48% 0.27 270)",
+        "tonalRamp": ["#101040", "#1A1A66", "#26268C", "#3F3FFF", "#5E5EFF", "#8585FF", "#ADADFF", "#D4D4FF"]
+      },
+      "ramp-violet": {
+        "role": "tertiary",
+        "displayName": "Legacy Violet",
+        "canonical": "oklch(62% 0.22 300)",
+        "tonalRamp": ["#2E1A4D", "#4A2680", "#6B36B5", "#8B5CF6", "#A77BFA", "#C2A0FC", "#D9C2FD", "#EBDFFE"]
+      },
+      "ramp-fuchsia": {
+        "role": "tertiary",
+        "displayName": "Legacy Fuchsia",
+        "canonical": "oklch(70% 0.27 330)",
+        "tonalRamp": ["#4D1059", "#7A1A8C", "#A626BF", "#D946EF", "#E26EF3", "#EA98F7", "#F2BCFA", "#F9DEFC"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headline only. Pairs the filled white treatment with the .text-stroke outlined second line for the site's signature Filled-Hollow pair."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headers — About statement, Selected Work, Let's build something bold."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Work-card titles, mobile-menu link labels."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Hero supporting copy, work-card descriptions. Color is muted #9A9AB0 against body; do not lighten further."
+      },
+      "label": {
+        "displayName": "Eyebrow Label",
+        "purpose": "Tracked uppercase rail above section headings. Currently overused (4 of 5 sections); cap at 1–2 per page."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "ease-out-expo", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Default easing for all reveal and transition states (matches Tailwind's transitionTimingFunction.out-expo)." },
+      { "name": "spring-button", "value": "type: spring, stiffness: 400, damping: 20", "purpose": "Motion-library spring for button hover (scale 1.04) and tap (scale 0.97)." },
+      { "name": "spring-card-lift", "value": "type: spring, stiffness: 300, damping: 22", "purpose": "Work-card hover lift (y: -10) paired with electric/30 blur halo." },
+      { "name": "scrub-reveal", "value": "scrollTrigger: scrub true, start: top 75%, end: bottom 65%", "purpose": "Scroll-coupled per-word color reveal on About statement and similar paragraph treatments." },
+      { "name": "marquee-velocity", "value": "scrollTrigger onUpdate -> timeScale = 1 + min(abs(velocity)/400, 5)", "purpose": "Skills-section marquees speed-up while scrolling, decay back." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" },
+      { "name": "container", "value": "1600px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary CTA (Voltage Lime)",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single load-bearing action. Voltage Lime pill, body-dark text, spring-bounce on hover.",
+      "html": "<button class=\"ds-btn-primary\">View Work</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; background: #C6FF3D; color: #08080B; font-family: 'Clash Display', Inter, sans-serif; font-weight: 600; font-size: 1rem; padding: 14px 32px; border: none; border-radius: 9999px; cursor: pointer; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-primary:hover { transform: scale(1.04); } .ds-btn-primary:active { transform: scale(0.97); } .ds-btn-primary:focus-visible { outline: 2px solid #C6FF3D; outline-offset: 4px; }"
+    },
+    {
+      "name": "Outline CTA",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary CTA, paired right of the Primary. Hairline border, white text.",
+      "html": "<button class=\"ds-btn-outline\">Get in Touch</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; background: transparent; color: #F5F5F7; font-family: 'Clash Display', Inter, sans-serif; font-weight: 600; font-size: 1rem; padding: 14px 32px; border: 1px solid #23232E; border-radius: 9999px; cursor: pointer; transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s; } .ds-btn-outline:hover { border-color: #F5F5F7; transform: scale(1.04); } .ds-btn-outline:active { transform: scale(0.97); } .ds-btn-outline:focus-visible { outline: 2px solid #C6FF3D; outline-offset: 4px; }"
+    },
+    {
+      "name": "Inverse Contact Pill (White)",
+      "kind": "button",
+      "refersTo": "button-white",
+      "description": "Navbar Contact button on transparent header — the inverse-emphasis case where Voltage Lime would over-saturate the chrome.",
+      "html": "<button class=\"ds-btn-white\">Contact</button>",
+      "css": ".ds-btn-white { display: inline-flex; align-items: center; justify-content: center; background: #F5F5F7; color: #08080B; font-family: 'Clash Display', Inter, sans-serif; font-weight: 600; font-size: 0.9375rem; padding: 10px 24px; border: none; border-radius: 9999px; cursor: pointer; transition: transform 0.2s; } .ds-btn-white:hover { transform: scale(1.05); } .ds-btn-white:active { transform: scale(0.96); }"
+    },
+    {
+      "name": "Section Eyebrow",
+      "kind": "custom",
+      "refersTo": "label",
+      "description": "Signature section-opener: 40px Voltage Lime hairline + tracked uppercase muted label. Cap at 1–2 per page; currently overused.",
+      "html": "<div class=\"ds-eyebrow\"><span class=\"ds-eyebrow-rule\"></span>About</div>",
+      "css": ".ds-eyebrow { display: inline-flex; align-items: center; gap: 16px; font-family: 'General Sans', Inter, sans-serif; font-size: 0.75rem; font-weight: 500; line-height: 1; letter-spacing: 0.3em; text-transform: uppercase; color: #9A9AB0; } .ds-eyebrow-rule { display: inline-block; width: 40px; height: 1px; background: #C6FF3D; }"
+    },
+    {
+      "name": "Work Card",
+      "kind": "card",
+      "refersTo": "card-project",
+      "description": "24px soft-corner card on the surface tone with a hairline border. Hover lifts -10px with a top-right ambient glow halo (depth-by-atmosphere, never shadow).",
+      "html": "<a class=\"ds-card-project\" href=\"#\"><div class=\"ds-card-glow\"></div><div class=\"ds-card-head\"><span class=\"ds-card-index\">01</span><span class=\"ds-card-tag\">Open Source</span></div><div class=\"ds-card-foot\"><h3 class=\"ds-card-title\">GitHub Repositories</h3><p class=\"ds-card-desc\">A growing collection of libraries, tools, and experiments — built in the open.</p><span class=\"ds-card-cta\">Explore <span class=\"ds-card-arrow\">→</span></span></div></a>",
+      "css": ".ds-card-project { position: relative; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; width: 28rem; min-height: 360px; padding: 40px; background: #121219; border: 1px solid #23232E; border-radius: 24px; color: #F5F5F7; text-decoration: none; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); } .ds-card-project:hover { transform: translateY(-10px); } .ds-card-glow { position: absolute; top: -64px; right: -64px; width: 192px; height: 192px; border-radius: 9999px; background: rgba(63, 63, 255, 0); filter: blur(48px); transition: background 0.5s ease; pointer-events: none; } .ds-card-project:hover .ds-card-glow { background: rgba(63, 63, 255, 0.3); } .ds-card-head { display: flex; align-items: center; justify-content: space-between; } .ds-card-index { font-family: ui-monospace, 'SF Mono', monospace; font-size: 0.875rem; color: #9A9AB0; } .ds-card-tag { padding: 6px 16px; border: 1px solid #23232E; border-radius: 9999px; font-family: 'General Sans', sans-serif; font-size: 0.6875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: #9A9AB0; } .ds-card-foot { margin-top: 40px; } .ds-card-title { font-family: 'Clash Display', Inter, sans-serif; font-size: 2.25rem; font-weight: 600; line-height: 1.1; color: #F5F5F7; margin: 0; } .ds-card-desc { margin-top: 20px; max-width: 22rem; font-family: 'General Sans', sans-serif; font-size: 1rem; line-height: 1.55; color: #9A9AB0; } .ds-card-cta { display: inline-flex; align-items: center; gap: 8px; margin-top: 32px; font-family: 'Clash Display', sans-serif; font-size: 1rem; font-weight: 600; color: #C6FF3D; } .ds-card-arrow { transition: transform 0.3s ease; } .ds-card-project:hover .ds-card-arrow { transform: translateX(6px); }"
+    },
+    {
+      "name": "Input (proposed)",
+      "kind": "input",
+      "refersTo": "input-default",
+      "description": "Pill-geometry text input on the ink tone, hairline border lifting to Voltage Lime on focus. Synthesized for forward use — no inputs ship today.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"your@email.com\" />",
+      "css": ".ds-input { width: 100%; max-width: 24rem; padding: 14px 20px; background: #0B0B10; color: #F5F5F7; font-family: 'General Sans', Inter, sans-serif; font-size: 1rem; line-height: 1.4; border: 1px solid #23232E; border-radius: 9999px; outline: none; transition: border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1); } .ds-input::placeholder { color: #737386; } .ds-input:focus-visible { border-color: #C6FF3D; }"
+    },
+    {
+      "name": "Nav Link",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Muted-at-rest, white on hover, with a Voltage Lime hairline underline sweeping in from left to right.",
+      "html": "<a class=\"ds-nav-link\" href=\"#\">Work<span class=\"ds-nav-rule\"></span></a>",
+      "css": ".ds-nav-link { position: relative; display: inline-block; padding: 8px 0; font-family: 'General Sans', Inter, sans-serif; font-size: 0.875rem; font-weight: 500; color: #9A9AB0; text-decoration: none; transition: color 0.2s ease; } .ds-nav-link:hover { color: #F5F5F7; } .ds-nav-rule { position: absolute; left: 0; bottom: 0; display: block; width: 0; height: 1px; background: #C6FF3D; transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1); } .ds-nav-link:hover .ds-nav-rule { width: 100%; }"
+    },
+    {
+      "name": "Filled-Hollow Display Pair",
+      "kind": "custom",
+      "refersTo": "display",
+      "description": "Two-line display headline pairing solid-white line 1 with the .text-stroke outlined line 2. Reserved for hero, work header, contact closer.",
+      "html": "<h1 class=\"ds-display-pair\">Aaryan<br/><span class=\"ds-display-stroke\">Porwal</span></h1>",
+      "css": ".ds-display-pair { font-family: 'Clash Display', Inter, sans-serif; font-size: clamp(3.5rem, 0.5rem + 13vw, 12rem); font-weight: 600; line-height: 0.92; letter-spacing: -0.05em; color: #F5F5F7; margin: 0; } .ds-display-stroke { -webkit-text-stroke: 1.5px rgba(245, 245, 247, 0.55); color: transparent; }"
+    },
+    {
+      "name": "Marquee Row",
+      "kind": "custom",
+      "refersTo": "headline",
+      "description": "Infinite-loop skill marquee. Display type, Voltage Lime separator glyphs. In production, GSAP couples timeScale to scroll velocity.",
+      "html": "<div class=\"ds-marquee\"><div class=\"ds-marquee-track\"><span class=\"ds-marquee-word\">JavaScript</span><span class=\"ds-marquee-sep\">✺</span><span class=\"ds-marquee-word\">TypeScript</span><span class=\"ds-marquee-sep\">✺</span><span class=\"ds-marquee-word\">React</span><span class=\"ds-marquee-sep\">✺</span><span class=\"ds-marquee-word\">Next.js</span><span class=\"ds-marquee-sep\">✺</span></div></div>",
+      "css": ".ds-marquee { width: 100%; overflow: hidden; } .ds-marquee-track { display: inline-flex; align-items: center; white-space: nowrap; animation: ds-marquee 22s linear infinite; } .ds-marquee-word { padding: 0 32px; font-family: 'Clash Display', Inter, sans-serif; font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 500; color: #F5F5F7; } .ds-marquee-sep { font-size: clamp(1.5rem, 3vw, 2.5rem); color: #C6FF3D; } @keyframes ds-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } } @media (prefers-reduced-motion: reduce) { .ds-marquee-track { animation: none; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Calm Stage",
+    "overview": "The site is a dark theater. The work is the performer. Voltage Lime is the single spot. Everything else — chrome, borders, navigation — recedes. This is not the AI-dark neon dashboard reflex (pure black + electric blue + fuchsia + acid glow stacked as personality). This is a dark stage where one signal color does the heavy lifting and the rest of the surface gets out of the way.\n\nDensity is generous. Type carries the page; motion is choreography, not effect; imagery is sparse on purpose because the visitor's eye is meant to land on the headline, then the marquee, then the work cards, then the contact moment. The brand triad from PRODUCT.md — Playful, Warm, Technical — is split by surface: playful lives in motion choreography and micro-interaction, warm lives in copy voice and the named-cat contact device, technical lives in execution detail (split-text reveals, scroll-pinned horizontal scroll, scroll-velocity marquee, reduced-motion fallbacks shipped on every animation).\n\nThe system explicitly rejects: the SaaS hero-metric template, identical icon-and-text card grids, the AI-dark cyberpunk neon-purple portfolio reflex (currently the single largest pressure point in this codebase), Themeforest-style 'Hello, I'm a developer' parallax, cold brutalist pure-mono, and corporate 'passionate about' LinkedIn voice.",
+    "keyCharacteristics": [
+      "Dark canvas at near-black #08080B, with two tonal steps (#0B0B10 ink, #121219 surface) doing all the layering work — no shadows.",
+      "One functional accent: Voltage Lime #C6FF3D. CTAs, eyebrow hairlines, link underlines, marquee separators, ::selection. ≤10% of any screen.",
+      "Display type at hero scale (up to ~12rem fluid) with letter-spacing -0.05em; body type tops out at ~1.5rem and stays comfortable for long reads.",
+      "Motion is the proof-of-craft: GSAP SplitText reveals, ScrollTrigger pinning, scrub-driven color reveal, scroll-velocity-coupled marquee. Every animation has a prefers-reduced-motion fallback.",
+      "Film-grain overlay at 5% opacity over the whole document — texture, not decoration."
+    ],
+    "rules": [
+      { "name": "The One Spotlight Rule", "body": "Voltage Lime is the only functional accent. Every CTA, every section-marker hairline, every active state, every selection. ≤10% of any screen by area. If you find yourself reaching for a second accent color to differentiate two things, the answer is type weight or spacing, not a new color.", "section": "colors" },
+      { "name": "The Glow-Only Rule", "body": "The Electric / Violet / Fuchsia ramp lives in blur(140px) ambient halos and nowhere else. Never on type. Never on borders. Never on a button. Never on a chip.", "section": "colors" },
+      { "name": "The Filled-Hollow Pair Rule", "body": "When a heading runs two lines and warrants emphasis, line 1 is solid white display, line 2 is text-stroke outlined (1.5px stroke at 55% white). Reserved for hero, work header, contact closer.", "section": "typography" },
+      { "name": "The Single-Family-Per-Role Rule", "body": "Clash for display and headline. General Sans for body and label. Three families counting GT Walsheim is the cap; do not pair another display serif 'for editorial feel' — wrong register for this brand.", "section": "typography" },
+      { "name": "The No-Shadow Rule", "body": "box-shadow is forbidden anywhere on the page. If a surface needs to read as lifted, step it up one tone (body → ink → surface) or pair it with the ambient glow halo.", "section": "elevation" },
+      { "name": "The Hairline-Border Rule", "body": "Borders are exactly 1px, always line #23232E (or its /60 / /80 opacity variants). Never thicker, never tinted, never colored. The hairline is the only stroke in the system.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use Voltage Lime #C6FF3D as the only functional accent. CTAs, hairline eyebrows, link underlines, marquee separators, selection, active states. ≤10% of any screen by area.",
+      "Do layer depth tonally: body #08080B → ink #0B0B10 → surface #121219. Three steps, no shadows.",
+      "Do use 1px line #23232E for every border. Hairline is the only stroke weight.",
+      "Do pair filled white display type with the .text-stroke outlined treatment for the second line of two-line headings (hero, work header, contact closer).",
+      "Do ship a prefers-reduced-motion: reduce alternative for every animation. The Hero, About, Skills, Work, and Footer all already do this; new components must match.",
+      "Do keep muted #9A9AB0 body copy against body #08080B at ≥5.3:1 contrast. Don't drift the muted color any further toward the background 'for elegance'.",
+      "Do use spring physics for button hover/tap (stiffness 400, damping 20, scale 1.04 / 0.97).",
+      "Do treat motion as the proof of engineering, not as decoration."
+    ],
+    "donts": [
+      "Don't introduce more of the Electric / Violet / Fuchsia ramp. Legacy, scheduled to recede. New screens must not put these colors on type, borders, buttons, or chips.",
+      "Don't ship background-clip: text gradient headlines. The current .animated-gradient wordmark and Footer closer are the highest-priority replacements; do not propagate.",
+      "Don't look or read like the AI-dark neon-purple cyberpunk dashboard. PRODUCT.md flags this as the current lane the site is closest to and the one it must leave by ship.",
+      "Don't put a tiny-uppercase-tracked eyebrow above every section. Cap at 1–2 per page maximum.",
+      "Don't use box-shadow. Anywhere. Depth is tonal or atmospheric.",
+      "Don't use border-left greater than 1px as a colored stripe on any card, alert, or callout.",
+      "Don't add a third or fourth font. Clash + General Sans + (sparingly) GT Walsheim is the cap.",
+      "Don't ship the hero-metric template (big number, small label, supporting stats, gradient accent).",
+      "Don't ship identical icon-and-text card grids.",
+      "Don't ship all-caps body copy. Caps are reserved for the eyebrow label (0.3em tracking) and section-marker chips.",
+      "Don't drift into Themeforest 'Hello, I'm a developer' parallax, corporate 'passionate about' LinkedIn voice, or cold pure-monospace brutalism."
+    ]
+  }
+}
