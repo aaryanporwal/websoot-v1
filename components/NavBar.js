@@ -39,7 +39,7 @@ export default function NavBar() {
             href="#top"
             className="font-display text-2xl font-bold tracking-tightest text-white sm:text-3xl"
           >
-            <span className="animated-gradient">Aaryan Porwal</span>
+            <span className="font-semibold text-white">Aaryan Porwal</span>
           </a>
 
           <nav className="hidden items-center gap-9 font-sans text-sm font-medium md:flex">
@@ -52,7 +52,7 @@ export default function NavBar() {
                 className="group relative text-muted transition-colors hover:text-white"
               >
                 {l.label}
-                <span className="absolute -bottom-1 left-0 h-px w-0 bg-acid transition-all duration-300 group-hover:w-full" />
+                <span className="absolute -bottom-1 left-0 h-px w-0 bg-voltage transition-all duration-300 group-hover:w-full" />
               </a>
             ))}
             <motion.a
@@ -117,7 +117,7 @@ export default function NavBar() {
               <a
                 href="#contact"
                 onClick={() => setOpen(false)}
-                className="mt-5 rounded-full bg-acid px-6 py-3 text-center font-display text-lg font-semibold text-body"
+                className="mt-5 rounded-full bg-voltage px-6 py-3 text-center font-display text-lg font-semibold text-body"
               >
                 Contact
               </a>

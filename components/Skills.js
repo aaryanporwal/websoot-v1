@@ -33,7 +33,7 @@ function Row({ items, rowRef, separator = "✺" }) {
           <span className="px-8 font-display text-5xl font-medium text-white sm:text-7xl">
             {s}
           </span>
-          <span className="text-2xl text-acid sm:text-4xl">{separator}</span>
+          <span className="text-2xl text-voltage sm:text-4xl">{separator}</span>
         </span>
       ))}
     </div>
@@ -105,12 +105,6 @@ export default function Skills() {
       ref={root}
       className="relative w-full border-y border-line bg-body py-20"
     >
-      <div className="mb-10 px-6 sm:px-10 lg:px-16">
-        <div className="flex items-center gap-4 font-sans text-xs uppercase tracking-[0.3em] text-muted sm:text-sm">
-          <span className="inline-block h-px w-10 bg-acid" />
-          Toolbox
-        </div>
-      </div>
       <div className="flex flex-col gap-4">
         <Row items={ROW_A} rowRef={rowA} separator="✺" />
         <Row items={ROW_B} rowRef={rowB} separator="◆" />

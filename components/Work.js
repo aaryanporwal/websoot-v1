@@ -106,12 +106,11 @@ export default function Work() {
             transition={{ type: "spring", stiffness: 300, damping: 22 }}
             className="group relative flex w-full flex-col justify-between overflow-hidden rounded-3xl border border-line bg-surface p-8 md:h-[60vh] md:w-[34rem] md:p-10"
           >
-            <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-electric/0 blur-3xl transition-all duration-500 group-hover:bg-electric/30" />
             <div className="flex items-center justify-between">
               <span className="font-mono text-sm text-muted">
                 0{i + 1}
               </span>
-              <span className="rounded-full border border-line px-4 py-1.5 font-sans text-xs uppercase tracking-widest text-muted">
+              <span className="rounded-full border border-line px-4 py-1.5 font-sans text-xs uppercase tracking-widest text-white">
                 {p.tag}
               </span>
             </div>
@@ -123,7 +122,7 @@ export default function Work() {
               <p className="mt-5 max-w-sm font-sans text-base text-muted md:text-lg">
                 {p.desc}
               </p>
-              <div className="mt-8 inline-flex items-center gap-2 font-display text-base font-semibold text-acid">
+              <div className="mt-8 inline-flex items-center gap-2 font-display text-base font-semibold text-voltage">
                 Explore
                 <span className="transition-transform duration-300 group-hover:translate-x-1.5">
                   →

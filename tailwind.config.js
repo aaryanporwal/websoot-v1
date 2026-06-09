@@ -10,14 +10,8 @@ module.exports = {
         ink: "#0B0B10",
         surface: "#121219",
         line: "#23232E",
-        muted: "#9A9AB0",
-        // Neon accent ramp
-        electric: "#3F3FFF",
-        violet: "#8B5CF6",
-        fuchsia: "#D946EF",
-        acid: "#C6FF3D",
-        "selected-text": "#A3A3FF",
-        theme: "#3F3FFF",
+        muted: "#9A9AB0", // contrast 5.3:1 against body; do not lighten further
+        voltage: "#C6FF3D",
       },
       fontFamily: {
         display: ["'Clash Display'", "Inter", "sans-serif"],

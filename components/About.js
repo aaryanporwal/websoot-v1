@@ -52,10 +52,6 @@ export default function About() {
       className="relative w-full bg-body px-6 py-32 sm:px-10 lg:px-16"
     >
       <div className="mx-auto max-w-container">
-        <div className="mb-12 flex items-center gap-4 font-sans text-xs uppercase tracking-[0.3em] text-muted sm:text-sm">
-          <span className="inline-block h-px w-10 bg-acid" />
-          About
-        </div>
         <p
           ref={textRef}
           className="max-w-5xl font-display text-fluid-md font-medium leading-[1.15] tracking-tight"

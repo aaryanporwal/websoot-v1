@@ -61,7 +61,7 @@ a {
   border: 2px solid #08080b;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f3fff;
+  background: #c6ff3d;
 }
 
 /* Subtle film grain overlay for the award-site texture */
@@ -73,27 +73,6 @@ a {
   pointer-events: none;
   opacity: 0.05;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-.animated-gradient {
-  background: linear-gradient(
-    to right,
-    #d946ef 20%,
-    #8b5cf6 40%,
-    #3f3fff 60%,
-    #8b5cf6 80%,
-    #d946ef 100%
-  );
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-size: 200% auto;
-  animation: shine 8s linear infinite;
-}
-@keyframes shine {
-  to {
-    background-position: 200%;
-  }
 }
 
 /* Outlined / stroke display text for bold headlines */

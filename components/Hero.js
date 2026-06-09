@@ -20,7 +20,7 @@ export default function Hero() {
   useGSAP(
     () => {
       const reduce = window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
+        "(prefers-reduced-motion: reduce)",
       ).matches;
 
       let split;
@@ -59,7 +59,7 @@ export default function Hero() {
             .fromTo(
               word,
               { yPercent: 110, opacity: 0 },
-              { yPercent: 0, opacity: 1, duration: 0.6, ease: "expo.out" }
+              { yPercent: 0, opacity: 1, duration: 0.6, ease: "expo.out" },
             )
             .to(word, {
               yPercent: -110,
@@ -78,7 +78,7 @@ export default function Hero() {
         if (split) split.revert();
       };
     },
-    { scope: root }
+    { scope: root },
   );
 
   return (
@@ -87,23 +87,19 @@ export default function Hero() {
       id="top"
       className="relative min-h-screen w-full overflow-hidden bg-body px-6 pt-32 sm:px-10 lg:px-16"
     >
-      {/* Ambient gradient glow */}
-      <div className="pointer-events-none absolute -top-40 right-[-10%] h-[42rem] w-[42rem] rounded-full bg-electric/20 blur-[140px]" />
-      <div className="pointer-events-none absolute bottom-[-20%] left-[-10%] h-[36rem] w-[36rem] rounded-full bg-fuchsia/10 blur-[140px]" />
-
       {/* Lottie ring accent */}
       <LottieAccent className="pointer-events-none absolute right-6 top-28 h-28 w-28 opacity-90 sm:right-16 sm:top-32 sm:h-40 sm:w-40 lg:h-52 lg:w-52" />
 
       <div className="relative mx-auto flex min-h-[calc(100vh-12rem)] max-w-container flex-col justify-center">
-        <motion.p
+        {/* <motion.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="hero-fade mb-6 flex items-center gap-3 font-sans text-xs uppercase tracking-[0.3em] text-muted sm:text-sm"
         >
-          <span className="inline-block h-px w-10 bg-acid" />
+          <span className="inline-block h-px w-10 bg-voltage" />
           Personal Site — Web Engineer
-        </motion.p>
+        </motion.p> */}
 
         <h1
           ref={headingRef}
@@ -126,7 +122,7 @@ export default function Hero() {
           <span className="relative inline-block h-[1.4em] overflow-hidden align-bottom">
             <span
               ref={wordRef}
-              className="inline-block whitespace-nowrap font-semibold text-acid"
+              className="inline-block whitespace-nowrap font-semibold text-voltage"
             >
               Web Development
             </span>
@@ -139,7 +135,7 @@ export default function Hero() {
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            className="rounded-full bg-acid px-8 py-3.5 font-display text-base font-semibold text-body"
+            className="rounded-full bg-voltage px-8 py-3.5 font-display text-base font-semibold text-body"
           >
             View Work
           </motion.a>
