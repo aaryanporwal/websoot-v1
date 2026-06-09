@@ -307,7 +307,7 @@ export default function Contact() {
       className="relative w-full overflow-hidden bg-body px-6 py-32 sm:px-10 sm:py-40 lg:px-16"
     >
       <div className="relative mx-auto grid max-w-container gap-12 lg:grid-cols-[minmax(320px,0.82fr)_minmax(0,1.18fr)] lg:items-center lg:gap-16">
-        {/* Left: copy + reveal panel */}
+        {/* Copy */}
         <div className="relative">
           <p className="contact-stagger inline-flex items-center gap-3 font-sans text-sm tracking-[0.18em] text-voltage">
             <span className="inline-block h-px w-8 bg-voltage" />
@@ -321,101 +321,12 @@ export default function Contact() {
           <p className="contact-stagger mt-6 max-w-md font-sans text-lg text-muted sm:text-xl">
             Bribe her with a treat. She decides what reaches me.
           </p>
-
-          {/* Reveal panel */}
-          <div
-            ref={revealRef}
-            aria-live="polite"
-            style={{
-              opacity: 0,
-              transform: "translateY(8px)",
-              visibility: "hidden",
-            }}
-            className={`mt-10 ${phase === STATE.APPROVED ? "" : "pointer-events-none"}`}
-          >
-            <ul className="flex flex-col divide-y divide-line border-y border-line">
-              <li>
-                <a
-                  href={CAL_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group flex items-center justify-between gap-6 py-5 outline-none focus-visible:bg-surface/60"
-                >
-                  <span>
-                    <span className="block font-display text-2xl font-semibold text-white sm:text-3xl">
-                      Book a 20-minute call
-                    </span>
-                    <span className="font-sans text-sm text-muted">
-                      for the actual conversation
-                    </span>
-                  </span>
-                  <span
-                    aria-hidden
-                    className="font-display text-2xl text-voltage transition-transform duration-300 group-hover:translate-x-1"
-                  >
-                    ↗
-                  </span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href={LINKEDIN_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group flex items-center justify-between gap-6 py-5 outline-none focus-visible:bg-surface/60"
-                >
-                  <span>
-                    <span className="block font-display text-2xl font-semibold text-white sm:text-3xl">
-                      LinkedIn
-                    </span>
-                    <span className="font-sans text-sm text-muted">
-                      for the formal first hello
-                    </span>
-                  </span>
-                  <span
-                    aria-hidden
-                    className="font-display text-2xl text-voltage transition-transform duration-300 group-hover:translate-x-1"
-                  >
-                    ↗
-                  </span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href={`mailto:${EMAIL}`}
-                  className="group flex items-center justify-between gap-6 py-5 outline-none focus-visible:bg-surface/60"
-                >
-                  <span>
-                    <span className="block font-display text-2xl font-semibold text-white sm:text-3xl">
-                      Email
-                    </span>
-                    <span className="font-sans text-sm text-muted">
-                      {EMAIL}
-                    </span>
-                  </span>
-                  <span
-                    aria-hidden
-                    className="font-display text-2xl text-voltage transition-transform duration-300 group-hover:translate-x-1"
-                  >
-                    ↗
-                  </span>
-                </a>
-              </li>
-            </ul>
-            <button
-              type="button"
-              onClick={resetToIdle}
-              className="mt-6 font-sans text-sm text-muted underline decoration-line decoration-1 underline-offset-4 transition-colors hover:text-voltage hover:decoration-voltage"
-            >
-              put her back to sleep
-            </button>
-          </div>
         </div>
 
         {/* Interactive shell */}
         <div
           ref={stage}
-          className="contact-stagger relative min-h-[430px] w-full select-none overflow-hidden rounded-2xl border border-line bg-surface/40 sm:min-h-[520px] lg:min-h-[620px]"
+          className="contact-stagger relative min-h-[430px] w-full select-none overflow-hidden rounded-2xl border border-line bg-surface/40 sm:min-h-[520px] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:min-h-[620px]"
         >
           <p
             className={`pointer-events-none absolute left-5 top-5 z-20 max-w-[13rem] font-sans text-sm transition-opacity duration-300 sm:left-6 sm:top-6 ${
@@ -493,6 +404,95 @@ export default function Contact() {
           >
             <TreatBagSVG className="h-36 w-28 sm:h-44 sm:w-36" />
           </div>
+        </div>
+
+        {/* Reveal panel — after Anya on mobile; below copy on desktop */}
+        <div
+          ref={revealRef}
+          aria-live="polite"
+          style={{
+            opacity: 0,
+            transform: "translateY(8px)",
+            visibility: "hidden",
+          }}
+          className={`lg:col-start-1 lg:row-start-2 ${phase === STATE.APPROVED ? "" : "pointer-events-none"}`}
+        >
+          <ul className="flex flex-col divide-y divide-line border-y border-line">
+            <li>
+              <a
+                href={CAL_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="group flex items-center justify-between gap-6 py-5 outline-none focus-visible:bg-surface/60"
+              >
+                <span>
+                  <span className="block font-display text-2xl font-semibold text-white sm:text-3xl">
+                    Book a 20-minute call
+                  </span>
+                  <span className="font-sans text-sm text-muted">
+                    for the actual conversation
+                  </span>
+                </span>
+                <span
+                  aria-hidden
+                  className="font-display text-2xl text-voltage transition-transform duration-300 group-hover:translate-x-1"
+                >
+                  ↗
+                </span>
+              </a>
+            </li>
+            <li>
+              <a
+                href={LINKEDIN_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="group flex items-center justify-between gap-6 py-5 outline-none focus-visible:bg-surface/60"
+              >
+                <span>
+                  <span className="block font-display text-2xl font-semibold text-white sm:text-3xl">
+                    LinkedIn
+                  </span>
+                  <span className="font-sans text-sm text-muted">
+                    for the formal first hello
+                  </span>
+                </span>
+                <span
+                  aria-hidden
+                  className="font-display text-2xl text-voltage transition-transform duration-300 group-hover:translate-x-1"
+                >
+                  ↗
+                </span>
+              </a>
+            </li>
+            <li>
+              <a
+                href={`mailto:${EMAIL}`}
+                className="group flex items-center justify-between gap-6 py-5 outline-none focus-visible:bg-surface/60"
+              >
+                <span>
+                  <span className="block font-display text-2xl font-semibold text-white sm:text-3xl">
+                    Email
+                  </span>
+                  <span className="font-sans text-sm text-muted">
+                    {EMAIL}
+                  </span>
+                </span>
+                <span
+                  aria-hidden
+                  className="font-display text-2xl text-voltage transition-transform duration-300 group-hover:translate-x-1"
+                >
+                  ↗
+                </span>
+              </a>
+            </li>
+          </ul>
+          <button
+            type="button"
+            onClick={resetToIdle}
+            className="mt-6 font-sans text-sm text-muted underline decoration-line decoration-1 underline-offset-4 transition-colors hover:text-voltage hover:decoration-voltage"
+          >
+            put her back to sleep
+          </button>
         </div>
       </div>
     </section>
