@@ -7,6 +7,7 @@ import { InertiaPlugin } from "gsap/InertiaPlugin";
 import { CustomWiggle } from "gsap/CustomWiggle";
 import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useSiteSounds } from "../hooks/useSiteSounds";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(
@@ -107,6 +108,7 @@ export default function Contact() {
   const dragInstance = useRef(null);
   const [phase, setPhase] = useState(STATE.IDLE);
   const phaseRef = useRef(STATE.IDLE);
+  const { tick, tap, off, shake, chime } = useSiteSounds();
 
   useEffect(() => {
     phaseRef.current = phase;
@@ -149,6 +151,7 @@ export default function Contact() {
 
   const triggerApproval = useCallback(() => {
     if (phaseRef.current === STATE.APPROVED) return;
+    chime();
     setPhase(STATE.APPROVED);
     setHeadFrame(STATE.APPROVED);
 
@@ -169,12 +172,13 @@ export default function Contact() {
         },
       });
     }
-  }, [setHeadFrame]);
+  }, [chime, setHeadFrame]);
 
   const resetToIdle = useCallback(() => {
     setPhase(STATE.IDLE);
     setHeadFrame(STATE.IDLE);
     if (bagRef.current) {
+      off();
       gsap.to(bagRef.current, {
         x: 0,
         y: 0,
@@ -183,7 +187,7 @@ export default function Contact() {
         ease: "expo.out",
       });
     }
-  }, [setHeadFrame]);
+  }, [off, setHeadFrame]);
 
   useGSAP(
     () => {
@@ -230,6 +234,7 @@ export default function Contact() {
         onPress() {
           didDrag = false;
           if (phaseRef.current === STATE.APPROVED) return;
+          shake();
           setPhase(STATE.ALERT);
           setHeadFrame(STATE.ALERT);
         },
@@ -265,7 +270,7 @@ export default function Contact() {
         dragInstance.current?.kill();
       };
     },
-    { scope: root, dependencies: [setHeadFrame, triggerApproval] },
+    { scope: root, dependencies: [setHeadFrame, shake, triggerApproval] },
   );
 
   const onBagKeyDown = (e) => {
@@ -339,8 +344,10 @@ export default function Contact() {
               onKeyDown={onBagKeyDown}
               onClick={() => {
                 // Click without drag (Draggable suppresses native click after a real drag).
+                tap();
                 triggerApproval();
               }}
+              onMouseEnter={tick}
               className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-grab touch-none rounded-xl outline-none ring-voltage/70 focus-visible:ring-2 active:cursor-grabbing motion-reduce:cursor-pointer"
             >
               <TreatBagSVG className="h-40 w-32 sm:h-44 sm:w-36" />
@@ -360,6 +367,8 @@ export default function Contact() {
                   href={CAL_URL}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={tap}
+                  onMouseEnter={tick}
                   className="group flex items-center justify-between gap-6 py-5 outline-none focus-visible:bg-surface/60"
                 >
                   <span>
@@ -383,6 +392,8 @@ export default function Contact() {
                   href={LINKEDIN_URL}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={tap}
+                  onMouseEnter={tick}
                   className="group flex items-center justify-between gap-6 py-5 outline-none focus-visible:bg-surface/60"
                 >
                   <span>
@@ -404,6 +415,8 @@ export default function Contact() {
               <li>
                 <a
                   href={`mailto:${EMAIL}`}
+                  onClick={tap}
+                  onMouseEnter={tick}
                   className="group flex items-center justify-between gap-6 py-5 outline-none focus-visible:bg-surface/60"
                 >
                   <span>
@@ -426,6 +439,7 @@ export default function Contact() {
             <button
               type="button"
               onClick={resetToIdle}
+              onMouseEnter={tick}
               className="mt-6 font-sans text-sm text-muted underline decoration-line decoration-1 underline-offset-4 transition-colors hover:text-voltage hover:decoration-voltage"
             >
               put her back to sleep
