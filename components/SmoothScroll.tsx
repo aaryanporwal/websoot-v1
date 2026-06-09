@@ -43,6 +43,10 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
 
+    const refreshScrollTrigger = () => ScrollTrigger.refresh();
+    const refreshFrame = window.requestAnimationFrame(refreshScrollTrigger);
+    window.addEventListener("load", refreshScrollTrigger);
+
     // Anchor links should hand off to Lenis for smooth in-page navigation.
     const onAnchorClick = (e: MouseEvent) => {
       if (!(e.target instanceof Element)) return;
@@ -63,6 +67,8 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     document.addEventListener("click", onAnchorClick);
 
     return () => {
+      window.cancelAnimationFrame(refreshFrame);
+      window.removeEventListener("load", refreshScrollTrigger);
       document.removeEventListener("click", onAnchorClick);
       gsap.ticker.remove(raf);
       lenis.destroy();
