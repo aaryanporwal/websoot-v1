@@ -5,6 +5,7 @@ import { SplitText } from "gsap/SplitText";
 import { motion } from "motion/react";
 import { Signature } from "./Signature";
 import LottieAccent from "./LottieAccent";
+import { useSiteSounds } from "../hooks/useSiteSounds";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP, SplitText);
@@ -16,6 +17,7 @@ export default function Hero() {
   const root = useRef(null);
   const headingRef = useRef(null);
   const wordRef = useRef(null);
+  const sounds = useSiteSounds();
 
   useGSAP(
     () => {
@@ -133,6 +135,8 @@ export default function Hero() {
         <div className="hero-fade mt-10 flex flex-wrap items-center gap-5">
           <motion.a
             href="#work"
+            onClick={sounds.tap}
+            onMouseEnter={sounds.tick}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
@@ -142,6 +146,8 @@ export default function Hero() {
           </motion.a>
           <motion.a
             href="#contact"
+            onClick={sounds.tap}
+            onMouseEnter={sounds.tick}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
