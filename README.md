@@ -1,20 +1,36 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+A bold, AWWWARDS-style personal site for Aaryan Porwal — built with [Next.js](https://nextjs.org/), [Bun](https://bun.sh/), GSAP + ScrollTrigger, Framer Motion, Lenis smooth scroll, and Lottie.
 
 ## Getting Started
 
-First, run the development server:
+This project uses [Bun](https://bun.sh/) as the package manager and runner.
 
 ```bash
-npm run dev
-# or
-yarn dev
+# Install dependencies
+bun install
+
+# Run the development server
+bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+Build and start production:
+
+```bash
+bun run build
+bun run start
+```
+
 You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+## Tech
+
+- Next.js (Pages Router)
+- GSAP + ScrollTrigger + SplitText (scroll-driven scenes, headline reveals)
+- Framer Motion (`motion`) — microinteractions and hovers
+- Lenis — smooth scroll, synced to ScrollTrigger
+- Lottie (`lottie-react`) — decorative animations
+- Tailwind CSS
 
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
