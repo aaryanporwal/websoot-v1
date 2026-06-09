@@ -576,22 +576,6 @@ export default function Contact() {
             />
           </div>
 
-          {phase === STATE.APPROVED ? (
-            <div className="absolute inset-0 z-[80] flex items-end justify-center bg-ink/15 p-6 backdrop-blur-[1px] sm:items-center">
-              <button
-                type="button"
-                onPointerDown={(e) => e.stopPropagation()}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  resetToIdle();
-                }}
-                onMouseEnter={tick}
-                className="pointer-events-auto rounded-full border border-voltage/70 bg-ink/85 px-5 py-3 font-sans text-sm font-medium text-white shadow-[0_18px_46px_rgba(0,0,0,0.35)] transition-colors hover:bg-voltage hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-voltage/70"
-              >
-                Retry
-              </button>
-            </div>
-          ) : null}
         </div>
 
         {/* Reveal panel — after Anya on mobile; below copy on desktop */}
@@ -680,6 +664,14 @@ export default function Contact() {
               </a>
             </li>
           </ul>
+          <button
+            type="button"
+            onClick={resetToIdle}
+            onMouseEnter={tick}
+            className="mt-6 font-sans text-sm text-muted underline decoration-line decoration-1 underline-offset-4 transition-colors hover:text-voltage hover:decoration-voltage"
+          >
+            put her back to sleep
+          </button>
         </div>
       </div>
     </section>
