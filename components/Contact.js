@@ -32,8 +32,6 @@ const STATE = {
   APPROVED: "approved",
 };
 
-const SHAKE_THRESHOLD_PX = 110;
-
 function TreatBagSVG({ className }) {
   return (
     <svg
@@ -100,6 +98,7 @@ export default function Contact() {
   const root = useRef(null);
   const stage = useRef(null);
   const bagRef = useRef(null);
+  const catTargetRef = useRef(null);
   const sleepyRef = useRef(null);
   const alertRef = useRef(null);
   const neutralRef = useRef(null);
@@ -171,6 +170,24 @@ export default function Contact() {
     }
   }, [setHeadFrame]);
 
+  const hasTreatReachedAnya = useCallback(() => {
+    if (!bagRef.current || !catTargetRef.current) return false;
+
+    const bag = bagRef.current.getBoundingClientRect();
+    const target = catTargetRef.current.getBoundingClientRect();
+    const bagCenterX = bag.left + bag.width / 2;
+    const bagCenterY = bag.top + bag.height / 2;
+    const targetInsetX = target.width * 0.12;
+    const targetInsetY = target.height * 0.1;
+
+    return (
+      bagCenterX >= target.left + targetInsetX &&
+      bagCenterX <= target.right - targetInsetX &&
+      bagCenterY >= target.top + targetInsetY &&
+      bagCenterY <= target.bottom - targetInsetY
+    );
+  }, []);
+
   const resetToIdle = useCallback(() => {
     setPhase(STATE.IDLE);
     setHeadFrame(STATE.IDLE);
@@ -219,6 +236,15 @@ export default function Contact() {
       if (reduce || !bagRef.current || !stage.current) return;
 
       let didDrag = false;
+      const approveIfTreatReachedAnya = (draggable, shouldEndDrag = false) => {
+        if (phaseRef.current === STATE.APPROVED) return;
+        if (!hasTreatReachedAnya()) return;
+        triggerApproval();
+        if (shouldEndDrag) {
+          draggable.endDrag(draggable.pointerEvent);
+        }
+      };
+
       dragInstance.current = Draggable.create(bagRef.current, {
         type: "x,y",
         inertia: true,
@@ -237,12 +263,7 @@ export default function Contact() {
           didDrag = true;
         },
         onDrag() {
-          if (phaseRef.current === STATE.APPROVED) return;
-          const dist = Math.hypot(this.x, this.y);
-          if (dist > SHAKE_THRESHOLD_PX) {
-            triggerApproval();
-            this.endDrag(this.pointerEvent);
-          }
+          approveIfTreatReachedAnya(this, true);
         },
         onRelease() {
           if (phaseRef.current === STATE.APPROVED) return;
@@ -255,9 +276,7 @@ export default function Contact() {
           setPhase(STATE.IDLE);
         },
         onThrowUpdate() {
-          if (phaseRef.current === STATE.APPROVED) return;
-          const dist = Math.hypot(this.x, this.y);
-          if (dist > SHAKE_THRESHOLD_PX) triggerApproval();
+          approveIfTreatReachedAnya(this);
         },
       })[0];
 
@@ -265,7 +284,10 @@ export default function Contact() {
         dragInstance.current?.kill();
       };
     },
-    { scope: root, dependencies: [setHeadFrame, triggerApproval] },
+    {
+      scope: root,
+      dependencies: [hasTreatReachedAnya, setHeadFrame, triggerApproval],
+    },
   );
 
   const onBagKeyDown = (e) => {
@@ -284,8 +306,8 @@ export default function Contact() {
       id="contact"
       className="relative w-full overflow-hidden bg-body px-6 py-32 sm:px-10 sm:py-40 lg:px-16"
     >
-      <div className="relative mx-auto grid max-w-container gap-12 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:items-center lg:gap-16">
-        {/* Left: copy + interactive bag */}
+      <div className="relative mx-auto grid max-w-container gap-12 lg:grid-cols-[minmax(320px,0.82fr)_minmax(0,1.18fr)] lg:items-center lg:gap-16">
+        {/* Left: copy + reveal panel */}
         <div className="relative">
           <p className="contact-stagger inline-flex items-center gap-3 font-sans text-sm tracking-[0.18em] text-voltage">
             <span className="inline-block h-px w-8 bg-voltage" />
@@ -300,58 +322,15 @@ export default function Contact() {
             Bribe her with a treat. She decides what reaches me.
           </p>
 
-          {/* Drag stage */}
-          <div
-            ref={stage}
-            className="contact-stagger relative mt-12 h-72 max-w-md select-none rounded-2xl border border-line bg-surface/40 sm:h-80"
-          >
-            {/* Hint */}
-            <p
-              className={`pointer-events-none absolute left-6 top-6 font-sans text-sm transition-opacity duration-300 ${
-                phase === STATE.IDLE ? "text-muted opacity-100" : "opacity-0"
-              }`}
-            >
-              <span className="motion-reduce:hidden">Drag the treat bag →</span>
-              <span className="hidden motion-reduce:inline">
-                Tap the bag to wake her.
-              </span>
-            </p>
-            <p
-              className={`pointer-events-none absolute left-6 top-6 font-sans text-sm text-voltage transition-opacity duration-300 ${
-                phase === STATE.ALERT ? "opacity-100" : "opacity-0"
-              }`}
-            >
-              shaking…
-            </p>
-            <p
-              className={`pointer-events-none absolute left-6 top-6 font-sans text-sm text-voltage transition-opacity duration-300 ${
-                phase === STATE.APPROVED ? "opacity-100" : "opacity-0"
-              }`}
-            >
-              she approved.
-            </p>
-
-            <div
-              ref={bagRef}
-              role="button"
-              tabIndex={0}
-              aria-label="Drag the bag, press Space, or click to bribe Anya with a treat."
-              onKeyDown={onBagKeyDown}
-              onClick={() => {
-                // Click without drag (Draggable suppresses native click after a real drag).
-                triggerApproval();
-              }}
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-grab touch-none rounded-xl outline-none ring-voltage/70 focus-visible:ring-2 active:cursor-grabbing motion-reduce:cursor-pointer"
-            >
-              <TreatBagSVG className="h-40 w-32 sm:h-44 sm:w-36" />
-            </div>
-          </div>
-
           {/* Reveal panel */}
           <div
             ref={revealRef}
             aria-live="polite"
-            style={{ opacity: 0, transform: "translateY(8px)", visibility: "hidden" }}
+            style={{
+              opacity: 0,
+              transform: "translateY(8px)",
+              visibility: "hidden",
+            }}
             className={`mt-10 ${phase === STATE.APPROVED ? "" : "pointer-events-none"}`}
           >
             <ul className="flex flex-col divide-y divide-line border-y border-line">
@@ -433,9 +412,42 @@ export default function Contact() {
           </div>
         </div>
 
-        {/* Right: Anya portrait */}
-        <div className="contact-stagger relative mx-auto flex aspect-square w-full max-w-[520px] items-end justify-center">
-          <div className="absolute inset-0 flex items-end justify-center">
+        {/* Interactive shell */}
+        <div
+          ref={stage}
+          className="contact-stagger relative min-h-[430px] w-full select-none overflow-hidden rounded-2xl border border-line bg-surface/40 sm:min-h-[520px] lg:min-h-[620px]"
+        >
+          <p
+            className={`pointer-events-none absolute left-5 top-5 z-20 max-w-[13rem] font-sans text-sm transition-opacity duration-300 sm:left-6 sm:top-6 ${
+              phase === STATE.IDLE ? "text-muted opacity-100" : "opacity-0"
+            }`}
+          >
+            <span className="motion-reduce:hidden">
+              Drag the treat to Anya.
+            </span>
+            <span className="hidden motion-reduce:inline">
+              Tap the treat to wake her.
+            </span>
+          </p>
+          <p
+            className={`pointer-events-none absolute left-5 top-5 z-20 font-sans text-sm text-voltage transition-opacity duration-300 sm:left-6 sm:top-6 ${
+              phase === STATE.ALERT ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            shaking…
+          </p>
+          <p
+            className={`pointer-events-none absolute left-5 top-5 z-20 font-sans text-sm text-voltage transition-opacity duration-300 sm:left-6 sm:top-6 ${
+              phase === STATE.APPROVED ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            she approved.
+          </p>
+
+          <div
+            ref={catTargetRef}
+            className="absolute bottom-4 right-0 h-[68%] w-[78%] max-w-[560px] sm:bottom-6 sm:right-4 lg:h-[76%] lg:w-[70%]"
+          >
             <div className="relative h-full w-full">
               <Image
                 ref={sleepyRef}
@@ -443,7 +455,7 @@ export default function Contact() {
                 alt="Anya, sleeping, sole gatekeeper of the inbox."
                 fill
                 priority={false}
-                sizes="(min-width: 1024px) 520px, 90vw"
+                sizes="(min-width: 1024px) 560px, 80vw"
                 className="object-contain object-bottom"
               />
               <Image
@@ -452,7 +464,7 @@ export default function Contact() {
                 alt=""
                 aria-hidden
                 fill
-                sizes="(min-width: 1024px) 520px, 90vw"
+                sizes="(min-width: 1024px) 560px, 80vw"
                 className="object-contain object-bottom"
               />
               <Image
@@ -461,10 +473,25 @@ export default function Contact() {
                 alt=""
                 aria-hidden
                 fill
-                sizes="(min-width: 1024px) 520px, 90vw"
+                sizes="(min-width: 1024px) 560px, 80vw"
                 className="object-contain object-bottom"
               />
             </div>
+          </div>
+
+          <div
+            ref={bagRef}
+            role="button"
+            tabIndex={0}
+            aria-label="Drag the treat to Anya, press Space, or click to bribe Anya with a treat."
+            onKeyDown={onBagKeyDown}
+            onClick={() => {
+              // Click without drag (Draggable suppresses native click after a real drag).
+              triggerApproval();
+            }}
+            className="absolute bottom-8 left-6 z-30 cursor-grab touch-none rounded-xl outline-none ring-voltage/70 focus-visible:ring-2 active:cursor-grabbing motion-reduce:cursor-pointer sm:bottom-10 sm:left-10"
+          >
+            <TreatBagSVG className="h-36 w-28 sm:h-44 sm:w-36" />
           </div>
         </div>
       </div>
