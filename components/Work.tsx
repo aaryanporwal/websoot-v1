@@ -111,7 +111,6 @@ export default function Work() {
             target={p.href.startsWith("#") ? undefined : "_blank"}
             rel={p.href.startsWith("#") ? undefined : "noreferrer"}
             onClick={sounds.tap}
-            onMouseEnter={sounds.tick}
             whileHover={{ y: -10 }}
             transition={{ type: "spring", stiffness: 300, damping: 22 }}
             className="group relative flex w-full flex-col justify-between overflow-hidden rounded-3xl border border-line bg-surface p-8 md:h-[60vh] md:w-[34rem] md:p-10"
