@@ -40,7 +40,6 @@ export default function NavBar() {
           <a
             href="#top"
             onClick={sounds.tap}
-            onMouseEnter={sounds.tick}
             className="font-display text-2xl font-bold tracking-tightest text-white sm:text-3xl"
           >
             <span className="font-semibold text-white">Aaryan Porwal</span>
@@ -54,7 +53,6 @@ export default function NavBar() {
                 target={l.external ? "_blank" : undefined}
                 rel={l.external ? "noreferrer" : undefined}
                 onClick={sounds.tap}
-                onMouseEnter={sounds.tick}
                 className="group relative text-muted transition-colors hover:text-white"
               >
                 {l.label}
@@ -64,7 +62,6 @@ export default function NavBar() {
             <motion.a
               href="#contact"
               onClick={sounds.tap}
-              onMouseEnter={sounds.tick}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.96 }}
               transition={{ type: "spring", stiffness: 400, damping: 20 }}
@@ -82,7 +79,6 @@ export default function NavBar() {
               sounds.tap();
               setOpen((v) => !v);
             }}
-            onMouseEnter={sounds.tick}
             className="relative z-50 flex h-10 w-10 flex-col items-center justify-center gap-1.5 md:hidden"
           >
             <motion.span
@@ -121,7 +117,6 @@ export default function NavBar() {
                     sounds.tap();
                     setOpen(false);
                   }}
-                  onMouseEnter={sounds.tick}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.06 * i }}
@@ -136,7 +131,6 @@ export default function NavBar() {
                   sounds.tap();
                   setOpen(false);
                 }}
-                onMouseEnter={sounds.tick}
                 className="mt-5 rounded-full bg-voltage px-6 py-3 text-center font-display text-lg font-semibold text-body"
               >
                 Contact
