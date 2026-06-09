@@ -48,8 +48,8 @@ const PROJECTS = [
 ];
 
 export default function Work() {
-  const root = useRef(null);
-  const trackRef = useRef(null);
+  const root = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
   const sounds = useSiteSounds();
 
   useGSAP(
@@ -60,6 +60,7 @@ export default function Work() {
         "(min-width: 768px) and (prefers-reduced-motion: no-preference)",
         () => {
           const track = trackRef.current;
+          if (!track) return;
           const amount = () => track.scrollWidth - window.innerWidth;
 
           gsap.to(track, {

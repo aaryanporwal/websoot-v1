@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useEffect } from "react";
 import Lenis from "lenis";
 import gsap from "gsap";
@@ -7,7 +8,7 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-function crossesPinnedSection(from, to) {
+function crossesPinnedSection(from: number, to: number) {
   return ScrollTrigger.getAll().some((t) => {
     if (!t.pin) return false;
     const lo = Math.min(from, to);
@@ -16,7 +17,11 @@ function crossesPinnedSection(from, to) {
   });
 }
 
-export default function SmoothScroll({ children }) {
+type SmoothScrollProps = {
+  children: ReactNode;
+};
+
+export default function SmoothScroll({ children }: SmoothScrollProps) {
   useEffect(() => {
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
@@ -27,24 +32,25 @@ export default function SmoothScroll({ children }) {
 
     const lenis = new Lenis({
       duration: 1.1,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     });
 
     // Keep ScrollTrigger in sync with Lenis' virtual scroll position.
     lenis.on("scroll", ScrollTrigger.update);
 
-    const raf = (time) => lenis.raf(time * 1000);
+    const raf = (time: number) => lenis.raf(time * 1000);
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
 
     // Anchor links should hand off to Lenis for smooth in-page navigation.
-    const onAnchorClick = (e) => {
-      const link = e.target.closest('a[href^="#"]');
+    const onAnchorClick = (e: MouseEvent) => {
+      if (!(e.target instanceof Element)) return;
+      const link = e.target.closest<HTMLAnchorElement>('a[href^="#"]');
       if (!link) return;
       const id = link.getAttribute("href");
       if (!id || id === "#") return;
-      const target = document.querySelector(id);
+      const target = document.querySelector<HTMLElement>(id);
       if (!target) return;
       e.preventDefault();
       const targetY =
