@@ -1,3 +1,4 @@
+import type { RefObject } from "react";
 import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -24,7 +25,13 @@ const ROW_B = [
   "GraphQL",
 ];
 
-function Row({ items, rowRef, separator = "✺" }) {
+type RowProps = {
+  items: string[];
+  rowRef: RefObject<HTMLDivElement>;
+  separator?: string;
+};
+
+function Row({ items, rowRef, separator = "✺" }: RowProps) {
   // Duplicate the content so the -50% loop is seamless.
   const content = (
     <div className="flex shrink-0 items-center">
@@ -50,9 +57,9 @@ function Row({ items, rowRef, separator = "✺" }) {
 }
 
 export default function Skills() {
-  const root = useRef(null);
-  const rowA = useRef(null);
-  const rowB = useRef(null);
+  const root = useRef<HTMLElement>(null);
+  const rowA = useRef<HTMLDivElement>(null);
+  const rowB = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
@@ -60,6 +67,7 @@ export default function Skills() {
         "(prefers-reduced-motion: reduce)"
       ).matches;
       if (reduce) return;
+      if (!rowA.current || !rowB.current) return;
 
       const tweenA = gsap.fromTo(
         rowA.current,

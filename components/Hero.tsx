@@ -14,9 +14,9 @@ if (typeof window !== "undefined") {
 const ROTATING = ["Next.js", "Node.js", "Postgres", "Docker", "CI/CD"];
 
 export default function Hero() {
-  const root = useRef(null);
-  const headingRef = useRef(null);
-  const wordRef = useRef(null);
+  const root = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const wordRef = useRef<HTMLSpanElement>(null);
   const sounds = useSiteSounds();
 
   useGSAP(
@@ -24,8 +24,9 @@ export default function Hero() {
       const reduce = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
       ).matches;
+      if (!headingRef.current) return;
 
-      let split;
+      let split: SplitText | undefined;
 
       if (!reduce) {
         // Headline character reveal.
@@ -55,6 +56,7 @@ export default function Hero() {
 
         // GSAP-driven rotating word (replaces typed.js).
         const word = wordRef.current;
+        if (!word) return;
         const tl = gsap.timeline({ repeat: -1, delay: 1 });
         ROTATING.forEach((w) => {
           tl.set(word, { textContent: w })

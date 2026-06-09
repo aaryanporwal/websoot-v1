@@ -1,5 +1,5 @@
 import React from "react";
-export function Signature({}) {
+export function Signature() {
   return (
     <svg
       width={100}

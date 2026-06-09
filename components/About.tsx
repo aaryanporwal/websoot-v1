@@ -12,14 +12,15 @@ const STATEMENT =
   "I design and build web products that stay fast under real traffic. The interface, the API behind it, and the pipelines that ship it are all my job.";
 
 export default function About() {
-  const root = useRef(null);
-  const textRef = useRef(null);
+  const root = useRef<HTMLElement>(null);
+  const textRef = useRef<HTMLParagraphElement>(null);
 
   useGSAP(
     () => {
       const reduce = window.matchMedia(
         "(prefers-reduced-motion: reduce)"
       ).matches;
+      if (!textRef.current) return;
       if (reduce) {
         gsap.set(textRef.current, { color: "#f5f5f7" });
         return;

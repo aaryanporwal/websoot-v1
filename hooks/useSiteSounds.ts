@@ -7,7 +7,7 @@ const SOUND_OPTIONS = {
 };
 
 export function useSiteSounds() {
-  const lastPlayed = useRef({});
+  const lastPlayed = useRef<Record<string, number>>({});
   const [playTick] = useSound("/sounds/pop-down.mp3", {
     ...SOUND_OPTIONS,
     volume: 0.12,
@@ -29,7 +29,7 @@ export function useSiteSounds() {
     volume: 0.24,
   });
 
-  const play = useCallback((name, player, cooldown = 90) => {
+  const play = useCallback((name: string, player: () => void, cooldown = 90) => {
     const now = Date.now();
     if (now - (lastPlayed.current[name] || 0) < cooldown) return;
     lastPlayed.current[name] = now;

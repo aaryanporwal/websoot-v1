@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { KeyboardEvent } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -31,9 +32,15 @@ const STATE = {
   IDLE: "idle",
   ALERT: "alert",
   APPROVED: "approved",
+} as const;
+
+type Phase = (typeof STATE)[keyof typeof STATE];
+
+type TreatBagSVGProps = {
+  className?: string;
 };
 
-function TreatBagSVG({ className }) {
+function TreatBagSVG({ className }: TreatBagSVGProps) {
   return (
     <svg
       viewBox="0 0 140 170"
@@ -96,17 +103,17 @@ function TreatBagSVG({ className }) {
 }
 
 export default function Contact() {
-  const root = useRef(null);
-  const stage = useRef(null);
-  const bagRef = useRef(null);
-  const catTargetRef = useRef(null);
-  const sleepyRef = useRef(null);
-  const alertRef = useRef(null);
-  const neutralRef = useRef(null);
-  const revealRef = useRef(null);
-  const dragInstance = useRef(null);
-  const [phase, setPhase] = useState(STATE.IDLE);
-  const phaseRef = useRef(STATE.IDLE);
+  const root = useRef<HTMLElement>(null);
+  const stage = useRef<HTMLDivElement>(null);
+  const bagRef = useRef<HTMLDivElement>(null);
+  const catTargetRef = useRef<HTMLDivElement>(null);
+  const sleepyRef = useRef<HTMLImageElement>(null);
+  const alertRef = useRef<HTMLImageElement>(null);
+  const neutralRef = useRef<HTMLImageElement>(null);
+  const revealRef = useRef<HTMLDivElement>(null);
+  const dragInstance = useRef<Draggable | null>(null);
+  const [phase, setPhase] = useState<Phase>(STATE.IDLE);
+  const phaseRef = useRef<Phase>(STATE.IDLE);
   const { tick, tap, off, shake, chime } = useSiteSounds();
 
   useEffect(() => {
@@ -131,7 +138,7 @@ export default function Contact() {
     }
   }, [phase]);
 
-  const setHeadFrame = useCallback((target) => {
+  const setHeadFrame = useCallback((target: Phase) => {
     const map = {
       [STATE.IDLE]: sleepyRef.current,
       [STATE.ALERT]: alertRef.current,
@@ -240,7 +247,10 @@ export default function Contact() {
       if (reduce || !bagRef.current || !stage.current) return;
 
       let didDrag = false;
-      const approveIfTreatReachedAnya = (draggable, shouldEndDrag = false) => {
+      const approveIfTreatReachedAnya = (
+        draggable: Draggable,
+        shouldEndDrag = false,
+      ) => {
         if (phaseRef.current === STATE.APPROVED) return;
         if (!hasTreatReachedAnya()) return;
         triggerApproval();
@@ -267,7 +277,7 @@ export default function Contact() {
         onDragStart() {
           didDrag = true;
         },
-        onDrag() {
+        onDrag(this: Draggable) {
           approveIfTreatReachedAnya(this, true);
         },
         onRelease() {
@@ -280,7 +290,7 @@ export default function Contact() {
           setHeadFrame(STATE.IDLE);
           setPhase(STATE.IDLE);
         },
-        onThrowUpdate() {
+        onThrowUpdate(this: Draggable) {
           approveIfTreatReachedAnya(this);
         },
       })[0];
@@ -295,7 +305,7 @@ export default function Contact() {
     },
   );
 
-  const onBagKeyDown = (e) => {
+  const onBagKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === " " || e.key === "Enter") {
       e.preventDefault();
       triggerApproval();
