@@ -36,72 +36,6 @@ const STATE = {
 
 type Phase = (typeof STATE)[keyof typeof STATE];
 
-type TreatBagSVGProps = {
-  className?: string;
-};
-
-function TreatBagSVG({ className }: TreatBagSVGProps) {
-  return (
-    <svg
-      viewBox="0 0 140 170"
-      className={className}
-      aria-hidden
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <defs>
-        <linearGradient id="bagBody" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#1A1A22" />
-          <stop offset="100%" stopColor="#0E0E14" />
-        </linearGradient>
-      </defs>
-      {/* Drawstring tied ears */}
-      <path
-        d="M44 28 Q 50 8 70 16 Q 90 8 96 28"
-        stroke="#C6FF3D"
-        strokeWidth="3"
-        fill="none"
-        strokeLinecap="round"
-      />
-      <circle cx="70" cy="22" r="4" fill="#C6FF3D" />
-      {/* Bag body */}
-      <path
-        d="M30 36 Q 70 28 110 36 L 122 150 Q 70 162 18 150 Z"
-        fill="url(#bagBody)"
-        stroke="#23232E"
-        strokeWidth="1.5"
-      />
-      {/* Cinch */}
-      <path
-        d="M30 38 Q 70 46 110 38"
-        stroke="#23232E"
-        strokeWidth="1.5"
-        fill="none"
-      />
-      {/* Fish glyph */}
-      <g transform="translate(70 96)">
-        <path
-          d="M -22 0 Q -10 -14 6 -10 L 14 -16 L 14 16 L 6 10 Q -10 14 -22 0 Z"
-          fill="#C6FF3D"
-        />
-        <circle cx="-6" cy="-3" r="1.6" fill="#08080B" />
-      </g>
-      {/* Label */}
-      <text
-        x="70"
-        y="134"
-        textAnchor="middle"
-        fontFamily="'Clash Display', Inter, sans-serif"
-        fontWeight="600"
-        fontSize="11"
-        letterSpacing="0.2em"
-        fill="#9A9AB0"
-      >
-        TREATS
-      </text>
-    </svg>
-  );
-}
-
 export default function Contact() {
   const root = useRef<HTMLElement>(null);
   const stage = useRef<HTMLDivElement>(null);
@@ -435,7 +369,17 @@ export default function Contact() {
             onMouseEnter={tick}
             className="absolute bottom-8 left-6 z-30 cursor-grab touch-none rounded-xl outline-none ring-voltage/70 focus-visible:ring-2 active:cursor-grabbing motion-reduce:cursor-pointer sm:bottom-10 sm:left-10"
           >
-            <TreatBagSVG className="h-36 w-28 sm:h-44 sm:w-36" />
+            <Image
+              src="/cat-treat.out.png"
+              alt=""
+              aria-hidden
+              width={1448}
+              height={1086}
+              sizes="(min-width: 640px) 176px, 144px"
+              className="h-36 w-36 object-contain drop-shadow-[0_18px_36px_rgba(0,0,0,0.35)] sm:h-44 sm:w-44"
+              draggable={false}
+              priority={false}
+            />
           </div>
         </div>
 
