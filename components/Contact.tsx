@@ -226,13 +226,29 @@ export default function Contact() {
         "(prefers-reduced-motion: reduce)",
       ).matches;
       if (!reduce) {
-        gsap.from(".contact-stagger", {
-          y: 28,
-          opacity: 0,
-          duration: 0.9,
-          stagger: 0.08,
-          ease: "expo.out",
-          scrollTrigger: { trigger: root.current, start: "top 78%" },
+        const contactItems = gsap.utils.toArray<HTMLElement>(
+          ".contact-stagger",
+        );
+        gsap.set(contactItems, { clearProps: "opacity,transform" });
+        ScrollTrigger.create({
+          trigger: root.current,
+          start: "top 78%",
+          invalidateOnRefresh: true,
+          once: true,
+          onEnter: () => {
+            gsap.fromTo(
+              contactItems,
+              { y: 28, opacity: 0 },
+              {
+                y: 0,
+                opacity: 1,
+                duration: 0.9,
+                stagger: 0.08,
+                ease: "expo.out",
+                overwrite: "auto",
+              },
+            );
+          },
         });
         // Idle breathing on the sleepy frame.
         gsap.to(sleepyRef.current, {
