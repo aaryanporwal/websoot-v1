@@ -10,10 +10,10 @@ export default function Home() {
   return (
     <div className="grain relative min-h-screen bg-body text-white">
       <Head>
-        <title>Aaryan Porwal — Web Engineer</title>
+        <title>Aaryan Porwal · Web Engineer</title>
         <meta
           name="description"
-          content="Aaryan Porwal — Web Engineer crafting fast, resilient, award-worthy web products. Web Development, Node.js, DevOps & Cloud."
+          content="Personal site of Aaryan Porwal, a web engineer who builds fast, resilient web products. Work, writing, and a cat named Anya who screens the inbox."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

@@ -9,7 +9,7 @@ if (typeof window !== "undefined") {
 }
 
 const STATEMENT =
-  "I design and build fast, resilient web products — from pixel-perfect interfaces to the infrastructure that keeps them running at scale.";
+  "I design and build web products that stay fast under real traffic. The interface, the API behind it, and the pipelines that ship it are all my job.";
 
 export default function About() {
   const root = useRef(null);
@@ -61,10 +61,10 @@ export default function About() {
 
         <div className="mt-20 grid grid-cols-2 gap-8 border-t border-line pt-10 sm:grid-cols-4">
           {[
-            { n: "5+", l: "Years building" },
-            { n: "30+", l: "Projects shipped" },
-            { n: "∞", l: "Cups of coffee" },
-            { n: "100%", l: "Ship energy" },
+            { n: "5+", l: "Years shipping" },
+            { n: "30+", l: "Projects in production" },
+            { n: "1", l: "Anya, chief of staff" },
+            { n: "∞", l: "Espresso shots" },
           ].map((s) => (
             <div key={s.l}>
               <div className="font-display text-4xl font-semibold text-white sm:text-6xl">

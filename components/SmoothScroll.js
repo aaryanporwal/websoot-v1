@@ -7,6 +7,15 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+function crossesPinnedSection(from, to) {
+  return ScrollTrigger.getAll().some((t) => {
+    if (!t.pin) return false;
+    const lo = Math.min(from, to);
+    const hi = Math.max(from, to);
+    return hi > t.start && lo < t.end;
+  });
+}
+
 export default function SmoothScroll({ children }) {
   useEffect(() => {
     const prefersReduced = window.matchMedia(
@@ -38,7 +47,12 @@ export default function SmoothScroll({ children }) {
       const target = document.querySelector(id);
       if (!target) return;
       e.preventDefault();
-      lenis.scrollTo(target, { offset: -40 });
+      const targetY =
+        target.getBoundingClientRect().top + window.scrollY - 40;
+      lenis.scrollTo(target, {
+        offset: -40,
+        immediate: crossesPinnedSection(lenis.scroll, targetY),
+      });
     };
     document.addEventListener("click", onAnchorClick);
 

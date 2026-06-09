@@ -11,32 +11,37 @@ if (typeof window !== "undefined") {
 const PROJECTS = [
   {
     tag: "Open Source",
-    title: "GitHub Repositories",
-    desc: "A growing collection of libraries, tools, and experiments — built in the open.",
+    title: "GitHub",
+    desc: "Libraries, tools, and experiments I build in the open.",
+    cta: "View on GitHub",
     href: "https://github.com/aaryanporwal?tab=repositories",
   },
   {
     tag: "Writing",
-    title: "The Blog",
-    desc: "Long-form thoughts on web engineering, Node.js, and shipping resilient systems.",
+    title: "Blog",
+    desc: "Long-form notes on web engineering, Node.js, and shipping resilient systems.",
+    cta: "Read posts",
     href: "https://blog.aaryanporwal.com/",
   },
   {
     tag: "Tinkering",
     title: "Scrapbook",
-    desc: "A daily log of what I'm hacking on — small wins, big experiments, and everything between.",
+    desc: "A daily log of what I'm hacking on, from small wins to broken experiments.",
+    cta: "See scraps",
     href: "https://scrapbook.hackclub.com/aaryan",
   },
   {
-    tag: "Infra / DevOps",
+    tag: "Infra",
     title: "Cloud & Pipelines",
     desc: "CI/CD, containers, and infrastructure that lets products scale without drama.",
+    cta: "View on GitHub",
     href: "https://github.com/aaryanporwal?tab=repositories",
   },
   {
-    tag: "Let's talk",
-    title: "Work With Me",
-    desc: "Have something ambitious in mind? Let's build something award-worthy together.",
+    tag: "Hire me",
+    title: "Work with me",
+    desc: "Got something ambitious in mind? Tell me about it and we'll figure out what to build.",
+    cta: "Start the brief",
     href: "#contact",
   },
 ];
@@ -123,7 +128,7 @@ export default function Work() {
                 {p.desc}
               </p>
               <div className="mt-8 inline-flex items-center gap-2 font-display text-base font-semibold text-voltage">
-                Explore
+                {p.cta}
                 <span className="transition-transform duration-300 group-hover:translate-x-1.5">
                   →
                 </span>

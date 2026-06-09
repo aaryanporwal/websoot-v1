@@ -10,7 +10,7 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP, SplitText);
 }
 
-const ROTATING = ["Web Development", "Node.js", "DevOps", "Cloud Native"];
+const ROTATING = ["Next.js", "Node.js", "Postgres", "Docker", "CI/CD"];
 
 export default function Hero() {
   const root = useRef(null);
@@ -112,8 +112,9 @@ export default function Hero() {
 
         <div className="hero-fade mt-8 max-w-2xl font-sans text-lg text-muted sm:text-2xl">
           <p>
-            A passionate Web Engineer by day, code magician by night — always
-            eager to craft the next impactful solution.
+            I build web products that load fast and hold up under load.
+            Interfaces, the APIs behind them, and the boring infra in between.
+            My cat Anya runs my schedule.
           </p>
         </div>
 
@@ -137,7 +138,7 @@ export default function Hero() {
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
             className="rounded-full bg-voltage px-8 py-3.5 font-display text-base font-semibold text-body"
           >
-            View Work
+            View work
           </motion.a>
           <motion.a
             href="#contact"
@@ -146,7 +147,7 @@ export default function Hero() {
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
             className="rounded-full border border-line px-8 py-3.5 font-display text-base font-semibold text-white hover:border-white"
           >
-            Get in Touch
+            Say hi
           </motion.a>
           <div className="ml-2 text-white">
             <Signature />

@@ -9,7 +9,7 @@ const PROJECTS_URL = "https://github.com/aaryanporwal?tab=repositories";
 const LINKS = [
   { label: "Work", href: "#work" },
   { label: "About", href: "#about" },
-  { label: "Projects", href: PROJECTS_URL, external: true },
+  { label: "GitHub", href: PROJECTS_URL, external: true },
   { label: "Scrapbook", href: SCRAPBOOK_URL, external: true },
   { label: "Blog", href: BLOG_URL, external: true },
 ];
@@ -68,7 +68,7 @@ export default function NavBar() {
 
           {/* Mobile toggle */}
           <button
-            aria-label="Toggle menu"
+            aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
             className="relative z-50 flex h-10 w-10 flex-col items-center justify-center gap-1.5 md:hidden"
