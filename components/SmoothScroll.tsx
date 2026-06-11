@@ -8,15 +8,6 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-function crossesPinnedSection(from: number, to: number) {
-  return ScrollTrigger.getAll().some((t) => {
-    if (!t.pin) return false;
-    const lo = Math.min(from, to);
-    const hi = Math.max(from, to);
-    return hi > t.start && lo < t.end;
-  });
-}
-
 type SmoothScrollProps = {
   children: ReactNode;
 };
@@ -59,10 +50,24 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       e.preventDefault();
       const targetY =
         target.getBoundingClientRect().top + window.scrollY - 40;
-      lenis.scrollTo(target, {
-        offset: -40,
-        immediate: crossesPinnedSection(lenis.scroll, targetY),
-      });
+
+      const pinnedScrollTriggers = ScrollTrigger.getAll().filter((t) => t.pin);
+      if (pinnedScrollTriggers.length > 0) {
+        const pinnedEnd = Math.max(
+          ...pinnedScrollTriggers.map((t) => t.end)
+        );
+        // Jump past the pinned section first to avoid the jarring zip
+        // through its horizontal scroll, then smooth-scroll the rest.
+        if (targetY > pinnedEnd && lenis.scroll < pinnedEnd) {
+          lenis.scrollTo(pinnedEnd + 80, { immediate: true });
+          requestAnimationFrame(() => {
+            lenis.scrollTo(target, { offset: -40 });
+          });
+          return;
+        }
+      }
+
+      lenis.scrollTo(target, { offset: -40 });
     };
     document.addEventListener("click", onAnchorClick);
 

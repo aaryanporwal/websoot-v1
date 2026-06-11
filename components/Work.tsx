@@ -80,19 +80,19 @@ export default function Work() {
               invalidateOnRefresh: true,
             },
           });
-        }
+        },
       );
 
       return () => mm.revert();
     },
-    { scope: root }
+    { scope: root },
   );
 
   return (
     <section
       ref={root}
       id="work"
-      className="relative w-full overflow-hidden bg-ink py-24 md:py-0"
+      className="relative w-full overflow-hidden bg-ink py-24 md:pt-0 md:pb-28"
     >
       <div className="flex items-end justify-between px-6 pb-12 pt-8 sm:px-10 md:pt-28 lg:px-16">
         <h2 className="font-display text-fluid-md font-semibold leading-none tracking-tightest text-white">
@@ -110,33 +110,27 @@ export default function Work() {
         className="flex flex-col gap-6 px-6 pb-8 sm:px-10 md:w-max md:flex-row md:flex-nowrap md:items-stretch md:gap-8 md:px-16"
       >
         {PROJECTS.map((p, i) => (
-          <motion.a
+          <motion.article
             key={p.title}
-            href={p.href}
-            target={p.href.startsWith("#") ? undefined : "_blank"}
-            rel={p.href.startsWith("#") ? undefined : "noreferrer"}
-            onClick={sounds.tap}
             whileHover={{ y: -10 }}
             transition={{ type: "spring", stiffness: 300, damping: 22 }}
             className="group relative flex w-full flex-col overflow-hidden rounded-3xl border border-line bg-surface md:w-[34rem]"
           >
-            <div className="relative h-48 shrink-0 overflow-hidden md:h-56">
+            <figure className="relative h-48 shrink-0 overflow-hidden md:h-56">
               <img
                 src={p.image}
                 alt={p.title}
                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
-            </div>
+            </figure>
 
             <div className="flex flex-1 flex-col justify-between p-8 md:p-10">
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-sm text-muted">
-                  0{i + 1}
-                </span>
+              <header className="flex items-center justify-between">
+                <span className="font-mono text-sm text-muted">0{i + 1}</span>
                 <span className="rounded-full border border-line px-4 py-1.5 font-sans text-xs uppercase tracking-widest text-white">
                   {p.tag}
                 </span>
-              </div>
+              </header>
 
               <div className="relative mt-6">
                 <h3 className="font-display text-4xl font-semibold leading-tight text-white md:text-5xl">
@@ -145,17 +139,22 @@ export default function Work() {
                 <p className="mt-5 max-w-sm font-sans text-base text-muted md:text-lg">
                   {p.desc}
                 </p>
-                <div className="mt-8 inline-flex items-center gap-2 font-display text-base font-semibold text-voltage">
+                <a
+                  href={p.href}
+                  target={p.href.startsWith("#") ? undefined : "_blank"}
+                  rel={p.href.startsWith("#") ? undefined : "noreferrer"}
+                  onClick={sounds.tap}
+                  className="mt-8 inline-flex items-center gap-2 font-display text-base font-semibold text-voltage transition-transform duration-300 hover:translate-x-1.5"
+                >
                   {p.cta}
-                  <span className="transition-transform duration-300 group-hover:translate-x-1.5">
-                    →
-                  </span>
-                </div>
+                  <span>→</span>
+                </a>
               </div>
             </div>
-          </motion.a>
+          </motion.article>
         ))}
       </div>
+      <div aria-hidden="true" className="hidden md:block md:h-28" />
     </section>
   );
 }

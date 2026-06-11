@@ -428,17 +428,15 @@ export default function Contact() {
       <div className="relative mx-auto grid max-w-container gap-12 lg:grid-cols-[minmax(320px,0.82fr)_minmax(0,1.18fr)] lg:items-center lg:gap-16">
         {/* Copy */}
         <div className="relative">
-          <p className="contact-stagger inline-flex items-center gap-3 font-sans text-sm tracking-[0.18em] text-voltage">
-            <span className="inline-block h-px w-8 bg-voltage" />
-            gatekeeper
-          </p>
-
           <h2 className="contact-stagger mt-6 font-display text-[clamp(2.5rem,1rem+5.5vw,5.5rem)] font-semibold leading-[0.95] tracking-tightest text-white text-balance">
             Anya screens my inbox.
           </h2>
 
-          <p className="contact-stagger mt-6 max-w-md font-sans text-lg text-muted sm:text-xl">
-            Bribe her with a treat. She decides what reaches me.
+          <p className="contact-stagger mt-8 max-w-md font-sans text-lg text-muted sm:text-xl">
+            Bribe her with a treat.
+          </p>
+          <p className="contact-stagger mt-8 max-w-md font-sans text-lg text-muted/70 sm:text-xl">
+            She decides what reaches me. If you can win over a cat, you&rsquo;re probably worth hearing from.
           </p>
         </div>
 

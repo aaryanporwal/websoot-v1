@@ -118,7 +118,6 @@ export default function Hero() {
           <p>
             I build AI systems that think fast and ship harder.
             Pipelines, agents, and the data that powers them.
-            My cat Anya runs my schedule.
           </p>
         </div>
 
