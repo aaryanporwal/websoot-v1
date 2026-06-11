@@ -17,7 +17,6 @@ export default function Home() {
           content="Personal site of Aaryan Porwal, a web engineer who builds fast, resilient web products. Work, writing, and a cat named Anya who screens the inbox."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <NavBar />

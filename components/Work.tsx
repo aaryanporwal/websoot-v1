@@ -11,39 +11,44 @@ if (typeof window !== "undefined") {
 
 const PROJECTS = [
   {
+    tag: "Full Stack",
+    title: "Fused",
+    desc: "Architected an AI-assisted inline diff review with CodeMirror 6, built full-stack Git version control, and redesigned File Explorer for 10K+ file trees.",
+    cta: "fused.io",
+    href: "https://fused.io",
+    image: "/works/fused.png",
+  },
+  {
     tag: "Open Source",
-    title: "GitHub",
-    desc: "Libraries, tools, and experiments I build in the open.",
+    title: "Canonical",
+    desc: "Built React components for ubuntu.com's design system (Vanilla Framework), a browser-based debugging environment for Anbox Cloud, and real-time Android Automotive sensor simulation.",
+    cta: "ubuntu.com",
+    href: "https://ubuntu.com",
+    image: "/works/canonical.png",
+  },
+  {
+    tag: "Open Source",
+    title: "GSoC",
+    desc: "Implemented visual regression testing for Ceph Dashboard using Applitools Eyes and Cypress, catching 15+ UI defects monthly and accelerating feature releases.",
     cta: "View on GitHub",
-    href: "https://github.com/aaryanporwal?tab=repositories",
+    href: "https://github.com/ceph/ceph",
+    image: "/works/gsoc.png",
   },
   {
-    tag: "Writing",
-    title: "Blog",
-    desc: "Long-form notes on web engineering, Node.js, and shipping resilient systems.",
-    cta: "Read posts",
-    href: "https://blog.aaryanporwal.com/",
+    tag: "Community",
+    title: "Hack Club",
+    desc: "Published 3 technical workshops on Node.js, DevOps, and HTML5 Canvas. Delivered a live workshop at Figma HQ on building CLI applications with Node.js.",
+    cta: "hackclub.com",
+    href: "https://hackclub.com",
+    image: "/works/hackclub.png",
   },
   {
-    tag: "Tinkering",
-    title: "Scrapbook",
-    desc: "A daily log of what I'm hacking on, from small wins to broken experiments.",
-    cta: "See scraps",
-    href: "https://scrapbook.hackclub.com/aaryan",
-  },
-  {
-    tag: "Infra",
-    title: "Cloud & Pipelines",
-    desc: "CI/CD, containers, and infrastructure that lets products scale without drama.",
-    cta: "View on GitHub",
-    href: "https://github.com/aaryanporwal?tab=repositories",
-  },
-  {
-    tag: "Hire me",
-    title: "Work with me",
-    desc: "Got something ambitious in mind? Tell me about it and we'll figure out what to build.",
-    cta: "Start the brief",
-    href: "#contact",
+    tag: "Event",
+    title: "Ubuntu Summit",
+    desc: "Built the official Ubuntu Summit 2024 website using Flask, supporting event infrastructure for 5,000+ attendees across a 3-day conference in The Hague.",
+    cta: "Read more",
+    href: "https://ubuntu.com/blog/tag/ubuntu-summit-2024",
+    image: "/works/ubuntu-summit.png",
   },
 ];
 
@@ -113,29 +118,39 @@ export default function Work() {
             onClick={sounds.tap}
             whileHover={{ y: -10 }}
             transition={{ type: "spring", stiffness: 300, damping: 22 }}
-            className="group relative flex w-full flex-col justify-between overflow-hidden rounded-3xl border border-line bg-surface p-8 md:h-[60vh] md:w-[34rem] md:p-10"
+            className="group relative flex w-full flex-col overflow-hidden rounded-3xl border border-line bg-surface md:w-[34rem]"
           >
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-sm text-muted">
-                0{i + 1}
-              </span>
-              <span className="rounded-full border border-line px-4 py-1.5 font-sans text-xs uppercase tracking-widest text-white">
-                {p.tag}
-              </span>
+            <div className="relative h-48 shrink-0 overflow-hidden md:h-56">
+              <img
+                src={p.image}
+                alt={p.title}
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
             </div>
 
-            <div className="relative mt-10">
-              <h3 className="font-display text-4xl font-semibold leading-tight text-white md:text-5xl">
-                {p.title}
-              </h3>
-              <p className="mt-5 max-w-sm font-sans text-base text-muted md:text-lg">
-                {p.desc}
-              </p>
-              <div className="mt-8 inline-flex items-center gap-2 font-display text-base font-semibold text-voltage">
-                {p.cta}
-                <span className="transition-transform duration-300 group-hover:translate-x-1.5">
-                  →
+            <div className="flex flex-1 flex-col justify-between p-8 md:p-10">
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-sm text-muted">
+                  0{i + 1}
                 </span>
+                <span className="rounded-full border border-line px-4 py-1.5 font-sans text-xs uppercase tracking-widest text-white">
+                  {p.tag}
+                </span>
+              </div>
+
+              <div className="relative mt-6">
+                <h3 className="font-display text-4xl font-semibold leading-tight text-white md:text-5xl">
+                  {p.title}
+                </h3>
+                <p className="mt-5 max-w-sm font-sans text-base text-muted md:text-lg">
+                  {p.desc}
+                </p>
+                <div className="mt-8 inline-flex items-center gap-2 font-display text-base font-semibold text-voltage">
+                  {p.cta}
+                  <span className="transition-transform duration-300 group-hover:translate-x-1.5">
+                    →
+                  </span>
+                </div>
               </div>
             </div>
           </motion.a>

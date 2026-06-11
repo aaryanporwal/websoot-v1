@@ -5,6 +5,9 @@ class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
+          <link rel="icon" href="/favicon.png" type="image/png" />
+          <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+          <link rel="shortcut icon" href="/favicon.ico" sizes="any" />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link
             rel="preconnect"
