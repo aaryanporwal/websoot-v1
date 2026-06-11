@@ -11,7 +11,7 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP, SplitText);
 }
 
-const ROTATING = ["Next.js", "Node.js", "Postgres", "Docker", "CI/CD"];
+const ROTATING = ["Python", "LLMs", "React", "Agents", "RAG"];
 
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -116,8 +116,8 @@ export default function Hero() {
 
         <div className="hero-fade mt-8 max-w-2xl font-sans text-lg text-muted sm:text-2xl">
           <p>
-            I build web products that load fast and hold up under load.
-            Interfaces, the APIs behind them, and the boring infra in between.
+            I build AI systems that think fast and ship harder.
+            Pipelines, agents, and the data that powers them.
             My cat Anya runs my schedule.
           </p>
         </div>
@@ -129,7 +129,7 @@ export default function Hero() {
               ref={wordRef}
               className="inline-block whitespace-nowrap font-semibold text-voltage"
             >
-              Web Development
+              AI Systems
             </span>
           </span>
         </div>
