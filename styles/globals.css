@@ -2,23 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: "GT Walsheim Pro";
-  src: local("GT Walsheim Pro Regular"), local("GTWalsheimProRegular"),
-    url(https://cloud-ej2vwom8u-hack-club-bot.vercel.app/0gt_walsheim_medium.woff2)
-      format("woff2"),
-    url(https://cloud-l7gf104g2-hack-club-bot.vercel.app/0gt_walsheim_medium.woff)
-      format("woff"),
-    url(https://cloud-ej2vwom8u-hack-club-bot.vercel.app/1gt_walsheim_medium.ttf)
-      format("truetype");
-  font-weight: 400;
-  font-display: swap;
-  font-style: normal;
-  text-rendering: optimizeLegibility;
-  font-feature-settings: "liga", "clig";
-  font-variant-ligatures: common-ligatures;
-}
-
 html {
   scroll-behavior: smooth;
 }
@@ -29,7 +12,7 @@ body {
   margin: 0;
   background-color: #08080b;
   color: #f5f5f7;
-  font-family: "General Sans", Inter, sans-serif;
+  font-family: "General Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }

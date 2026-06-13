@@ -14,10 +14,8 @@ module.exports = {
         voltage: "#C6FF3D",
       },
       fontFamily: {
-        display: ["'Clash Display'", "Inter", "sans-serif"],
-        sans: ["'General Sans'", "Inter", "sans-serif"],
-        Inter: ["Inter", "sans-serif"],
-        Walsheim: ["'GT Walsheim Pro'", "sans-serif"],
+        display: ["'Clash Display'", "sans-serif"],
+        sans: ["'General Sans'", "sans-serif"],
       },
       fontSize: {
         // Fluid display sizes for the AWWWARDS-scale headlines
