@@ -9,7 +9,6 @@ import { Footer } from "./Footer";
 
 export default function HomeApp() {
   return (
-    <SmoothScroll>
       <div className="grain relative min-h-screen bg-body text-white">
         <NavBar />
         <main>
@@ -21,6 +20,5 @@ export default function HomeApp() {
         </main>
         <Footer />
       </div>
-    </SmoothScroll>
   );
 }
