@@ -43,12 +43,6 @@ const commands: CommandItem[] = [
     description: "Selected projects",
   },
   {
-    title: "About",
-    href: "/#about",
-    section: "Navigation",
-    description: "Background and interests",
-  },
-  {
     title: "Skills",
     href: "/#skills",
     section: "Navigation",
@@ -133,6 +127,15 @@ const commands: CommandItem[] = [
   </head>
   <body class={bodyClass}>
     <slot />
+    <script>
+      document.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        if (!target.closest("[data-command-switcher-trigger]")) return;
+
+        window.dispatchEvent(new CustomEvent("command-switcher:open"));
+      });
+    </script>
     <CommandSwitcher client:load commands={commands} />
   </body>
 </html>

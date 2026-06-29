@@ -65,7 +65,19 @@ export default function CommandSwitcher({ commands }: Props) {
     return () => window.clearTimeout(id);
   }, [open]);
 
+  function openSwitcher() {
+    if (!open) {
+      returnFocusRef.current =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
+    }
+    setOpen(true);
+  }
+
   useEffect(() => {
+    const onOpen = () => openSwitcher();
+
     const onKeyDown = (event: KeyboardEvent) => {
       const usesCommandKey = event.metaKey || event.ctrlKey;
 
@@ -73,13 +85,8 @@ export default function CommandSwitcher({ commands }: Props) {
         if (!open && isTypingTarget(event.target)) return;
 
         event.preventDefault();
-        if (!open) {
-          returnFocusRef.current =
-            document.activeElement instanceof HTMLElement
-              ? document.activeElement
-              : null;
-        }
-        setOpen((value) => !value);
+        if (open) setOpen(false);
+        else openSwitcher();
         return;
       }
 
@@ -120,8 +127,12 @@ export default function CommandSwitcher({ commands }: Props) {
       }
     };
 
+    window.addEventListener("command-switcher:open", onOpen);
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("command-switcher:open", onOpen);
+      window.removeEventListener("keydown", onKeyDown);
+    };
   }, [activeIndex, filteredCommands, open]);
 
   useEffect(() => {
