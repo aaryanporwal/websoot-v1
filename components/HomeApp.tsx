@@ -9,16 +9,16 @@ import { Footer } from "./Footer";
 
 export default function HomeApp() {
   return (
-      <div className="grain relative min-h-screen bg-body text-white">
-        <NavBar />
-        <main>
-          <Hero />
-          <About />
-          <Work />
-          <Skills />
-          <Contact />
-        </main>
-        <Footer />
-      </div>
+    <div className="grain relative min-h-screen bg-body text-white">
+      <NavBar />
+      <main>
+        <Hero />
+        <About />
+        <Work />
+        <Skills />
+        <Contact />
+      </main>
+      <Footer />
+    </div>
   );
 }
