@@ -1,4 +1,3 @@
-import Image from "next/image";
 import type { KeyboardEvent, PointerEvent } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
@@ -433,10 +432,11 @@ export default function Contact() {
           </h2>
 
           <p className="contact-stagger mt-8 max-w-md font-sans text-lg text-muted sm:text-xl">
-            Bribe her with a treat.
+            Bribe her with a treat and the channels appear.
           </p>
           <p className="contact-stagger mt-8 max-w-md font-sans text-lg text-muted/70 sm:text-xl">
-            She decides what reaches me. If you can win over a cat, you&rsquo;re probably worth hearing from.
+            Serious project, quick hello, odd idea: all welcome. She just likes
+            to feel involved.
           </p>
         </div>
 
@@ -517,32 +517,25 @@ export default function Contact() {
             className="absolute bottom-4 right-0 h-[54%] w-[64%] max-w-[430px] sm:bottom-6 sm:right-4 lg:h-[60%] lg:w-[56%]"
           >
             <div className="relative h-full w-full">
-              <Image
+              <img
                 ref={sleepyRef}
                 src="/anya/head-sleepy.png"
                 alt="Anya, sleeping, sole gatekeeper of the inbox."
-                fill
-                priority={false}
-                sizes="(min-width: 1024px) 560px, 80vw"
-                className="object-contain object-bottom"
+                className="absolute inset-0 h-full w-full object-contain object-bottom"
               />
-              <Image
+              <img
                 ref={alertRef}
                 src="/anya/head-alert.png"
                 alt=""
                 aria-hidden
-                fill
-                sizes="(min-width: 1024px) 560px, 80vw"
-                className="object-contain object-bottom"
+                className="absolute inset-0 h-full w-full object-contain object-bottom"
               />
-              <Image
+              <img
                 ref={neutralRef}
                 src="/anya/head-neutral.png"
                 alt=""
                 aria-hidden
-                fill
-                sizes="(min-width: 1024px) 560px, 80vw"
-                className="object-contain object-bottom"
+                className="absolute inset-0 h-full w-full object-contain object-bottom"
               />
             </div>
           </div>
@@ -561,7 +554,7 @@ export default function Contact() {
             onMouseEnter={tick}
             className="absolute bottom-8 left-6 z-30 cursor-grab touch-none rounded-xl outline-none ring-voltage/70 focus-visible:ring-2 active:cursor-grabbing motion-reduce:cursor-pointer sm:bottom-10 sm:left-10"
           >
-            <Image
+            <img
               src="/cat-treat.out.png"
               alt=""
               aria-hidden
@@ -570,7 +563,6 @@ export default function Contact() {
               sizes="(min-width: 640px) 176px, 144px"
               className="h-36 w-36 object-contain drop-shadow-[0_18px_36px_rgba(0,0,0,0.35)] sm:h-44 sm:w-44"
               draggable={false}
-              priority={false}
             />
           </div>
 

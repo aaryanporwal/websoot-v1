@@ -13,7 +13,7 @@ const PROJECTS = [
   {
     tag: "Full Stack",
     title: "Fused",
-    desc: "Architected an AI-assisted inline diff review with CodeMirror 6, built full-stack Git version control, and redesigned File Explorer for 10K+ file trees.",
+    desc: "Shaped an AI-assisted inline diff review in CodeMirror 6, built full-stack Git version control, and made 10K+ file trees easier to navigate.",
     cta: "fused.io",
     href: "https://fused.io",
     image: "/works/fused.png",
@@ -21,7 +21,7 @@ const PROJECTS = [
   {
     tag: "Open Source",
     title: "Canonical",
-    desc: "Built React components for ubuntu.com's design system (Vanilla Framework), a browser-based debugging environment for Anbox Cloud, and real-time Android Automotive sensor simulation.",
+    desc: "Built React components for ubuntu.com's Vanilla Framework, a browser debugging environment for Anbox Cloud, and real-time Android Automotive sensor simulation.",
     cta: "ubuntu.com",
     href: "https://ubuntu.com",
     image: "/works/canonical.png",
@@ -29,7 +29,7 @@ const PROJECTS = [
   {
     tag: "Open Source",
     title: "GSoC",
-    desc: "Implemented visual regression testing for Ceph Dashboard using Applitools Eyes and Cypress, catching 15+ UI defects monthly and accelerating feature releases.",
+    desc: "Added visual regression testing to Ceph Dashboard with Applitools Eyes and Cypress, catching 15+ UI defects a month before they reached users.",
     cta: "View on GitHub",
     href: "https://github.com/ceph/ceph",
     image: "/works/gsoc.png",
@@ -37,7 +37,7 @@ const PROJECTS = [
   {
     tag: "Community",
     title: "Hack Club",
-    desc: "Published 3 technical workshops on Node.js, DevOps, and HTML5 Canvas. Delivered a live workshop at Figma HQ on building CLI applications with Node.js.",
+    desc: "Published 3 technical workshops on Node.js, DevOps, and HTML5 Canvas, then taught CLI application building live at Figma HQ.",
     cta: "hackclub.com",
     href: "https://hackclub.com",
     image: "/works/hackclub.png",
@@ -45,7 +45,7 @@ const PROJECTS = [
   {
     tag: "Event",
     title: "Ubuntu Summit",
-    desc: "Built the official Ubuntu Summit 2024 website using Flask, supporting event infrastructure for 5,000+ attendees across a 3-day conference in The Hague.",
+    desc: "Built the official Ubuntu Summit 2024 site in Flask for a 5,000+ attendee, 3-day conference in The Hague.",
     cta: "Read more",
     href: "https://ubuntu.com/blog/tag/ubuntu-summit-2024",
     image: "/works/ubuntu-summit.png",
@@ -92,9 +92,9 @@ export default function Work() {
     <section
       ref={root}
       id="work"
-      className="relative w-full overflow-hidden bg-ink py-24 md:pt-0 md:pb-28"
+      className="relative w-full overflow-hidden bg-ink py-24 md:pt-0 md:pb-12"
     >
-      <div className="flex items-end justify-between px-6 pb-12 pt-8 sm:px-10 md:pt-28 lg:px-16">
+      <div className="flex items-end justify-between px-6 pb-10 pt-8 sm:px-10 md:pt-20 lg:px-16">
         <h2 className="font-display text-fluid-md font-semibold leading-none tracking-tightest text-white">
           Selected
           <br />
@@ -116,7 +116,7 @@ export default function Work() {
             transition={{ type: "spring", stiffness: 300, damping: 22 }}
             className="group relative flex w-full flex-col overflow-hidden rounded-3xl border border-line bg-surface md:w-[34rem]"
           >
-            <figure className="relative h-48 shrink-0 overflow-hidden md:h-56">
+            <figure className="relative h-40 shrink-0 overflow-hidden md:h-56">
               <img
                 src={p.image}
                 alt={p.title}
@@ -124,7 +124,7 @@ export default function Work() {
               />
             </figure>
 
-            <div className="flex flex-1 flex-col justify-between p-8 md:p-10">
+            <div className="flex flex-col justify-between p-6 md:p-8">
               <header className="flex items-center justify-between">
                 <span className="font-mono text-sm text-muted">0{i + 1}</span>
                 <span className="rounded-full border border-line px-4 py-1.5 font-sans text-xs uppercase tracking-widest text-white">
@@ -132,11 +132,11 @@ export default function Work() {
                 </span>
               </header>
 
-              <div className="relative mt-6">
-                <h3 className="font-display text-4xl font-semibold leading-tight text-white md:text-5xl">
+              <div className="relative mt-4">
+                <h3 className="font-display text-3xl font-semibold leading-tight text-white md:text-4xl">
                   {p.title}
                 </h3>
-                <p className="mt-5 max-w-sm font-sans text-base text-muted md:text-lg">
+                <p className="mt-3 max-w-sm font-sans text-sm text-muted md:text-base">
                   {p.desc}
                 </p>
                 <a
@@ -144,7 +144,7 @@ export default function Work() {
                   target={p.href.startsWith("#") ? undefined : "_blank"}
                   rel={p.href.startsWith("#") ? undefined : "noreferrer"}
                   onClick={sounds.tap}
-                  className="mt-8 inline-flex items-center gap-2 font-display text-base font-semibold text-voltage transition-transform duration-300 hover:translate-x-1.5"
+                  className="mt-6 inline-flex items-center gap-2 font-display text-sm font-semibold text-voltage transition-transform duration-300 hover:translate-x-1.5"
                 >
                   {p.cta}
                   <span>→</span>
@@ -154,7 +154,7 @@ export default function Work() {
           </motion.article>
         ))}
       </div>
-      <div aria-hidden="true" className="hidden md:block md:h-28" />
+      <div aria-hidden="true" className="hidden md:block md:h-16" />
     </section>
   );
 }
