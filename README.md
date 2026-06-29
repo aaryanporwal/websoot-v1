@@ -1,4 +1,4 @@
-A bold, AWWWARDS-style personal site for Aaryan Porwal — built with [Next.js](https://nextjs.org/), [Bun](https://bun.sh/), GSAP + ScrollTrigger, Framer Motion, Lenis smooth scroll, and Lottie.
+A bold, AWWWARDS-style personal site for Aaryan Porwal — built with [Astro](https://astro.build/), [Bun](https://bun.sh/), React islands, GSAP + ScrollTrigger, Motion, Lenis smooth scroll, Lottie, and a native Astro blog.
 
 ## Getting Started
 
@@ -12,39 +12,39 @@ bun install
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open the local URL printed by Astro, usually [http://localhost:4321](http://localhost:4321).
 
 Build and start production:
 
 ```bash
 bun run build
-bun run start
+bun run preview
 ```
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+You can start editing the homepage by modifying `components/HomeApp.tsx` and the imported React components. Blog posts live in `src/content/blog`.
 
 ## Tech
 
-- Next.js (Pages Router)
+- Astro static site
+- React islands for the interactive homepage
 - GSAP + ScrollTrigger + SplitText (scroll-driven scenes, headline reveals)
-- Framer Motion (`motion`) — microinteractions and hovers
+- Motion (`motion`) — microinteractions and hovers
 - Lenis — smooth scroll, synced to ScrollTrigger
 - Lottie (`lottie-react`) — decorative animations
 - Tailwind CSS
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- Astro content collections for `/blog`, post pages, tag pages, and `/rss.xml`
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+To learn more about Astro, take a look at:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Astro Documentation](https://docs.astro.build/)
+- [Astro Content Collections](https://docs.astro.build/en/guides/content-collections/)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Blog
 
-## Deploy on Vercel
+The old Hugo blog content has been copied into this repo. Draft posts are excluded from the content collection output. The first migration preserves core blog parity: published posts, tags, syntax highlighting, metadata, and RSS. Search and comments are intentionally deferred.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deploy
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This is a static Astro site. It can deploy to Vercel, Netlify, Cloudflare Pages, or any CDN that serves the generated `dist/` directory.

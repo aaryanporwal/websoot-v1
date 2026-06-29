@@ -1,0 +1,85 @@
+---
+import { getCollection } from "astro:content";
+import BlogLayout from "../../layouts/BlogLayout.astro";
+import {
+  formatDate,
+  postHref,
+  postSummary,
+  readingTime,
+  sortPosts,
+  tagSlug,
+  uniqueTags,
+} from "../../lib/posts";
+
+const posts = sortPosts(
+  await getCollection("blog", ({ data }) => data.draft !== true),
+);
+const tags = uniqueTags(posts);
+---
+
+<BlogLayout
+  title="Blog · Aaryan Porwal"
+  description="Aaryan Porwal writes about frontend performance, open source, JavaScript, systems, and the parts of software that get weird."
+  canonicalPath="/blog/"
+>
+  <main class="relative mx-auto max-w-container px-6 py-24 sm:px-10 lg:px-16">
+    <section class="max-w-5xl">
+      <p class="font-sans text-sm uppercase tracking-[0.3em] text-muted">
+        Blog
+      </p>
+      <h1 class="mt-6 font-display text-fluid-lg font-semibold leading-[0.95] tracking-tightest text-white">
+        Notes from
+        <br />
+        <span class="text-stroke">the build</span>
+      </h1>
+      <p class="mt-8 max-w-2xl font-sans text-lg text-muted sm:text-xl">
+        Frontend performance, open source, JavaScript edges, and the occasional systems rabbit hole.
+      </p>
+    </section>
+
+    {
+      tags.length > 0 ? (
+        <section class="mt-14 flex flex-wrap gap-3" aria-label="Blog tags">
+          {tags.map((tag) => (
+            <a
+              href={`/blog/tags/${tagSlug(tag)}/`}
+              class="rounded-full border border-line px-4 py-2 font-sans text-sm text-muted outline-none transition-colors hover:border-voltage hover:text-voltage focus-visible:border-voltage focus-visible:text-voltage"
+            >
+              {tag}
+            </a>
+          ))}
+        </section>
+      ) : null
+    }
+
+    <section class="mt-16 grid gap-6">
+      {
+        posts.map((post) => (
+          <article class="group border-y border-line py-8 transition-colors hover:border-voltage/70">
+            <a href={postHref(post)} class="block outline-none focus-visible:bg-surface/50">
+              <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+                <div class="max-w-3xl">
+                  <div class="flex flex-wrap items-center gap-x-4 gap-y-2 font-sans text-sm text-muted">
+                    <time datetime={post.data.date.toISOString()}>
+                      {formatDate(post.data.date)}
+                    </time>
+                    <span>{readingTime(post.body)} min read</span>
+                  </div>
+                  <h2 class="mt-4 font-display text-3xl font-semibold leading-tight text-white transition-colors group-hover:text-voltage sm:text-5xl">
+                    {post.data.title}
+                  </h2>
+                  <p class="mt-5 max-w-2xl font-sans text-base leading-7 text-muted sm:text-lg">
+                    {postSummary(post)}
+                  </p>
+                </div>
+                <span class="font-display text-2xl text-voltage transition-transform duration-300 group-hover:translate-x-1">
+                  →
+                </span>
+              </div>
+            </a>
+          </article>
+        ))
+      }
+    </section>
+  </main>
+</BlogLayout>

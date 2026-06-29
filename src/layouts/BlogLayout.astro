@@ -1,0 +1,87 @@
+---
+import SiteLayout from "./SiteLayout.astro";
+
+type Props = {
+  title: string;
+  description?: string;
+  canonicalPath?: string;
+};
+
+const { title, description, canonicalPath } = Astro.props;
+
+const links = [
+  { label: "Home", href: "/" },
+  { label: "Work", href: "/#work" },
+  { label: "Blog", href: "/blog/" },
+  { label: "Contact", href: "/#contact" },
+];
+---
+
+<SiteLayout title={title} description={description} canonicalPath={canonicalPath}>
+  <div class="grain relative min-h-screen bg-body text-white">
+    <header class="sticky top-0 z-50 border-b border-line/80 bg-body/80 backdrop-blur-xl">
+      <div class="mx-auto flex max-w-container items-center justify-between px-6 py-5 sm:px-10 lg:px-16">
+        <a
+          href="/"
+          class="font-display text-2xl font-semibold tracking-tightest text-white outline-none transition-colors hover:text-voltage focus-visible:text-voltage sm:text-3xl"
+        >
+          Aaryan Porwal
+        </a>
+        <nav class="flex items-center gap-5 font-sans text-sm font-medium sm:gap-8">
+          {
+            links.map((link) => (
+              <a
+                href={link.href}
+                class="text-muted outline-none transition-colors hover:text-white focus-visible:text-voltage"
+              >
+                {link.label}
+              </a>
+            ))
+          }
+        </nav>
+      </div>
+    </header>
+
+    <slot />
+
+    <footer class="relative w-full bg-body px-6 pb-10 pt-16 sm:px-10 lg:px-16">
+      <div class="mx-auto flex max-w-container flex-col gap-6 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between">
+        <ul class="flex flex-wrap gap-x-8 gap-y-3 font-sans text-base">
+          <li>
+            <a
+              href="https://www.linkedin.com/in/aaryan-porwal/"
+              target="_blank"
+              rel="noreferrer"
+              class="text-muted outline-none transition-colors hover:text-voltage focus-visible:text-voltage"
+            >
+              LinkedIn
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://twitter.com/aaryan7476"
+              target="_blank"
+              rel="noreferrer"
+              class="text-muted outline-none transition-colors hover:text-voltage focus-visible:text-voltage"
+            >
+              Twitter
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://github.com/aaryanporwal"
+              target="_blank"
+              rel="noreferrer"
+              class="text-muted outline-none transition-colors hover:text-voltage focus-visible:text-voltage"
+            >
+              GitHub
+            </a>
+          </li>
+        </ul>
+        <p class="font-sans text-sm text-muted">
+          &copy; {new Date().getFullYear()} Aaryan Porwal. Built with Astro, GSAP, and Bun.
+        </p>
+      </div>
+    </footer>
+  </div>
+</SiteLayout>

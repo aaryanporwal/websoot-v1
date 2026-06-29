@@ -27,7 +27,7 @@ export function Footer() {
           ))}
         </ul>
         <p className="font-sans text-sm text-muted">
-          &copy; {new Date().getFullYear()} Aaryan Porwal. Built with Next.js,
+          &copy; {new Date().getFullYear()} Aaryan Porwal. Built with Astro,
           GSAP, and Bun.
         </p>
       </div>
