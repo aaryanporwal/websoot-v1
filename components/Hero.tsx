@@ -17,6 +17,7 @@ export default function Hero() {
   const root = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const wordRef = useRef<HTMLSpanElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const sounds = useSiteSounds();
 
   useGSAP(
@@ -34,7 +35,7 @@ export default function Hero() {
           type: "chars,lines",
           linesClass: "overflow-hidden",
         });
-        gsap.set(headingRef.current, { autoAlpha: 1 });
+        gsap.set(contentRef.current, { autoAlpha: 1, pointerEvents: "auto" });
         gsap.from(split.chars, {
           yPercent: 120,
           opacity: 0,
@@ -74,7 +75,7 @@ export default function Hero() {
             });
         });
       } else {
-        gsap.set(headingRef.current, { autoAlpha: 1 });
+        gsap.set(contentRef.current, { autoAlpha: 1, pointerEvents: "auto" });
         if (wordRef.current) wordRef.current.textContent = ROTATING[0];
       }
 
@@ -94,7 +95,10 @@ export default function Hero() {
       {/* Lottie ring accent */}
       <LottieAccent className="pointer-events-none absolute right-6 top-28 h-28 w-28 opacity-90 sm:right-16 sm:top-32 sm:h-40 sm:w-40 lg:h-52 lg:w-52" />
 
-      <div className="relative mx-auto flex min-h-[calc(100vh-12rem)] max-w-container flex-col justify-center">
+      <div
+        ref={contentRef}
+        className="opacity-0 pointer-events-none relative mx-auto flex min-h-[calc(100vh-12rem)] max-w-container flex-col justify-center"
+      >
         {/* <motion.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -107,7 +111,7 @@ export default function Hero() {
 
         <h1
           ref={headingRef}
-          className="invisible font-display text-fluid-xl font-semibold leading-[0.92] tracking-tightest text-white"
+          className="font-display text-fluid-xl font-semibold leading-[0.92] tracking-tightest text-white"
         >
           Aaryan
           <br />
