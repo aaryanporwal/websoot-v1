@@ -9,7 +9,7 @@ if (typeof window !== "undefined") {
 }
 
 const STATEMENT =
-  "I am a software engineer who loves the craft: clean interfaces, sturdy systems, thoughtful details, and the keyboard percussion it takes to make them real.";
+  "I am a software engineer who loves the craft. Optimized systems, clean interfaces, thoughtful details, and the quiet rhythm of building them well.";
 
 export default function About() {
   const root = useRef<HTMLElement>(null);
@@ -64,8 +64,8 @@ export default function About() {
           {[
             { n: "5+", l: "Years at the keyboard" },
             { n: "30+", l: "Projects shipped" },
-            { n: "1", l: "Cat near the deploy button" },
-            { n: "∞", l: "Tiny details fussed over" },
+            { n: "1", l: "Cat (my chief architect)" },
+            { n: "∞", l: "Passion" },
           ].map((s) => (
             <div key={s.l}>
               <div className="font-display text-4xl font-semibold text-white sm:text-6xl">
