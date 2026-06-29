@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useSiteSounds } from "../hooks/useSiteSounds";
+import { HERO_CHROME_REVEAL_DELAY } from "./animationTimings";
 
 const BLOG_URL = "/blog/";
 const LINKEDIN_URL = "https://www.linkedin.com/in/aaryan-porwal/";
@@ -45,7 +46,12 @@ export default function NavBar() {
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
+    <motion.header
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: HERO_CHROME_REVEAL_DELAY, duration: 0.5 }}
+      className="fixed inset-x-0 top-0 z-50"
+    >
       <div
         className={`transition-all duration-500 ${
           scrolled
@@ -173,6 +179,6 @@ export default function NavBar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </motion.header>
   );
 }
