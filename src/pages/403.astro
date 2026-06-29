@@ -1,0 +1,8 @@
+---
+import ErrorApp from "../../components/ErrorApp";
+import SiteLayout from "../layouts/SiteLayout.astro";
+---
+
+<SiteLayout title="403 · Forbidden" description="Themed forbidden page.">
+  <ErrorApp client:load status={403} />
+</SiteLayout>

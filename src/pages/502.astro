@@ -1,0 +1,8 @@
+---
+import ErrorApp from "../../components/ErrorApp";
+import SiteLayout from "../layouts/SiteLayout.astro";
+---
+
+<SiteLayout title="502 · Bad gateway" description="Themed bad gateway page.">
+  <ErrorApp client:load status={502} />
+</SiteLayout>
