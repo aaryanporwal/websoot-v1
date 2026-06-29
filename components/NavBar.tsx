@@ -9,11 +9,14 @@ const PROJECTS_URL = "https://github.com/aaryanporwal?tab=repositories";
 
 const LINKS = [
   { label: "Work", href: "#work" },
-  { label: "About", href: "#about" },
   { label: "GitHub", href: PROJECTS_URL, external: true },
   { label: "Scrapbook", href: SCRAPBOOK_URL, external: true },
   { label: "Blog", href: BLOG_URL },
 ];
+
+function openCommandSwitcher() {
+  window.dispatchEvent(new CustomEvent("command-switcher:open"));
+}
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
@@ -79,6 +82,17 @@ export default function NavBar() {
                 <span className="absolute -bottom-1 left-0 h-px w-0 bg-voltage transition-all duration-300 group-hover:w-full" />
               </a>
             ))}
+            <button
+              type="button"
+              aria-label="Open command switcher"
+              onClick={() => {
+                sounds.tap();
+                openCommandSwitcher();
+              }}
+              className="rounded-md border border-line bg-surface/30 px-2.5 py-1 font-sans text-[11px] font-semibold text-muted transition-colors hover:border-voltage hover:text-voltage focus-visible:border-voltage focus-visible:text-voltage focus-visible:outline-none"
+            >
+              ⌘K
+            </button>
             <motion.a
               href="#contact"
               onClick={sounds.tap}

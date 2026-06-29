@@ -1,5 +1,10 @@
 ---
+import { getCollection } from "astro:content";
+import CommandSwitcher, {
+  type CommandItem,
+} from "../../components/CommandSwitcher";
 import "../../styles/globals.css";
+import { postHref, postSummary, sortPosts } from "../lib/posts";
 
 type Props = {
   title?: string;
@@ -19,6 +24,70 @@ const canonical = new URL(canonicalPath, Astro.site ?? "https://aaryanporwal.com
 const posthogKey = import.meta.env.PUBLIC_POSTHOG_KEY;
 const posthogHost =
   import.meta.env.PUBLIC_POSTHOG_HOST || "https://eu.i.posthog.com";
+
+const posts = sortPosts(
+  await getCollection("blog", ({ data }) => data.draft !== true),
+);
+
+const commands: CommandItem[] = [
+  {
+    title: "Home",
+    href: "/",
+    section: "Navigation",
+    description: "Back to the top",
+  },
+  {
+    title: "Work",
+    href: "/#work",
+    section: "Navigation",
+    description: "Selected projects",
+  },
+  {
+    title: "Skills",
+    href: "/#skills",
+    section: "Navigation",
+    description: "Tools and technologies",
+  },
+  {
+    title: "Blog",
+    href: "/blog/",
+    section: "Navigation",
+    description: "Writing archive",
+  },
+  {
+    title: "Contact",
+    href: "/#contact",
+    section: "Navigation",
+    description: "Get in touch",
+  },
+  {
+    title: "GitHub",
+    href: "https://github.com/aaryanporwal?tab=repositories",
+    section: "Social",
+    description: "Projects and repositories",
+    external: true,
+  },
+  {
+    title: "LinkedIn",
+    href: "https://www.linkedin.com/in/aaryan-porwal/",
+    section: "Social",
+    description: "Professional profile",
+    external: true,
+  },
+  {
+    title: "Scrapbook",
+    href: "https://scrapbook.hackclub.com/aaryan",
+    section: "Social",
+    description: "Build notes and updates",
+    external: true,
+  },
+  ...posts.map((post) => ({
+    title: post.data.title,
+    href: postHref(post),
+    section: "Writing" as const,
+    description: postSummary(post),
+  })),
+];
 ---
 
 <!doctype html>
@@ -58,5 +127,15 @@ const posthogHost =
   </head>
   <body class={bodyClass}>
     <slot />
+    <script>
+      document.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        if (!target.closest("[data-command-switcher-trigger]")) return;
+
+        window.dispatchEvent(new CustomEvent("command-switcher:open"));
+      });
+    </script>
+    <CommandSwitcher client:load commands={commands} />
   </body>
 </html>
