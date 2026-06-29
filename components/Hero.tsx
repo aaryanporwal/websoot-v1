@@ -116,8 +116,8 @@ export default function Hero() {
 
         <div className="hero-fade mt-8 max-w-2xl font-sans text-lg text-muted sm:text-2xl">
           <p>
-            I build AI systems that think fast and ship harder.
-            Pipelines, agents, and the data that powers them.
+            I build software with care, curiosity, and a suspiciously loud
+            keyboard. Interfaces, systems, and tools that feel good to use.
           </p>
         </div>
 

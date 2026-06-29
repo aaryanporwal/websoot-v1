@@ -9,7 +9,7 @@ if (typeof window !== "undefined") {
 }
 
 const STATEMENT =
-  "I design and build web products that stay fast under real traffic. The interface, the API behind it, and the pipelines that ship it are all my job.";
+  "I am a software engineer who loves the craft: clean interfaces, sturdy systems, thoughtful details, and the keyboard percussion it takes to make them real.";
 
 export default function About() {
   const root = useRef<HTMLElement>(null);
@@ -62,10 +62,10 @@ export default function About() {
 
         <div className="mt-20 grid grid-cols-2 gap-8 border-t border-line pt-10 sm:grid-cols-4">
           {[
-            { n: "5+", l: "Years shipping" },
-            { n: "30+", l: "Projects in production" },
-            { n: "1", l: "Anya, chief of staff" },
-            { n: "∞", l: "Espresso shots" },
+            { n: "5+", l: "Years at the keyboard" },
+            { n: "30+", l: "Projects shipped" },
+            { n: "1", l: "Cat near the deploy button" },
+            { n: "∞", l: "Tiny details fussed over" },
           ].map((s) => (
             <div key={s.l}>
               <div className="font-display text-4xl font-semibold text-white sm:text-6xl">
