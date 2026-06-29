@@ -1,0 +1,1 @@
+export const HERO_CHROME_REVEAL_DELAY = 1.4;
