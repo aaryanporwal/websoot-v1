@@ -1,0 +1,30 @@
+---
+import { getCollection } from "astro:content";
+import { postHref, postSlug } from "../../lib/posts";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", ({ data }) => data.draft !== true);
+
+  return posts.map((post) => ({
+    params: { slug: postSlug(post) },
+    props: { destination: postHref(post) },
+  }));
+}
+
+const { destination } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${destination}`} />
+    <link rel="canonical" href={destination} />
+    <script is:inline define:vars={{ destination }}>
+      window.location.replace(destination);
+    </script>
+  </head>
+  <body>
+    <a href={destination}>Moved to {destination}</a>
+  </body>
+</html>

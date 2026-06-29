@@ -1,0 +1,41 @@
+---
+import "../../styles/globals.css";
+
+type Props = {
+  title?: string;
+  description?: string;
+  canonicalPath?: string;
+  bodyClass?: string;
+};
+
+const {
+  title = "Aaryan Porwal · Web Engineer",
+  description = "Personal site of Aaryan Porwal, a web engineer who builds fast, resilient web products. Work, writing, and a cat named Anya who screens the inbox.",
+  canonicalPath = Astro.url.pathname,
+  bodyClass = "bg-body text-white antialiased",
+} = Astro.props;
+
+const canonical = new URL(canonicalPath, Astro.site ?? "https://aaryanporwal.com");
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.ico" sizes="any" />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=general-sans@400,500,600&display=swap"
+      rel="stylesheet"
+    />
+    <slot name="head" />
+  </head>
+  <body class={bodyClass}>
+    <slot />
+  </body>
+</html>

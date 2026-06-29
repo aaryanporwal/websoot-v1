@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useSiteSounds } from "../hooks/useSiteSounds";
 
-const BLOG_URL = "https://blog.aaryanporwal.com/";
+const BLOG_URL = "/blog/";
 const LINKEDIN_URL = "https://www.linkedin.com/in/aaryan-porwal/";
 const SCRAPBOOK_URL = "https://scrapbook.hackclub.com/aaryan";
 const PROJECTS_URL = "https://github.com/aaryanporwal?tab=repositories";
@@ -12,7 +12,7 @@ const LINKS = [
   { label: "About", href: "#about" },
   { label: "GitHub", href: PROJECTS_URL, external: true },
   { label: "Scrapbook", href: SCRAPBOOK_URL, external: true },
-  { label: "Blog", href: BLOG_URL, external: true },
+  { label: "Blog", href: BLOG_URL },
 ];
 
 export default function NavBar() {
