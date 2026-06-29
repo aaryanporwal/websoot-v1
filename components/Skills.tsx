@@ -12,7 +12,7 @@ const ROW_A = [
   "JavaScript",
   "TypeScript",
   "React",
-  "Next.js",
+  "Astro",
   "Node.js",
   "GSAP",
 ];
