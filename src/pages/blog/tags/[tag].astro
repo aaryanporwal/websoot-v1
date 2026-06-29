@@ -5,6 +5,7 @@ import {
   formatDate,
   postHref,
   postSummary,
+  postUpdatedDate,
   readingTime,
   sortPosts,
   tagSlug,
@@ -48,31 +49,40 @@ const { tag, posts } = Astro.props;
 
     <section class="mt-14 grid gap-6">
       {
-        posts.map((post) => (
-          <article class="group border-y border-line py-8 transition-colors hover:border-voltage/70">
-            <a href={postHref(post)} class="block outline-none focus-visible:bg-surface/50">
-              <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-                <div class="max-w-3xl">
-                  <div class="flex flex-wrap items-center gap-x-4 gap-y-2 font-sans text-sm text-muted">
-                    <time datetime={post.data.date.toISOString()}>
-                      {formatDate(post.data.date)}
-                    </time>
-                    <span>{readingTime(post.body)} min read</span>
+        posts.map((post) => {
+          const updatedDate = postUpdatedDate(post);
+
+          return (
+            <article class="group border-y border-line py-8 transition-colors hover:border-voltage/70">
+              <a href={postHref(post)} class="block outline-none focus-visible:bg-surface/50">
+                <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+                  <div class="max-w-3xl">
+                    <div class="flex flex-wrap items-center gap-x-4 gap-y-2 font-sans text-sm text-muted">
+                      <time datetime={post.data.date.toISOString()}>
+                        Posted {formatDate(post.data.date)}
+                      </time>
+                      {updatedDate ? (
+                        <time datetime={updatedDate.toISOString()}>
+                          Updated {formatDate(updatedDate)}
+                        </time>
+                      ) : null}
+                      <span>{readingTime(post.body)} min read</span>
+                    </div>
+                    <h2 class="mt-4 font-display text-3xl font-semibold leading-tight text-white transition-colors group-hover:text-voltage sm:text-5xl">
+                      {post.data.title}
+                    </h2>
+                    <p class="mt-5 max-w-2xl font-sans text-base leading-7 text-muted sm:text-lg">
+                      {postSummary(post)}
+                    </p>
                   </div>
-                  <h2 class="mt-4 font-display text-3xl font-semibold leading-tight text-white transition-colors group-hover:text-voltage sm:text-5xl">
-                    {post.data.title}
-                  </h2>
-                  <p class="mt-5 max-w-2xl font-sans text-base leading-7 text-muted sm:text-lg">
-                    {postSummary(post)}
-                  </p>
+                  <span class="font-display text-2xl text-voltage transition-transform duration-300 group-hover:translate-x-1">
+                    →
+                  </span>
                 </div>
-                <span class="font-display text-2xl text-voltage transition-transform duration-300 group-hover:translate-x-1">
-                  →
-                </span>
-              </div>
-            </a>
-          </article>
-        ))
+              </a>
+            </article>
+          );
+        })
       }
     </section>
   </main>

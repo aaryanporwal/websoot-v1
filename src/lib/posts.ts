@@ -22,6 +22,24 @@ export function formatDate(date: Date) {
   }).format(date);
 }
 
+export function isSameDay(a: Date, b: Date) {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
+}
+
+export function postUpdatedDate(post: BlogPost) {
+  const updatedDate = post.data.updatedDate;
+
+  if (!updatedDate || isSameDay(updatedDate, post.data.date)) {
+    return undefined;
+  }
+
+  return updatedDate;
+}
+
 export function readingTime(body: string) {
   const words = body.trim().split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.ceil(words / 220));
