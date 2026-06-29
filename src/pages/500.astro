@@ -1,0 +1,8 @@
+---
+import ErrorApp from "../../components/ErrorApp";
+import SiteLayout from "../layouts/SiteLayout.astro";
+---
+
+<SiteLayout title="500 · Server error" description="Themed server error page.">
+  <ErrorApp client:load status={500} />
+</SiteLayout>

@@ -1,0 +1,8 @@
+---
+import ErrorApp from "../../components/ErrorApp";
+import SiteLayout from "../layouts/SiteLayout.astro";
+---
+
+<SiteLayout title="504 · Gateway timeout" description="Themed gateway timeout page.">
+  <ErrorApp client:load status={504} />
+</SiteLayout>

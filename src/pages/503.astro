@@ -1,0 +1,8 @@
+---
+import ErrorApp from "../../components/ErrorApp";
+import SiteLayout from "../layouts/SiteLayout.astro";
+---
+
+<SiteLayout title="503 · Unavailable" description="Themed service unavailable page.">
+  <ErrorApp client:load status={503} />
+</SiteLayout>

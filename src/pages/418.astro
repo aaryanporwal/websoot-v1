@@ -1,0 +1,8 @@
+---
+import ErrorApp from "../../components/ErrorApp";
+import SiteLayout from "../layouts/SiteLayout.astro";
+---
+
+<SiteLayout title="418 · Teapot" description="Themed teapot page.">
+  <ErrorApp client:load status={418} />
+</SiteLayout>

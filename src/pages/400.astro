@@ -1,0 +1,8 @@
+---
+import ErrorApp from "../../components/ErrorApp";
+import SiteLayout from "../layouts/SiteLayout.astro";
+---
+
+<SiteLayout title="400 · Bad request" description="Themed bad request page.">
+  <ErrorApp client:load status={400} />
+</SiteLayout>
