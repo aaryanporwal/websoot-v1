@@ -1,0 +1,8 @@
+---
+import ErrorApp from "../../components/ErrorApp";
+import SiteLayout from "../layouts/SiteLayout.astro";
+---
+
+<SiteLayout title="404 · Not found" description="Themed page not found.">
+  <ErrorApp client:load status={404} />
+</SiteLayout>
