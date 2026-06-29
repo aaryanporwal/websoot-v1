@@ -13,7 +13,7 @@ const PROJECTS = [
   {
     tag: "Full Stack",
     title: "Fused",
-    desc: "Architected an AI-assisted inline diff review with CodeMirror 6, built full-stack Git version control, and redesigned File Explorer for 10K+ file trees.",
+    desc: "Shaped an AI-assisted inline diff review in CodeMirror 6, built full-stack Git version control, and made 10K+ file trees easier to navigate.",
     cta: "fused.io",
     href: "https://fused.io",
     image: "/works/fused.png",
@@ -21,7 +21,7 @@ const PROJECTS = [
   {
     tag: "Open Source",
     title: "Canonical",
-    desc: "Built React components for ubuntu.com's design system (Vanilla Framework), a browser-based debugging environment for Anbox Cloud, and real-time Android Automotive sensor simulation.",
+    desc: "Built React components for ubuntu.com's Vanilla Framework, a browser debugging environment for Anbox Cloud, and real-time Android Automotive sensor simulation.",
     cta: "ubuntu.com",
     href: "https://ubuntu.com",
     image: "/works/canonical.png",
@@ -29,7 +29,7 @@ const PROJECTS = [
   {
     tag: "Open Source",
     title: "GSoC",
-    desc: "Implemented visual regression testing for Ceph Dashboard using Applitools Eyes and Cypress, catching 15+ UI defects monthly and accelerating feature releases.",
+    desc: "Added visual regression testing to Ceph Dashboard with Applitools Eyes and Cypress, catching 15+ UI defects a month before they reached users.",
     cta: "View on GitHub",
     href: "https://github.com/ceph/ceph",
     image: "/works/gsoc.png",
@@ -37,7 +37,7 @@ const PROJECTS = [
   {
     tag: "Community",
     title: "Hack Club",
-    desc: "Published 3 technical workshops on Node.js, DevOps, and HTML5 Canvas. Delivered a live workshop at Figma HQ on building CLI applications with Node.js.",
+    desc: "Published 3 technical workshops on Node.js, DevOps, and HTML5 Canvas, then taught CLI application building live at Figma HQ.",
     cta: "hackclub.com",
     href: "https://hackclub.com",
     image: "/works/hackclub.png",
@@ -45,7 +45,7 @@ const PROJECTS = [
   {
     tag: "Event",
     title: "Ubuntu Summit",
-    desc: "Built the official Ubuntu Summit 2024 website using Flask, supporting event infrastructure for 5,000+ attendees across a 3-day conference in The Hague.",
+    desc: "Built the official Ubuntu Summit 2024 site in Flask for a 5,000+ attendee, 3-day conference in The Hague.",
     cta: "Read more",
     href: "https://ubuntu.com/blog/tag/ubuntu-summit-2024",
     image: "/works/ubuntu-summit.png",
