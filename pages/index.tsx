@@ -11,10 +11,10 @@ export default function Home() {
   return (
     <div className="grain relative min-h-screen bg-body text-white">
       <Head>
-        <title>Aaryan Porwal · Web Engineer</title>
+        <title>Aaryan Porwal · Software Engineer</title>
         <meta
           name="description"
-          content="Personal site of Aaryan Porwal, a web engineer who builds fast, resilient web products. Work, writing, and a cat named Anya who screens the inbox."
+          content="Personal site of Aaryan Porwal, a software engineer who cares about sharp interfaces, reliable systems, the craft of building well, and a cat named Anya."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>

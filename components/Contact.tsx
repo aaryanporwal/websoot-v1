@@ -433,10 +433,11 @@ export default function Contact() {
           </h2>
 
           <p className="contact-stagger mt-8 max-w-md font-sans text-lg text-muted sm:text-xl">
-            Bribe her with a treat.
+            Bribe her with a treat and the channels appear.
           </p>
           <p className="contact-stagger mt-8 max-w-md font-sans text-lg text-muted/70 sm:text-xl">
-            She decides what reaches me. If you can win over a cat, you&rsquo;re probably worth hearing from.
+            Serious project, quick hello, odd idea: all welcome. She just likes
+            to feel involved.
           </p>
         </div>
 
