@@ -1,7 +1,10 @@
 import { PostHog } from "posthog-node";
 
-const posthogKey = import.meta.env.POSTHOG_KEY;
-const posthogHost = import.meta.env.POSTHOG_HOST || "https://eu.i.posthog.com";
+const posthogKey =
+  import.meta.env.POSTHOG_KEY ||
+  "phc_BzBUGcL3QBQozy1N8TmwpMZm3aS09rppD6vtbLDQ5ajN";
+const posthogHost =
+  import.meta.env.POSTHOG_HOST || "https://hogxd.aaryanporwal.com";
 
 let posthogClient: PostHog | null = null;
 
