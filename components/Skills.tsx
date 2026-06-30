@@ -8,14 +8,7 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP, ScrollTrigger);
 }
 
-const ROW_A = [
-  "JavaScript",
-  "TypeScript",
-  "React",
-  "Astro",
-  "Node.js",
-  "GSAP",
-];
+const ROW_A = ["JavaScript", "TypeScript", "React", "Astro", "Node.js", "GSAP"];
 const ROW_B = [
   "Tailwind CSS",
   "Docker",
@@ -64,7 +57,7 @@ export default function Skills() {
   useGSAP(
     () => {
       const reduce = window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
+        "(prefers-reduced-motion: reduce)",
       ).matches;
       if (reduce) return;
       if (!rowA.current || !rowB.current) return;
@@ -72,12 +65,12 @@ export default function Skills() {
       const tweenA = gsap.fromTo(
         rowA.current,
         { xPercent: 0 },
-        { xPercent: -50, duration: 24, ease: "none", repeat: -1 }
+        { xPercent: -50, duration: 24, ease: "none", repeat: -1 },
       );
       const tweenB = gsap.fromTo(
         rowB.current,
         { xPercent: -50 },
-        { xPercent: 0, duration: 24, ease: "none", repeat: -1 }
+        { xPercent: 0, duration: 24, ease: "none", repeat: -1 },
       );
 
       // Scroll velocity nudges the marquee speed for that reactive feel.
@@ -105,12 +98,13 @@ export default function Skills() {
         tweenB.kill();
       };
     },
-    { scope: root }
+    { scope: root },
   );
 
   return (
     <section
       ref={root}
+      id="skills"
       className="relative w-full border-y border-line bg-body py-20"
     >
       <div className="flex flex-col gap-4">

@@ -29,12 +29,7 @@ function normalize(value: string) {
 
 function commandText(command: CommandItem) {
   return normalize(
-    [
-      command.title,
-      command.section,
-      command.description,
-      command.href,
-    ]
+    [command.title, command.section, command.description, command.href]
       .filter(Boolean)
       .join(" "),
   );
@@ -44,6 +39,7 @@ export default function CommandSwitcher({ commands }: Props) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
 
@@ -91,6 +87,33 @@ export default function CommandSwitcher({ commands }: Props) {
       }
 
       if (!open) return;
+
+      if (event.key === "Tab") {
+        const dialog = dialogRef.current;
+        if (!dialog) return;
+
+        const focusable = Array.from(
+          dialog.querySelectorAll<HTMLElement>(
+            'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+          ),
+        ).filter((element) => element.getClientRects().length > 0);
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (!first || !last) return;
+
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+          return;
+        }
+
+        if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+        return;
+      }
 
       if (event.key === "Escape") {
         event.preventDefault();
@@ -161,10 +184,11 @@ export default function CommandSwitcher({ commands }: Props) {
         }}
       >
         <div
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-label="Command switcher"
-          className="w-full max-w-2xl overflow-hidden rounded-lg border border-line bg-ink shadow-2xl shadow-black/50"
+          className="w-full max-w-2xl overflow-hidden rounded-lg border border-line bg-ink"
         >
           <div className="flex items-center gap-3 border-b border-line bg-surface/70 px-4 py-3 sm:px-5">
             <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-voltage" />
@@ -173,6 +197,9 @@ export default function CommandSwitcher({ commands }: Props) {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-expanded="true"
               className="min-w-0 flex-1 bg-transparent font-sans text-base text-white outline-none placeholder:text-muted"
               aria-controls="command-switcher-results"
               aria-activedescendant={

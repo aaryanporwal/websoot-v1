@@ -224,7 +224,9 @@ export default function Contact() {
     if (!chaseModeRef.current || phaseRef.current === STATE.APPROVED) return;
     if (!stage.current || !catTargetRef.current) return;
 
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     if (reduce) return;
 
     const stageBounds = stage.current.getBoundingClientRect();
@@ -298,9 +300,8 @@ export default function Contact() {
         "(prefers-reduced-motion: reduce)",
       ).matches;
       if (!reduce) {
-        const contactItems = gsap.utils.toArray<HTMLElement>(
-          ".contact-stagger",
-        );
+        const contactItems =
+          gsap.utils.toArray<HTMLElement>(".contact-stagger");
         gsap.set(contactItems, { clearProps: "opacity,transform" });
         ScrollTrigger.create({
           trigger: root.current,
@@ -419,6 +420,18 @@ export default function Contact() {
     dodgeAnyaFromPoint(e.clientX, e.clientY);
   };
 
+  const instructionText = chaseMode
+    ? "Catch Anya with the treat."
+    : "Drag the treat to Anya.";
+  const statusText =
+    phase === STATE.APPROVED
+      ? "Anya approved. Contact channels are available."
+      : phase === STATE.ALERT
+        ? chaseMode
+          ? "Anya noticed the treat."
+          : "Shaking the treat bag."
+        : instructionText;
+
   return (
     <section
       ref={root}
@@ -447,19 +460,22 @@ export default function Contact() {
           onPointerMove={onStagePointerMove}
           className="contact-stagger relative min-h-[430px] w-full select-none overflow-hidden rounded-2xl border border-line bg-surface/40 sm:min-h-[520px] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:min-h-[620px]"
         >
+          <p id="contact-status" className="sr-only" aria-live="polite">
+            {statusText}
+          </p>
           <p
+            aria-hidden="true"
             className={`pointer-events-none absolute left-5 top-5 z-20 max-w-[13rem] font-sans text-sm transition-opacity duration-300 sm:left-6 sm:top-6 ${
               phase === STATE.IDLE ? "text-muted opacity-100" : "opacity-0"
             }`}
           >
-            <span className="motion-reduce:hidden">
-              {chaseMode ? "Catch Anya with the treat." : "Drag the treat to Anya."}
-            </span>
+            <span className="motion-reduce:hidden">{instructionText}</span>
             <span className="hidden motion-reduce:inline">
               Tap the treat to wake her.
             </span>
           </p>
           <p
+            aria-hidden="true"
             className={`pointer-events-none absolute left-5 top-5 z-20 font-sans text-sm text-voltage transition-opacity duration-300 sm:left-6 sm:top-6 ${
               phase === STATE.ALERT ? "opacity-100" : "opacity-0"
             }`}
@@ -467,6 +483,7 @@ export default function Contact() {
             {chaseMode ? "she noticed." : "shaking..."}
           </p>
           <div
+            aria-hidden={phase === STATE.APPROVED}
             className={`absolute right-5 top-5 z-40 w-[min(13rem,calc(100%-2.5rem))] rounded-2xl border border-line bg-ink/75 p-3 font-sans text-xs text-muted backdrop-blur transition-opacity duration-300 sm:right-6 sm:top-6 ${
               phase === STATE.APPROVED
                 ? "pointer-events-none opacity-0"
@@ -478,6 +495,7 @@ export default function Contact() {
                 <input
                   type="checkbox"
                   checked={chaseMode}
+                  disabled={phase === STATE.APPROVED}
                   onChange={(e) => onChaseModeChange(e.currentTarget.checked)}
                   className="h-3.5 w-3.5 accent-voltage"
                 />
@@ -496,6 +514,7 @@ export default function Contact() {
                   max={5}
                   value={difficulty}
                   aria-label="Chase difficulty"
+                  disabled={phase === STATE.APPROVED}
                   onChange={(e) =>
                     onDifficultyChange(Number(e.currentTarget.value))
                   }
@@ -506,6 +525,7 @@ export default function Contact() {
             ) : null}
           </div>
           <p
+            aria-hidden="true"
             className={`pointer-events-none absolute left-5 top-5 z-20 font-sans text-sm text-voltage transition-opacity duration-300 sm:left-6 sm:top-6 ${
               phase === STATE.APPROVED ? "opacity-100" : "opacity-0"
             }`}
@@ -545,6 +565,7 @@ export default function Contact() {
             ref={bagRef}
             role="button"
             tabIndex={0}
+            aria-describedby="contact-status"
             aria-label="Drag the treat to Anya, press Space, or click to bribe Anya with a treat."
             onKeyDown={onBagKeyDown}
             onClick={() => {
@@ -566,7 +587,6 @@ export default function Contact() {
               draggable={false}
             />
           </div>
-
         </div>
 
         {/* Reveal panel — after Anya on mobile; below copy on desktop */}
@@ -642,9 +662,7 @@ export default function Contact() {
                   <span className="block font-display text-2xl font-semibold text-white sm:text-3xl">
                     Email
                   </span>
-                  <span className="font-sans text-sm text-muted">
-                    {EMAIL}
-                  </span>
+                  <span className="font-sans text-sm text-muted">{EMAIL}</span>
                 </span>
                 <span
                   aria-hidden

@@ -22,6 +22,22 @@ a {
   text-decoration: none;
 }
 
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
+:focus-visible {
+  outline: 2px solid #c6ff3d;
+  outline-offset: 4px;
+}
+
 * {
   box-sizing: border-box;
 }

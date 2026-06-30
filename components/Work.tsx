@@ -2,7 +2,7 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { useSiteSounds } from "../hooks/useSiteSounds";
 
 if (typeof window !== "undefined") {
@@ -17,6 +17,8 @@ const PROJECTS = [
     cta: "fused.io",
     href: "https://fused.io",
     image: "/works/fused.png",
+    width: 2872,
+    height: 1667,
   },
   {
     tag: "Open Source",
@@ -25,6 +27,8 @@ const PROJECTS = [
     cta: "ubuntu.com",
     href: "https://ubuntu.com",
     image: "/works/canonical.png",
+    width: 1325,
+    height: 807,
   },
   {
     tag: "Open Source",
@@ -33,6 +37,8 @@ const PROJECTS = [
     cta: "View on GitHub",
     href: "https://github.com/ceph/ceph",
     image: "/works/gsoc.png",
+    width: 1680,
+    height: 936,
   },
   {
     tag: "Community",
@@ -41,6 +47,8 @@ const PROJECTS = [
     cta: "hackclub.com",
     href: "https://hackclub.com",
     image: "/works/hackclub.png",
+    width: 1672,
+    height: 941,
   },
   {
     tag: "Event",
@@ -49,6 +57,8 @@ const PROJECTS = [
     cta: "Read more",
     href: "https://ubuntu.com/blog/tag/ubuntu-summit-2024",
     image: "/works/ubuntu-summit.png",
+    width: 2172,
+    height: 724,
   },
 ];
 
@@ -56,6 +66,7 @@ export default function Work() {
   const root = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const sounds = useSiteSounds();
+  const prefersReducedMotion = useReducedMotion();
 
   useGSAP(
     () => {
@@ -112,15 +123,19 @@ export default function Work() {
         {PROJECTS.map((p, i) => (
           <motion.article
             key={p.title}
-            whileHover={{ y: -10 }}
+            whileHover={prefersReducedMotion ? undefined : { y: -10 }}
             transition={{ type: "spring", stiffness: 300, damping: 22 }}
             className="group relative flex w-full flex-col overflow-hidden rounded-3xl border border-line bg-surface md:w-[34rem]"
           >
             <figure className="relative h-40 shrink-0 overflow-hidden md:h-56">
               <img
                 src={p.image}
-                alt={p.title}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                alt={`${p.title} project preview`}
+                width={p.width}
+                height={p.height}
+                loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:group-hover:scale-100"
               />
             </figure>
 

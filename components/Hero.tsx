@@ -2,7 +2,7 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { Signature } from "./Signature";
 import { useSiteSounds } from "../hooks/useSiteSounds";
 import { HERO_CHROME_REVEAL_DELAY } from "./animationTimings";
@@ -19,6 +19,7 @@ export default function Hero() {
   const wordRef = useRef<HTMLSpanElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const sounds = useSiteSounds();
+  const prefersReducedMotion = useReducedMotion();
 
   useGSAP(
     () => {
@@ -96,7 +97,6 @@ export default function Hero() {
         ref={contentRef}
         className="opacity-0 pointer-events-none relative mx-auto flex min-h-[calc(100vh-12rem)] max-w-container flex-col justify-center"
       >
-
         <h1
           ref={headingRef}
           className="font-display text-fluid-xl font-semibold leading-[0.92] tracking-tightest text-white"
@@ -129,8 +129,8 @@ export default function Hero() {
           <motion.a
             href="#work"
             onClick={sounds.tap}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
+            whileHover={prefersReducedMotion ? undefined : { scale: 1.04 }}
+            whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
             className="rounded-full bg-voltage px-8 py-3.5 font-display text-base font-semibold text-body"
           >
@@ -139,8 +139,8 @@ export default function Hero() {
           <motion.a
             href="#contact"
             onClick={sounds.tap}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
+            whileHover={prefersReducedMotion ? undefined : { scale: 1.04 }}
+            whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
             className="rounded-full border border-line px-8 py-3.5 font-display text-base font-semibold text-white hover:border-white"
           >
@@ -154,15 +154,23 @@ export default function Hero() {
 
       {/* Scroll cue */}
       <motion.div
-        initial={{ opacity: 0 }}
+        initial={prefersReducedMotion ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: HERO_CHROME_REVEAL_DELAY, duration: 0.8 }}
+        transition={
+          prefersReducedMotion
+            ? { duration: 0 }
+            : { delay: HERO_CHROME_REVEAL_DELAY, duration: 0.8 }
+        }
         className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-xs uppercase tracking-[0.3em] text-muted sm:flex"
       >
         Scroll
         <motion.span
-          animate={{ y: [0, 8, 0] }}
-          transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+          animate={prefersReducedMotion ? undefined : { y: [0, 8, 0] }}
+          transition={
+            prefersReducedMotion
+              ? undefined
+              : { repeat: Infinity, duration: 1.6, ease: "easeInOut" }
+          }
           className="block h-8 w-px bg-muted"
         />
       </motion.div>
