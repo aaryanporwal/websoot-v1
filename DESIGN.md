@@ -19,7 +19,7 @@ typography:
     fontSize: "clamp(3.5rem, 0.5rem + 13vw, 12rem)"
     fontWeight: 600
     lineHeight: 0.92
-    letterSpacing: "-0.05em"
+    letterSpacing: "-0.04em"
   headline:
     fontFamily: "Clash Display, Inter, sans-serif"
     fontSize: "clamp(2.25rem, 1rem + 5vw, 4.5rem)"
@@ -46,6 +46,8 @@ typography:
     letterSpacing: "0.3em"
 rounded:
   hairline: "0px"
+  code: "0.35rem"
+  media: "0.75rem"
   card: "24px"
   pill: "9999px"
 spacing:
@@ -105,14 +107,15 @@ components:
 
 The site is a dark theater. The work is the performer. Voltage Lime is the single spot. Everything else — chrome, borders, navigation — recedes. This is not the AI-dark neon dashboard reflex (pure black + electric blue + fuchsia + acid glow stacked as personality). This is a dark stage where one signal color does the heavy lifting and the rest of the surface gets out of the way.
 
-Density is generous. Type carries the page; motion is choreography, not effect; imagery is sparse on purpose because the visitor's eye is meant to land on the headline, then the marquee, then the work cards, then the contact moment. The brand triad from PRODUCT.md — *Playful, Warm, Technical* — is split by surface: playful lives in motion choreography and micro-interaction, warm lives in copy voice and the named-cat contact device, technical lives in execution detail (split-text reveals, scroll-pinned horizontal scroll, scroll-velocity marquee, reduced-motion fallbacks shipped on every animation).
+Density is generous. Type carries the page; motion is choreography, not effect; imagery is sparse on purpose because the visitor's eye is meant to land on the headline, then the marquee, then the work cards, then the contact moment. The brand triad from PRODUCT.md — _Playful, Warm, Technical_ — is split by surface: playful lives in motion choreography and micro-interaction, warm lives in copy voice and the named-cat contact device, technical lives in execution detail (split-text reveals, scroll-pinned horizontal scroll, scroll-velocity marquee, reduced-motion fallbacks shipped on every animation).
 
 The system explicitly rejects: the SaaS hero-metric template, identical icon-and-text card grids, the AI-dark cyberpunk neon-purple portfolio reflex (currently the single largest pressure point in this codebase — see Colors §2 and Don'ts §6), Themeforest-style "Hello, I'm a developer" parallax, cold brutalist pure-mono, and corporate "passionate about" LinkedIn voice.
 
 **Key Characteristics:**
+
 - Dark canvas at near-black `#08080B`, with two tonal steps (`#0B0B10` ink, `#121219` surface) doing all the layering work — no shadows.
 - One functional accent: **Voltage Lime** `#C6FF3D`. It carries CTAs, eyebrow hairlines, link underlines, marquee separators, and `::selection`. Used at ≤10% of any screen.
-- Display type at hero scale (up to ~12rem fluid) with `letter-spacing: -0.05em`; body type tops out at ~1.5rem and stays comfortable for long reads.
+- Display type at hero scale (up to ~12rem fluid) with `letter-spacing: -0.04em`; body type tops out at ~1.5rem and stays comfortable for long reads.
 - Motion is the proof-of-craft: GSAP `SplitText` reveals, `ScrollTrigger` pinning, scrub-driven color reveal on the About statement, scroll-velocity-coupled marquee. Every animation has a `prefers-reduced-motion` fallback.
 - Film-grain overlay at 5% opacity over the whole document — texture, not decoration.
 
@@ -121,16 +124,20 @@ The system explicitly rejects: the SaaS hero-metric template, identical icon-and
 A near-black canvas with one signal color carrying all functional weight, and a legacy purple/fuchsia ramp held in ambient glows that is scheduled to recede.
 
 ### Primary
+
 - **Voltage Lime** (`#C6FF3D`): The only functional accent. Used on the primary "View Work" pill, hairline eyebrow rules above every section, link underlines, marquee `✺` / `◆` separators, the rotating headline word, the `::selection` background, and the `Explore →` affordance on work cards. If a UI element needs to read as "actionable" or "live," it gets Voltage Lime. Nothing else does.
 
 ### Secondary
+
 - **White** (`#F5F5F7`): Headlines, primary body text, the contact-CTA pill background (the inverse-emphasis variant where Voltage Lime would be too loud, e.g. the small navbar Contact button on a transparent header).
 
 ### Tertiary (legacy ramp — scheduled to recede)
+
 - **Electric** (`#3F3FFF`): Currently only as an ambient glow (Hero top-right blur, Footer center blur, card-hover blur halo). Never on type, never on borders, never on UI affordances.
 - **Violet** (`#8B5CF6`) and **Fuchsia** (`#D946EF`): Currently only in the `.animated-gradient` wordmark and the Footer hero gradient text. **This is a known anti-pattern** (gradient `background-clip: text` is on the global ban list, and the electric+violet+fuchsia stack is the AI-dark cyberpunk lane PRODUCT.md flags as the saturated 2026 portfolio reflex). New screens must not introduce more of this ramp; existing usage is scheduled for replacement in a follow-up pass.
 
 ### Neutral
+
 - **Body** (`#08080B`): Page background. Near-black with the slightest cool tint.
 - **Ink** (`#0B0B10`): One step up — used for input fills and reserved for sections that need to read as "deeper" than body.
 - **Surface** (`#121219`): Two steps up — work-card backgrounds. The only consistently-elevated surface in the system.
@@ -139,7 +146,8 @@ A near-black canvas with one signal color carrying all functional weight, and a 
 - **Selected Text** (`#A3A3FF`): Reserved for selected-state text on dark surfaces (currently unused in components but defined as a token).
 
 ### Named Rules
-**The One Spotlight Rule.** Voltage Lime is the only functional accent. Every CTA, every section-marker hairline, every active state, every selection. ≤10% of any screen by area. If you find yourself reaching for a *second* accent color to differentiate two things, the answer is type weight or spacing, not a new color.
+
+**The One Spotlight Rule.** Voltage Lime is the only functional accent. Every CTA, every section-marker hairline, every active state, every selection. ≤10% of any screen by area. If you find yourself reaching for a _second_ accent color to differentiate two things, the answer is type weight or spacing, not a new color.
 
 **The Glow-Only Rule.** The Electric / Violet / Fuchsia ramp lives in `blur(140px)` ambient halos and nowhere else. Never on type. Never on borders. Never on a button. Never on a chip. The moment one of these colors becomes a literal UI element, it has betrayed the system.
 
@@ -149,9 +157,10 @@ A near-black canvas with one signal color carrying all functional weight, and a 
 **Body Font:** General Sans (with Inter as fallback)
 **Local Font:** GT Walsheim Pro (loaded via `@font-face` from CDN, currently underused; available as `font-Walsheim`).
 
-**Character:** A geometric display sans (Clash Display) paired with a neutral, slightly humanist sans (General Sans). The pairing leans on weight and scale contrast rather than form contrast — both are sans, but Clash has wider apertures and a more confident verticality, General Sans is the quieter workhorse. Headlines push to `letter-spacing: -0.05em` for visual tightness at extreme scale; body holds at `normal`.
+**Character:** A geometric display sans (Clash Display) paired with a neutral, slightly humanist sans (General Sans). The pairing leans on weight and scale contrast rather than form contrast — both are sans, but Clash has wider apertures and a more confident verticality, General Sans is the quieter workhorse. Headlines push to `letter-spacing: -0.04em` for visual tightness at extreme scale; body holds at `normal`.
 
 ### Hierarchy
+
 - **Display** (600, `clamp(3.5rem, 0.5rem + 13vw, 12rem)`, line-height 0.92): Hero headline only. Paired with the `.text-stroke` outlined treatment for the second line of the hero name, creating a "filled / hollow" pairing that's the site's typographic signature.
 - **Headline** (600, `clamp(2.25rem, 1rem + 5vw, 4.5rem)`, line-height 1.15): Section headers — About statement, Selected Work, Let's build something bold. Some pair with `text-stroke` for the second word, echoing the hero.
 - **Title** (600, `1.875rem`–`3rem`, line-height tight): Work-card titles, mobile-menu link labels.
@@ -159,6 +168,7 @@ A near-black canvas with one signal color carrying all functional weight, and a 
 - **Label** (500, `0.75rem`–`0.875rem`, `letter-spacing: 0.3em`, uppercase): The eyebrow rail above every section ("About", "Toolbox", "Got a project?"). Currently sits next to a 40px Voltage Lime hairline `h-px w-10 bg-acid`. **This eyebrow pattern is currently used on every section** (Hero, About, Skills, Footer) — see Don'ts §6 for the planned reduction.
 
 ### Named Rules
+
 **The Filled-Hollow Pair Rule.** When a heading runs two lines and warrants emphasis, line 1 is solid white display, line 2 is `text-stroke` outlined (1.5px stroke at 55% white). Reserved for the hero, the work header, and the contact closer. Anywhere else and it stops feeling deliberate.
 
 **The Single-Family-Per-Role Rule.** Clash for display and headline. General Sans for body and label. Three families counting GT Walsheim is the cap; do not pair another display serif "for editorial feel" — that's the wrong register for this brand.
@@ -170,6 +180,7 @@ The system is **flat by tonal layering**. There are no `box-shadow` declarations
 The card-hover treatment is a `whileHover={{ y: -10 }}` spring lift with the blur halo intensifying behind the card — depth-by-motion plus depth-by-atmosphere, never depth-by-shadow.
 
 ### Named Rules
+
 **The No-Shadow Rule.** `box-shadow` is forbidden anywhere on the page. If a surface needs to read as lifted, step it up one tone (`body` → `ink` → `surface`) or pair it with the ambient glow halo. Drop-shadows are a 2014 affordance and a tell on dark backgrounds.
 
 **The Hairline-Border Rule.** Borders are exactly 1px, always `line` `#23232E` (or its `/60` / `/80` opacity variants). Never thicker, never tinted, never colored. The hairline is the only stroke in the system.
@@ -177,6 +188,7 @@ The card-hover treatment is a `whileHover={{ y: -10 }}` spring lift with the blu
 ## 5. Components
 
 ### Buttons
+
 Three variants, all fully-rounded pills. Hover uses a spring physics scale (`{ type: "spring", stiffness: 400, damping: 20 }`) on a `scale: 1.04` lift with `0.97` on tap.
 
 - **Primary (`button-primary`).** Voltage Lime fill, body-dark text, rounded-full pill. Padding `14px 32px`. Used for the hero "View Work" CTA, the mobile-menu Contact CTA. The "this is the action that matters" affordance.
@@ -184,9 +196,11 @@ Three variants, all fully-rounded pills. Hover uses a spring physics scale (`{ t
 - **White (`button-white`).** White fill, body-dark text, rounded-full pill. Padding `10px 24px`. Used only for the navbar Contact button on transparent header — the inverse-emphasis case where Voltage Lime would over-saturate the chrome.
 
 ### Section Eyebrow (signature component)
-Every section opens with the same affordance: a 40px Voltage Lime `h-px` hairline + a 24-32px gap + a 12-14px label in `muted`, `font-sans`, uppercase, `letter-spacing: 0.3em`. Examples: `— Personal Site — Web Engineer`, `— About`, `— Toolbox`, `— Got a project?`. This is the strongest *and* the most overused pattern in the system; it functions as the visual table-of-contents but currently appears on 4 of 5 sections, which puts it in the AI-grammar zone (see Don'ts §6).
+
+Every section opens with the same affordance: a 40px Voltage Lime `h-px` hairline + a 24-32px gap + a 12-14px label in `muted`, `font-sans`, uppercase, `letter-spacing: 0.3em`. Examples: `— Personal Site — Web Engineer`, `— About`, `— Toolbox`, `— Got a project?`. This is the strongest _and_ the most overused pattern in the system; it functions as the visual table-of-contents but currently appears on 4 of 5 sections, which puts it in the AI-grammar zone (see Don'ts §6).
 
 ### Cards (work-card)
+
 - **Corner Style:** `rounded-3xl` (24px) — soft, confident, not aggressive.
 - **Background:** `surface` `#121219`.
 - **Border:** 1px `line` `#23232E`.
@@ -195,23 +209,28 @@ Every section opens with the same affordance: a 40px Voltage Lime `h-px` hairlin
 - **Structure:** Index number top-left (`font-mono`, muted), category tag top-right (1px outline pill, uppercase tracking-widest). Title and description anchored to the bottom-third. `Explore →` affordance in Voltage Lime at the foot, with the arrow translating 6px right on hover.
 
 ### Inputs / Fields
+
 Currently no form inputs ship in the production components (contact is mailto-driven and the future "Bribe Me With a Cat Treat" interaction is not yet built). When inputs are introduced, they should: fill `ink` `#0B0B10`, 1px `line` border, rounded-full pill geometry to match the buttons, focus state lifts the border to `voltage-lime`, placeholder copy must hit 4.5:1 against `ink` (so muted gray is too light — use a darker mid-tone). No drop-shadow on focus; the border-color shift carries it.
 
 ### Navigation
+
 Fixed top bar, transparent on first scroll, `body/70` with `backdrop-blur-xl` and a `line/80` bottom border after scrolling past 24px. Links sit in `muted` at rest and animate to `white` on hover, with a Voltage Lime underline (`h-px`) sweeping in from left to right via a `w-0 → w-full transition-all duration-300`. Wordmark "Aaryan Porwal" currently uses `.animated-gradient` (fuchsia → violet → electric, animated `background-position` shine) — this is the most prominent surviving instance of the legacy ramp and is the highest-priority replacement in the next pass (see Don'ts §6).
 
 Mobile menu is a full-width drop-down panel, `body/95` with `backdrop-blur-xl`, each link rendered at `text-3xl` `font-display` and revealed with staggered `x: -20 → 0` on open.
 
 ### Marquee (signature component)
+
 The Skills section is two infinite-loop marquees in opposite directions, words at `text-5xl`–`text-7xl` `font-display`, separated by a Voltage Lime `✺` (row A) or `◆` (row B) glyph. Speed couples to scroll velocity via a `ScrollTrigger.onUpdate` that boosts the `timeScale` based on `self.getVelocity()` — the rows speed up while the user is scrolling and decay back. This is the load-bearing demonstration of "the engineering is the proof" — copy claims "GSAP / Web Development / DevOps" while the marquee itself is the proof of GSAP competence.
 
 ### Scroll-Reveal Statement (signature component)
+
 The About statement uses `SplitText` to split the paragraph into words, sets each word to `#3A3A45` (near-invisible against `body`), then scrubs each word's color toward `white` as the user scrolls past — a 100% scroll-coupled text reveal. Reduced-motion path: skip the scrub, set the whole paragraph to `white` immediately.
 
 ## 6. Do's and Don'ts
 
 ### Do:
-- **Do** use **Voltage Lime** `#C6FF3D` as the *only* functional accent. CTAs, hairline eyebrows, link underlines, marquee separators, selection, active states. ≤10% of any screen by area.
+
+- **Do** use **Voltage Lime** `#C6FF3D` as the _only_ functional accent. CTAs, hairline eyebrows, link underlines, marquee separators, selection, active states. ≤10% of any screen by area.
 - **Do** layer depth tonally: `body` `#08080B` → `ink` `#0B0B10` → `surface` `#121219`. Three steps, no shadows.
 - **Do** use 1px `line` `#23232E` for every border. Hairline is the only stroke weight.
 - **Do** pair filled white display type with the `.text-stroke` outlined treatment for the second line of two-line headings (hero, work header, contact closer) — the Filled-Hollow Pair is the site's typographic signature.
@@ -221,6 +240,7 @@ The About statement uses `SplitText` to split the paragraph into words, sets eac
 - **Do** treat motion as the proof. Performance, easing, choreography, reduced-motion correctness — these are the load-bearing demonstrations that this is an engineer's site, not the bullet list of "Skills".
 
 ### Don't:
+
 - **Don't** introduce more of the **Electric / Violet / Fuchsia** ramp. It's a legacy, scheduled to recede. Currently confined to ambient `blur(140px)` halos and the `.animated-gradient` wordmark. New screens must not put these colors on type, borders, buttons, or chips.
 - **Don't** ship `background-clip: text` gradient headlines. The current `.animated-gradient` on the wordmark and the Footer closer is the highest-priority replacement; do not propagate the pattern further. Use a single solid color (white or Voltage Lime). Emphasis via weight or scale.
 - **Don't** look or read like the **AI-dark neon-purple cyberpunk dashboard** — the saturated 2026 portfolio reflex. PRODUCT.md flags this as the current lane the site is closest to and the one it must leave by ship. If your move adds a glow, a gradient, or a fuchsia accent, you are reinforcing the slop lane.

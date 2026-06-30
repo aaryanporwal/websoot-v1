@@ -26,7 +26,7 @@ module.exports = {
         "fluid-xl": "clamp(3.5rem, 0.5rem + 13vw, 12rem)",
       },
       letterSpacing: {
-        tightest: "-0.05em",
+        tightest: "-0.04em",
       },
       maxWidth: {
         container: "1600px",
