@@ -1,0 +1,37 @@
+[
+  {
+    "event_name": "contact_unlocked",
+    "event_description": "User successfully bribes Anya the cat with a treat, unlocking the contact links.",
+    "file": "components/Contact.tsx"
+  },
+  {
+    "event_name": "contact_link_clicked",
+    "event_description": "User clicks a contact link (Book a call, LinkedIn, or Email) after unlocking the contact section.",
+    "file": "components/Contact.tsx"
+  },
+  {
+    "event_name": "work_project_clicked",
+    "event_description": "User clicks the CTA link on a work project card.",
+    "file": "components/Work.tsx"
+  },
+  {
+    "event_name": "hero_cta_clicked",
+    "event_description": "User clicks the View Work or Say Hi CTA button in the hero section.",
+    "file": "components/Hero.tsx"
+  },
+  {
+    "event_name": "blog_post_viewed",
+    "event_description": "User views a specific blog post page — top of the content engagement funnel.",
+    "file": "src/pages/blog/[slug].astro"
+  },
+  {
+    "event_name": "blog_tag_filtered",
+    "event_description": "User clicks a tag to filter blog posts by topic.",
+    "file": "src/pages/blog/index.astro"
+  },
+  {
+    "event_name": "social_link_clicked",
+    "event_description": "User clicks a social media link (LinkedIn, Twitter, or GitHub) in the footer.",
+    "file": "src/layouts/BlogLayout.astro"
+  }
+]

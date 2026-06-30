@@ -117,6 +117,7 @@ export default function Contact() {
     setPhase(STATE.APPROVED);
     setHeadFrame(STATE.APPROVED);
     resetCatPosition();
+    window.posthog?.capture("contact_unlocked");
 
     if (bagRef.current) {
       gsap.to(bagRef.current, {
