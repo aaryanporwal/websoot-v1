@@ -159,6 +159,14 @@ li {
   color: transparent;
 }
 
+.hero-signature {
+  color: rgb(var(--color-foreground));
+}
+
+:root[data-theme="light"] .hero-signature {
+  color: #000;
+}
+
 #signature {
   stroke-dasharray: 791;
   stroke-dashoffset: 791;

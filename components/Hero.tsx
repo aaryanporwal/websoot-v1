@@ -146,7 +146,7 @@ export default function Hero() {
           >
             Say hi
           </motion.a>
-          <div className="ml-2 text-white">
+          <div className="hero-signature ml-2">
             <Signature />
           </div>
         </div>
