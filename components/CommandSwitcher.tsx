@@ -41,6 +41,7 @@ export default function CommandSwitcher({ commands }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
   const dialogRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
 
   const filteredCommands = useMemo(() => {
@@ -53,6 +54,15 @@ export default function CommandSwitcher({ commands }: Props) {
   useEffect(() => {
     setActiveIndex(0);
   }, [query, open]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const activeElement = document.getElementById(
+      `command-switcher-result-${activeIndex}`,
+    );
+    activeElement?.scrollIntoView({ block: "nearest" });
+  }, [activeIndex, open]);
 
   useEffect(() => {
     if (!open) return;
@@ -178,7 +188,7 @@ export default function CommandSwitcher({ commands }: Props) {
   return (
     open && (
       <div
-        className="fixed inset-0 z-[100] flex items-start justify-center bg-body/75 px-4 py-20 backdrop-blur-md sm:px-6"
+        className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto overscroll-contain bg-body/75 px-4 py-20 backdrop-blur-md sm:px-6"
         onMouseDown={(event) => {
           if (event.target === event.currentTarget) setOpen(false);
         }}
@@ -214,9 +224,10 @@ export default function CommandSwitcher({ commands }: Props) {
           </div>
 
           <div
+            ref={listRef}
             id="command-switcher-results"
             role="listbox"
-            className="max-h-[min(60vh,28rem)] overflow-y-auto p-2"
+            className="max-h-[min(60vh,28rem)] overflow-y-auto overscroll-contain p-2"
           >
             {filteredCommands.length > 0 ? (
               filteredCommands.map((command, index) => {
