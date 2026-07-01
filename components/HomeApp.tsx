@@ -15,22 +15,24 @@ export default function HomeApp() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="grain relative min-h-screen bg-body text-white">
-      <NavBar onOpenTheme={() => setThemeOpen(true)} />
-      <main>
-        <Hero />
-        <About />
-        <Work />
-        <Skills />
-        <Contact />
-      </main>
-      <Footer />
+    <SmoothScroll>
+      <div className="grain relative min-h-screen bg-body text-white">
+        <NavBar onOpenTheme={() => setThemeOpen(true)} />
+        <main>
+          <Hero />
+          <About />
+          <Work />
+          <Skills />
+          <Contact />
+        </main>
+        <Footer />
+      </div>
       <ThemeMenu
         open={themeOpen}
         theme={theme}
         onClose={() => setThemeOpen(false)}
         onSelect={setTheme}
       />
-    </div>
+    </SmoothScroll>
   );
 }

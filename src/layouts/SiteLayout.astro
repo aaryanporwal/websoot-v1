@@ -5,6 +5,7 @@ import CommandSwitcher, {
 } from "../../components/CommandSwitcher";
 import "../../styles/globals.css";
 import { postHref, postSummary, sortPosts } from "../lib/posts";
+import PostHog from "../components/posthog.astro";
 
 type Props = {
   title?: string;
@@ -14,16 +15,13 @@ type Props = {
 };
 
 const {
-  title = "Aaryan Porwal · Web Engineer",
-  description = "Personal site of Aaryan Porwal, a web engineer who builds fast, resilient web products. Work, writing, and a cat named Anya who screens the inbox.",
+  title = "Aaryan Porwal · AI Systems & Web Engineer",
+  description = "Aaryan Porwal builds software with care and curiosity: interfaces, systems, React, agents, LLMs, and RAG tools that feel good to use.",
   canonicalPath = Astro.url.pathname,
-  bodyClass = "bg-body text-white antialiased",
+  bodyClass = "grain bg-body font-sans text-white antialiased",
 } = Astro.props;
 
 const canonical = new URL(canonicalPath, Astro.site ?? "https://aaryanporwal.com");
-const posthogKey = import.meta.env.PUBLIC_POSTHOG_KEY;
-const posthogHost =
-  import.meta.env.PUBLIC_POSTHOG_HOST || "https://eu.i.posthog.com";
 
 const posts = sortPosts(
   await getCollection("blog", ({ data }) => data.draft !== true),
@@ -121,24 +119,7 @@ const commands: CommandItem[] = [
         document.documentElement.dataset.theme = theme;
       })();
     </script>
-    {
-      posthogKey && (
-        <script data-posthog-key={posthogKey} data-posthog-host={posthogHost}>
-          import posthog from "posthog-js";
-
-          const script = document.currentScript as HTMLScriptElement | null;
-          const key = script?.dataset.posthogKey;
-          const host = script?.dataset.posthogHost || "https://eu.i.posthog.com";
-
-          if (key) {
-            posthog.init(key, {
-              api_host: host,
-              defaults: "2025-05-24",
-            });
-          }
-        </script>
-      )
-    }
+    <PostHog />
     <slot name="head" />
   </head>
   <body class={bodyClass}>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { useSiteSounds } from "../hooks/useSiteSounds";
 import { HERO_CHROME_REVEAL_DELAY } from "./animationTimings";
 import { PaletteIcon } from "./theme/ThemeMenu";
@@ -29,6 +29,7 @@ export default function NavBar({ onOpenTheme }: Props) {
   const [scrolled, setScrolled] = useState(false);
   const [heroVisible, setHeroVisible] = useState(true);
   const sounds = useSiteSounds();
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -52,9 +53,13 @@ export default function NavBar({ onOpenTheme }: Props) {
 
   return (
     <motion.header
-      initial={{ opacity: 0 }}
+      initial={prefersReducedMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ delay: HERO_CHROME_REVEAL_DELAY, duration: 0.5 }}
+      transition={
+        prefersReducedMotion
+          ? { duration: 0 }
+          : { delay: HERO_CHROME_REVEAL_DELAY, duration: 0.5 }
+      }
       className="fixed inset-x-0 top-0 z-50"
     >
       <div
@@ -111,15 +116,15 @@ export default function NavBar({ onOpenTheme }: Props) {
                 sounds.tap();
                 openCommandSwitcher();
               }}
-              className="rounded-md border border-line bg-surface/30 px-2.5 py-1 font-sans text-[11px] font-semibold text-muted transition-colors hover:border-voltage hover:text-voltage focus-visible:border-voltage focus-visible:text-voltage focus-visible:outline-none"
+              className="rounded-md border border-line bg-surface/30 px-2.5 py-1 font-sans text-[11px] font-semibold text-muted transition-colors hover:border-voltage hover:text-voltage focus-visible:border-voltage focus-visible:text-voltage"
             >
               ⌘K
             </button>
             <motion.a
               href="#contact"
               onClick={sounds.tap}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.96 }}
+              whileHover={prefersReducedMotion ? undefined : { scale: 1.05 }}
+              whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}
               transition={{ type: "spring", stiffness: 400, damping: 20 }}
               className="rounded-full bg-white px-6 py-2.5 font-display font-semibold text-body"
             >
@@ -139,14 +144,17 @@ export default function NavBar({ onOpenTheme }: Props) {
           >
             <motion.span
               animate={open ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
+              transition={prefersReducedMotion ? { duration: 0 } : undefined}
               className="block h-0.5 w-7 bg-white"
             />
             <motion.span
               animate={open ? { opacity: 0 } : { opacity: 1 }}
+              transition={prefersReducedMotion ? { duration: 0 } : undefined}
               className="block h-0.5 w-7 bg-white"
             />
             <motion.span
               animate={open ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
+              transition={prefersReducedMotion ? { duration: 0 } : undefined}
               className="block h-0.5 w-7 bg-white"
             />
           </button>
@@ -156,10 +164,14 @@ export default function NavBar({ onOpenTheme }: Props) {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            transition={
+              prefersReducedMotion
+                ? { duration: 0 }
+                : { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
+            }
             className="overflow-hidden border-b border-line bg-body/95 backdrop-blur-xl md:hidden"
           >
             <nav className="flex flex-col gap-1 px-6 py-6">
@@ -173,9 +185,13 @@ export default function NavBar({ onOpenTheme }: Props) {
                     sounds.tap();
                     setOpen(false);
                   }}
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={
+                    prefersReducedMotion ? false : { opacity: 0, x: -20 }
+                  }
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.06 * i }}
+                  transition={
+                    prefersReducedMotion ? { duration: 0 } : { delay: 0.06 * i }
+                  }
                   className="border-b border-line/60 py-4 font-display text-3xl font-medium text-white"
                 >
                   {l.label}

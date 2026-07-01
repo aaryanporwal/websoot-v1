@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { useSiteSounds } from "../hooks/useSiteSounds";
 
 type ErrorStatus = 400 | 401 | 403 | 404 | 418 | 500 | 502 | 503 | 504;
@@ -84,6 +84,7 @@ export default function ErrorApp({ status }: ErrorAppProps) {
     "idle",
   );
   const sounds = useSiteSounds();
+  const prefersReducedMotion = useReducedMotion();
 
   const routeName = useMemo(() => `ERR_${status}_ROUTE`, [status]);
 
@@ -139,7 +140,7 @@ export default function ErrorApp({ status }: ErrorAppProps) {
           type="button"
           data-command-switcher-trigger
           onClick={sounds.tap}
-          className="rounded-md border border-line bg-surface/50 px-3 py-2 font-sans text-xs font-semibold text-muted transition-colors hover:border-voltage hover:text-voltage focus-visible:border-voltage focus-visible:text-voltage focus-visible:outline-none"
+          className="rounded-md border border-line bg-surface/50 px-3 py-2 font-sans text-xs font-semibold text-muted transition-colors hover:border-voltage hover:text-voltage focus-visible:border-voltage focus-visible:text-voltage"
         >
           Command menu
         </button>
@@ -148,41 +149,47 @@ export default function ErrorApp({ status }: ErrorAppProps) {
       <main className="relative z-10 mx-auto grid min-h-[calc(100vh-6.5rem)] max-w-container items-center gap-10 py-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.7fr)]">
         <section>
           <motion.p
-            initial={{ opacity: 0, y: 12 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             className="font-sans text-sm font-semibold uppercase text-voltage"
           >
             {config.eyebrow} / {routeName}
           </motion.p>
           <motion.h1
-            initial={{ opacity: 0, y: 18 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.08 }}
+            transition={
+              prefersReducedMotion ? { duration: 0 } : { delay: 0.08 }
+            }
             className="mt-5 max-w-5xl font-display text-6xl font-semibold leading-none text-white sm:text-7xl lg:text-8xl"
           >
             <span className="block text-voltage">{status}</span>
             {config.title}
           </motion.h1>
           <motion.p
-            initial={{ opacity: 0, y: 18 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.16 }}
+            transition={
+              prefersReducedMotion ? { duration: 0 } : { delay: 0.16 }
+            }
             className="mt-8 max-w-2xl font-sans text-lg leading-8 text-muted sm:text-xl"
           >
             {config.detail}
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 18 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.24 }}
+            transition={
+              prefersReducedMotion ? { duration: 0 } : { delay: 0.24 }
+            }
             className="mt-10 flex flex-wrap items-center gap-4"
           >
             <motion.a
               href="/"
               onClick={sounds.tap}
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
+              whileHover={prefersReducedMotion ? undefined : { scale: 1.04 }}
+              whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}
               className="rounded-full bg-voltage px-7 py-3.5 font-display text-base font-semibold text-on-accent"
             >
               Back home
@@ -190,8 +197,8 @@ export default function ErrorApp({ status }: ErrorAppProps) {
             <motion.a
               href="/blog/"
               onClick={sounds.tap}
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
+              whileHover={prefersReducedMotion ? undefined : { scale: 1.04 }}
+              whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}
               className="rounded-full border border-line px-7 py-3.5 font-display text-base font-semibold text-white transition-colors hover:border-white"
             >
               Read instead
@@ -200,9 +207,9 @@ export default function ErrorApp({ status }: ErrorAppProps) {
         </section>
 
         <motion.aside
-          initial={{ opacity: 0, y: 24 }}
+          initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.2 }}
           className="border border-line bg-surface/60 p-5 backdrop-blur-xl sm:p-6"
         >
           <div className="border border-line bg-body/70 p-4">

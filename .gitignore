@@ -38,9 +38,12 @@ yarn-error.log*
 .netlify
 
 .vercel
+.impeccable/config.local.json
 
 .agents
 .claude
 .cursor
 .codex
 .gemini
+.env
+.vscode/
