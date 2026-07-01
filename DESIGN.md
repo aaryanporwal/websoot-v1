@@ -1,14 +1,20 @@
 ---
 name: Aaryan Porwal — Web Engineer
-description: A dark, motion-led personal site where Anya (the cat) gates the inbox.
+description: A motion-led personal site with selectable themes, tokenized color, and a dark-stage default.
 colors:
-  body: "#08080B"
-  ink: "#0B0B10"
-  surface: "#121219"
-  line: "#23232E"
-  muted: "#9A9AB0"
-  white: "#F5F5F7"
-  voltage-lime: "#C6FF3D"
+  body: "rgb(var(--color-body))"
+  ink: "rgb(var(--color-ink))"
+  surface: "rgb(var(--color-surface))"
+  line: "rgb(var(--color-line))"
+  muted: "rgb(var(--color-muted))"
+  foreground: "rgb(var(--color-foreground))"
+  accent: "rgb(var(--color-accent))"
+  accent-hover: "rgb(var(--color-accent-hover))"
+  accent-subtle: "rgb(var(--color-accent-subtle))"
+  on-accent: "rgb(var(--color-on-accent))"
+  default-body: "#08080B"
+  default-foreground: "#F5F5F7"
+  default-accent: "#C6FF3D"
   selected-text: "#A3A3FF"
   ramp-electric: "#3F3FFF"
   ramp-violet: "#8B5CF6"
@@ -59,34 +65,34 @@ spacing:
   section: "128px"
 components:
   button-primary:
-    backgroundColor: "{colors.voltage-lime}"
-    textColor: "{colors.body}"
+    backgroundColor: "{colors.accent}"
+    textColor: "{colors.on-accent}"
     rounded: "{rounded.pill}"
     padding: "14px 32px"
   button-primary-hover:
-    backgroundColor: "{colors.voltage-lime}"
-    textColor: "{colors.body}"
+    backgroundColor: "{colors.accent-hover}"
+    textColor: "{colors.on-accent}"
   button-outline:
     backgroundColor: "transparent"
-    textColor: "{colors.white}"
+    textColor: "{colors.foreground}"
     rounded: "{rounded.pill}"
     padding: "14px 32px"
   button-outline-hover:
     backgroundColor: "transparent"
-    textColor: "{colors.white}"
+    textColor: "{colors.foreground}"
   button-white:
-    backgroundColor: "{colors.white}"
+    backgroundColor: "{colors.foreground}"
     textColor: "{colors.body}"
     rounded: "{rounded.pill}"
     padding: "10px 24px"
   card-project:
     backgroundColor: "{colors.surface}"
-    textColor: "{colors.white}"
+    textColor: "{colors.foreground}"
     rounded: "{rounded.card}"
     padding: "40px"
   input-default:
     backgroundColor: "{colors.ink}"
-    textColor: "{colors.white}"
+    textColor: "{colors.foreground}"
     rounded: "{rounded.pill}"
     padding: "14px 20px"
   nav-link:
@@ -96,7 +102,7 @@ components:
     padding: "8px 0"
   nav-link-hover:
     backgroundColor: "transparent"
-    textColor: "{colors.white}"
+    textColor: "{colors.foreground}"
 ---
 
 # Design System: Aaryan Porwal — Web Engineer
@@ -105,7 +111,9 @@ components:
 
 **Creative North Star: "The Calm Stage"**
 
-The site is a dark theater. The work is the performer. Voltage Lime is the single spot. Everything else — chrome, borders, navigation — recedes. This is not the AI-dark neon dashboard reflex (pure black + electric blue + fuchsia + acid glow stacked as personality). This is a dark stage where one signal color does the heavy lifting and the rest of the surface gets out of the way.
+The default theme is a dark theater. The work is the performer. Voltage Lime is the single spot. Everything else — chrome, borders, navigation — recedes. This is not the AI-dark neon dashboard reflex (pure black + electric blue + fuchsia + acid glow stacked as personality). This is a dark stage where one signal color does the heavy lifting and the rest of the surface gets out of the way.
+
+The live site is now themeable. The dark-stage default remains the brand baseline, but color must be expressed through CSS variables (`--color-body`, `--color-foreground`, `--color-accent`, etc.) so the light, Gruvbox, Everforest, Nature, and Rose Pine themes inherit the same hierarchy without duplicating component styles.
 
 Density is generous. Type carries the page; motion is choreography, not effect; imagery is sparse on purpose because the visitor's eye is meant to land on the headline, then the marquee, then the work cards, then the contact moment. The brand triad from PRODUCT.md — _Playful, Warm, Technical_ — is split by surface: playful lives in motion choreography and micro-interaction, warm lives in copy voice and the named-cat contact device, technical lives in execution detail (split-text reveals, scroll-pinned horizontal scroll, scroll-velocity marquee, reduced-motion fallbacks shipped on every animation).
 
@@ -113,23 +121,33 @@ The system explicitly rejects: the SaaS hero-metric template, identical icon-and
 
 **Key Characteristics:**
 
-- Dark canvas at near-black `#08080B`, with two tonal steps (`#0B0B10` ink, `#121219` surface) doing all the layering work — no shadows.
-- One functional accent: **Voltage Lime** `#C6FF3D`. It carries CTAs, eyebrow hairlines, link underlines, marquee separators, and `::selection`. Used at ≤10% of any screen.
+- Default dark canvas at near-black `#08080B`, with two tonal steps (`#0B0B10` ink, `#121219` surface) doing all the layering work — no shadows.
+- One functional accent per theme. In the default theme this is **Voltage Lime** `#C6FF3D`; in alternate themes it is `--color-accent`. It carries CTAs, eyebrow hairlines, link underlines, marquee separators, and `::selection`. Used at ≤10% of any screen.
 - Display type at hero scale (up to ~12rem fluid) with `letter-spacing: -0.04em`; body type tops out at ~1.5rem and stays comfortable for long reads.
 - Motion is the proof-of-craft: GSAP `SplitText` reveals, `ScrollTrigger` pinning, scrub-driven color reveal on the About statement, scroll-velocity-coupled marquee. Every animation has a `prefers-reduced-motion` fallback.
 - Film-grain overlay at 5% opacity over the whole document — texture, not decoration.
 
 ## 2. Colors
 
-A near-black canvas with one signal color carrying all functional weight, and a legacy purple/fuchsia ramp held in ambient glows that is scheduled to recede.
+A tokenized color system with one signal color carrying all functional weight in each theme. The default theme is a near-black canvas with Voltage Lime, while alternate themes remap the same semantic tokens. A legacy purple/fuchsia ramp remains held in ambient glows and is scheduled to recede.
+
+### Theme Tokens
+
+All production color styling should use semantic Tailwind colors backed by CSS variables:
+
+- `body`, `ink`, `surface`, `line`, `muted`, `white`/foreground, `voltage`/accent, `voltage-hover`, `voltage-subtle`, and `on-accent`.
+- Theme state lives on `document.documentElement.dataset.theme`.
+- The supported theme IDs are `default`, `light`, `gruvbox`, `everforest`, `nature`, and `rose-pine`.
+- Theme choice persists in `localStorage` under `aaryanporwal-theme`.
+- The inline head bootstrap in `SiteLayout.astro` must set the saved theme before React loads to avoid a theme flash.
 
 ### Primary
 
-- **Voltage Lime** (`#C6FF3D`): The only functional accent. Used on the primary "View Work" pill, hairline eyebrow rules above every section, link underlines, marquee `✺` / `◆` separators, the rotating headline word, the `::selection` background, and the `Explore →` affordance on work cards. If a UI element needs to read as "actionable" or "live," it gets Voltage Lime. Nothing else does.
+- **Accent** (`--color-accent`; default `#C6FF3D`): The only functional accent within a theme. Used on the primary "View Work" pill, hairline eyebrow rules above every section, link underlines, marquee `✺` / `◆` separators, the rotating headline word, the `::selection` background, and the `Explore →` affordance on work cards. If a UI element needs to read as "actionable" or "live," it gets the active theme accent. Nothing else does.
 
 ### Secondary
 
-- **White** (`#F5F5F7`): Headlines, primary body text, the contact-CTA pill background (the inverse-emphasis variant where Voltage Lime would be too loud, e.g. the small navbar Contact button on a transparent header).
+- **Foreground** (`--color-foreground`; default `#F5F5F7`): Headlines, primary body text, the contact-CTA pill background (the inverse-emphasis variant where the accent would be too loud, e.g. the small navbar Contact button on a transparent header).
 
 ### Tertiary (legacy ramp — scheduled to recede)
 
@@ -147,7 +165,7 @@ A near-black canvas with one signal color carrying all functional weight, and a 
 
 ### Named Rules
 
-**The One Spotlight Rule.** Voltage Lime is the only functional accent. Every CTA, every section-marker hairline, every active state, every selection. ≤10% of any screen by area. If you find yourself reaching for a _second_ accent color to differentiate two things, the answer is type weight or spacing, not a new color.
+**The One Spotlight Rule.** Each theme gets one functional accent. In default it is Voltage Lime; in other themes it is whatever `--color-accent` defines. Every CTA, every section-marker hairline, every active state, every selection. ≤10% of any screen by area. If you find yourself reaching for a _second_ accent color to differentiate two things, the answer is type weight or spacing, not a new color.
 
 **The Glow-Only Rule.** The Electric / Violet / Fuchsia ramp lives in `blur(140px)` ambient halos and nowhere else. Never on type. Never on borders. Never on a button. Never on a chip. The moment one of these colors becomes a literal UI element, it has betrayed the system.
 
@@ -170,6 +188,8 @@ A near-black canvas with one signal color carrying all functional weight, and a 
 ### Named Rules
 
 **The Filled-Hollow Pair Rule.** When a heading runs two lines and warrants emphasis, line 1 is solid white display, line 2 is `text-stroke` outlined (1.5px stroke at 55% white). Reserved for the hero, the work header, and the contact closer. Anywhere else and it stops feeling deliberate.
+
+**The Signature Contrast Rule.** The hero handwritten signature uses `currentColor`, not hardcoded SVG stroke colors. It follows `--color-foreground` in all themes except `light`, where `.hero-signature` is pure black `#000` for intentional contrast on the warm light canvas.
 
 **The Single-Family-Per-Role Rule.** Clash for display and headline. General Sans for body and label. Three families counting GT Walsheim is the cap; do not pair another display serif "for editorial feel" — that's the wrong register for this brand.
 
