@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import {
-  DEFAULT_THEME,
   getStoredTheme,
   setDocumentTheme,
   THEME_STORAGE_KEY,
@@ -11,14 +10,12 @@ export type UseThemeOptions = {
   storageKey?: string;
 };
 
-export function useTheme({ storageKey = THEME_STORAGE_KEY }: UseThemeOptions = {}) {
-  const [theme, setThemeState] = useState<ThemeId>(DEFAULT_THEME);
-
-  useEffect(() => {
-    const savedTheme = getStoredTheme(storageKey);
-    setThemeState(savedTheme);
-    setDocumentTheme(savedTheme);
-  }, [storageKey]);
+export function useTheme({
+  storageKey = THEME_STORAGE_KEY,
+}: UseThemeOptions = {}) {
+  const [theme, setThemeState] = useState<ThemeId>(() =>
+    getStoredTheme(storageKey),
+  );
 
   const setTheme = useCallback(
     (nextTheme: ThemeId) => {

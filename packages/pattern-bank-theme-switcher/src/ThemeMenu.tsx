@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { THEME_OPTIONS, type ThemeId } from "./theme";
 
 export type ThemeMenuProps = {
@@ -24,7 +24,11 @@ function CheckIcon() {
   );
 }
 
-export function PaletteIcon({ className = "pbts-icon" }: { className?: string }) {
+export function PaletteIcon({
+  className = "pbts-icon",
+}: {
+  className?: string;
+}) {
   return (
     <svg
       aria-hidden="true"
@@ -52,21 +56,6 @@ export function ThemeMenu({
   onClose,
   className = "",
 }: ThemeMenuProps) {
-  const closeRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-
-    closeRef.current?.focus();
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
-
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [onClose, open]);
-
   useEffect(() => {
     if (!open) return;
 
@@ -82,16 +71,35 @@ export function ThemeMenu({
   return (
     <div
       className={`pbts-overlay ${className}`.trim()}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") onClose();
+      }}
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}
     >
-      <div role="dialog" aria-modal="true" aria-labelledby="pbts-title" className="pbts-panel">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="pbts-title"
+        className="pbts-panel"
+      >
         <div className="pbts-header">
           <h2 id="pbts-title">Theme</h2>
-          <button ref={closeRef} type="button" aria-label="Close theme menu" onClick={onClose}>
+          <button
+            type="button"
+            aria-label="Close theme menu"
+            autoFocus
+            onClick={onClose}
+          >
             <svg aria-hidden="true" viewBox="0 0 20 20" className="pbts-icon">
-              <path d="m5 5 10 10M15 5 5 15" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
+              <path
+                d="m5 5 10 10M15 5 5 15"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeWidth="2"
+              />
             </svg>
           </button>
         </div>
@@ -115,7 +123,9 @@ export function ThemeMenu({
                 </span>
                 <span className="pbts-label-row">
                   <span>{option.label}</span>
-                  <span className={`pbts-check ${selected ? "is-selected" : ""}`}>
+                  <span
+                    className={`pbts-check ${selected ? "is-selected" : ""}`}
+                  >
                     {selected && <CheckIcon />}
                   </span>
                 </span>

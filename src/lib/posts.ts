@@ -31,7 +31,7 @@ export function postSummary(post: BlogPost) {
   if (post.data.description) return post.data.description;
   if (post.data.summary) return post.data.summary;
 
-  const plain = post.body
+  const plain = (post.body ?? "")
     .replace(/```[\s\S]*?```/g, "")
     .replace(/!\[[^\]]*\]\([^)]+\)/g, "")
     .replace(/\[[^\]]+\]\([^)]+\)/g, (match) => {

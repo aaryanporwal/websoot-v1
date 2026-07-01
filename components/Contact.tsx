@@ -1,5 +1,5 @@
 import type { KeyboardEvent, PointerEvent } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { Draggable } from "gsap/Draggable";
@@ -47,24 +47,18 @@ export default function Contact() {
   const dragInstance = useRef<Draggable | null>(null);
   const chaseModeRef = useRef(false);
   const difficultyRef = useRef(4);
-  const [phase, setPhase] = useState<Phase>(STATE.IDLE);
+  const [phase, setPhaseState] = useState<Phase>(STATE.IDLE);
   const [chaseMode, setChaseMode] = useState(false);
   const [difficulty, setDifficulty] = useState(4);
   const phaseRef = useRef<Phase>(STATE.IDLE);
   const { tick, tap, off, shake, chime } = useSiteSounds();
 
-  useEffect(() => {
-    chaseModeRef.current = chaseMode;
-  }, [chaseMode]);
+  const setPhase = useCallback((nextPhase: Phase) => {
+    phaseRef.current = nextPhase;
+    setPhaseState(nextPhase);
 
-  useEffect(() => {
-    difficultyRef.current = difficulty;
-  }, [difficulty]);
-
-  useEffect(() => {
-    phaseRef.current = phase;
     if (!revealRef.current) return;
-    if (phase === STATE.APPROVED) {
+    if (nextPhase === STATE.APPROVED) {
       gsap.to(revealRef.current, {
         autoAlpha: 1,
         y: 0,
@@ -81,7 +75,7 @@ export default function Contact() {
         overwrite: "auto",
       });
     }
-  }, [phase]);
+  }, []);
 
   const setHeadFrame = useCallback((target: Phase) => {
     const map = {
@@ -136,7 +130,7 @@ export default function Contact() {
         },
       });
     }
-  }, [chime, resetCatPosition, setHeadFrame]);
+  }, [chime, resetCatPosition, setHeadFrame, setPhase]);
 
   const hasTreatReachedAnya = useCallback(() => {
     if (!bagRef.current || !catTargetRef.current) return false;
@@ -190,7 +184,7 @@ export default function Contact() {
         }
       },
     });
-  }, [hasTreatReachedAnya, setHeadFrame, shake, triggerApproval]);
+  }, [hasTreatReachedAnya, setHeadFrame, setPhase, shake, triggerApproval]);
 
   const resetToIdle = useCallback(() => {
     setPhase(STATE.IDLE);
@@ -206,7 +200,7 @@ export default function Contact() {
         ease: "expo.out",
       });
     }
-  }, [off, resetCatPosition, setHeadFrame]);
+  }, [off, resetCatPosition, setHeadFrame, setPhase]);
 
   const onChaseModeChange = (checked: boolean) => {
     tap();
@@ -399,6 +393,7 @@ export default function Contact() {
         dodgeAnyaFromPoint,
         moveTreatToAnya,
         setHeadFrame,
+        setPhase,
         shake,
         triggerApproval,
       ],
