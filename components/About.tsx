@@ -21,16 +21,25 @@ export default function About() {
         "(prefers-reduced-motion: reduce)"
       ).matches;
       if (!textRef.current) return;
+      const foreground = getComputedStyle(document.documentElement)
+        .getPropertyValue("--color-foreground")
+        .trim();
+      const muted = getComputedStyle(document.documentElement)
+        .getPropertyValue("--color-muted")
+        .trim();
+      const foregroundColor = `rgb(${foreground})`;
+      const mutedColor = `rgb(${muted} / 0.45)`;
+
       if (reduce) {
-        gsap.set(textRef.current, { color: "#f5f5f7" });
+        gsap.set(textRef.current, { color: foregroundColor });
         return;
       }
 
       const split = new SplitText(textRef.current, { type: "words" });
-      gsap.set(split.words, { color: "#3a3a45" });
+      gsap.set(split.words, { color: mutedColor });
 
       gsap.to(split.words, {
-        color: "#f5f5f7",
+        color: foregroundColor,
         stagger: 1,
         ease: "none",
         scrollTrigger: {

@@ -7,12 +7,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        body: "#08080B",
-        ink: "#0B0B10",
-        surface: "#121219",
-        line: "#23232E",
-        muted: "#9A9AB0", // contrast 5.3:1 against body; do not lighten further
-        voltage: "#C6FF3D",
+        body: "rgb(var(--color-body) / <alpha-value>)",
+        ink: "rgb(var(--color-ink) / <alpha-value>)",
+        surface: "rgb(var(--color-surface) / <alpha-value>)",
+        line: "rgb(var(--color-line) / <alpha-value>)",
+        muted: "rgb(var(--color-muted) / <alpha-value>)",
+        white: "rgb(var(--color-foreground) / <alpha-value>)",
+        voltage: "rgb(var(--color-accent) / <alpha-value>)",
+        "voltage-hover": "rgb(var(--color-accent-hover) / <alpha-value>)",
+        "voltage-subtle": "rgb(var(--color-accent-subtle) / <alpha-value>)",
+        "on-accent": "rgb(var(--color-on-accent) / <alpha-value>)",
       },
       fontFamily: {
         display: ["'Clash Display'", "sans-serif"],

@@ -1,0 +1,55 @@
+{
+  "name": "@aaryanporwal/tiny-theme-palette",
+  "version": "0.1.0",
+  "description": "A cute one-component React theme switcher with a six-theme palette.",
+  "license": "MIT",
+  "author": "Aaryan Porwal",
+  "keywords": [
+    "react",
+    "theme",
+    "theme-switcher",
+    "palette",
+    "dark-mode"
+  ],
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaryanporwal/tiny-theme-palette.git"
+  },
+  "homepage": "https://github.com/aaryanporwal/tiny-theme-palette#readme",
+  "bugs": {
+    "url": "https://github.com/aaryanporwal/tiny-theme-palette/issues"
+  },
+  "type": "module",
+  "sideEffects": [
+    "./dist/loadStyles.js",
+    "./dist/styles.css"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && cp src/styles.css dist/styles.css && cp src/loadStyles.js dist/loadStyles.js",
+    "prepublishOnly": "npm run build"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "typescript": "^6.0.0"
+  }
+}
