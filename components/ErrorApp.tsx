@@ -190,7 +190,7 @@ export default function ErrorApp({ status }: ErrorAppProps) {
               onClick={sounds.tap}
               whileHover={prefersReducedMotion ? undefined : { scale: 1.04 }}
               whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}
-              className="rounded-full bg-voltage px-7 py-3.5 font-display text-base font-semibold text-body"
+              className="rounded-full bg-voltage px-7 py-3.5 font-display text-base font-semibold text-on-accent"
             >
               Back home
             </motion.a>
