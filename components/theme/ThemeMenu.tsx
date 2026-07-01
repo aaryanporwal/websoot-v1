@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { THEME_OPTIONS, type ThemeId } from "./theme";
 
 type ThemeMenuProps = {
@@ -50,21 +50,6 @@ export default function ThemeMenu({
   onSelect,
   onClose,
 }: ThemeMenuProps) {
-  const closeRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-
-    closeRef.current?.focus();
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
-
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [onClose, open]);
-
   useEffect(() => {
     if (!open) return;
 
@@ -80,6 +65,9 @@ export default function ThemeMenu({
   return (
     <div
       className="fixed inset-0 z-[110] flex items-start justify-center bg-body/75 px-4 py-20 backdrop-blur-md sm:px-6"
+      onKeyDown={(event) => {
+        if (event.key === "Escape") onClose();
+      }}
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}
@@ -98,9 +86,9 @@ export default function ThemeMenu({
             Theme
           </h2>
           <button
-            ref={closeRef}
             type="button"
             aria-label="Close theme menu"
+            autoFocus
             onClick={onClose}
             className="grid h-9 w-9 place-items-center rounded-md border border-line text-muted transition-colors hover:border-voltage hover:text-voltage focus-visible:border-voltage focus-visible:text-voltage focus-visible:outline-none"
           >

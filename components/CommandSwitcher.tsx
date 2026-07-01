@@ -40,8 +40,6 @@ export default function CommandSwitcher({ commands }: Props) {
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const dialogRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
 
   const filteredCommands = useMemo(() => {
@@ -50,26 +48,10 @@ export default function CommandSwitcher({ commands }: Props) {
 
     return commands.filter((command) => commandText(command).includes(needle));
   }, [commands, query]);
-
-  useEffect(() => {
-    setActiveIndex(0);
-  }, [query, open]);
-
-  useEffect(() => {
-    if (!open) return;
-
-    const activeElement = document.getElementById(
-      `command-switcher-result-${activeIndex}`,
-    );
-    activeElement?.scrollIntoView({ block: "nearest" });
-  }, [activeIndex, open]);
-
-  useEffect(() => {
-    if (!open) return;
-
-    const id = window.setTimeout(() => inputRef.current?.focus(), 0);
-    return () => window.clearTimeout(id);
-  }, [open]);
+  const selectedIndex =
+    filteredCommands.length === 0
+      ? 0
+      : Math.min(activeIndex, filteredCommands.length - 1);
 
   function openSwitcher() {
     if (!open) {
@@ -78,6 +60,7 @@ export default function CommandSwitcher({ commands }: Props) {
           ? document.activeElement
           : null;
     }
+    setActiveIndex(0);
     setOpen(true);
   }
 
@@ -152,7 +135,7 @@ export default function CommandSwitcher({ commands }: Props) {
       }
 
       if (event.key === "Enter") {
-        const command = filteredCommands[activeIndex];
+        const command = filteredCommands[selectedIndex];
         if (!command) return;
 
         event.preventDefault();
@@ -166,7 +149,7 @@ export default function CommandSwitcher({ commands }: Props) {
       window.removeEventListener("command-switcher:open", onOpen);
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [activeIndex, filteredCommands, open]);
+  }, [filteredCommands, open, selectedIndex]);
 
   useEffect(() => {
     if (open) {
@@ -203,9 +186,12 @@ export default function CommandSwitcher({ commands }: Props) {
           <div className="flex items-center gap-3 border-b border-line bg-surface/70 px-4 py-3 sm:px-5">
             <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-voltage" />
             <input
-              ref={inputRef}
               value={query}
-              onChange={(event) => setQuery(event.target.value)}
+              onChange={(event) => {
+                setQuery(event.target.value);
+                setActiveIndex(0);
+              }}
+              autoFocus
               placeholder="Search"
               role="combobox"
               aria-autocomplete="list"
@@ -213,8 +199,8 @@ export default function CommandSwitcher({ commands }: Props) {
               className="min-w-0 flex-1 bg-transparent font-sans text-base text-white outline-none placeholder:text-muted"
               aria-controls="command-switcher-results"
               aria-activedescendant={
-                filteredCommands[activeIndex]
-                  ? `command-switcher-result-${activeIndex}`
+                filteredCommands[selectedIndex]
+                  ? `command-switcher-result-${selectedIndex}`
                   : undefined
               }
             />
@@ -224,17 +210,19 @@ export default function CommandSwitcher({ commands }: Props) {
           </div>
 
           <div
-            ref={listRef}
             id="command-switcher-results"
             role="listbox"
             className="max-h-[min(60vh,28rem)] overflow-y-auto overscroll-contain p-2"
           >
             {filteredCommands.length > 0 ? (
               filteredCommands.map((command, index) => {
-                const active = index === activeIndex;
+                const active = index === selectedIndex;
 
                 return (
                   <button
+                    ref={(element) => {
+                      if (active) element?.scrollIntoView({ block: "nearest" });
+                    }}
                     id={`command-switcher-result-${index}`}
                     key={`${command.section}-${command.href}`}
                     type="button"
