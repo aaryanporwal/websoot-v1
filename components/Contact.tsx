@@ -436,7 +436,7 @@ export default function Contact() {
     <section
       ref={root}
       id="contact"
-      className="relative w-full overflow-hidden bg-body px-6 py-32 sm:px-10 sm:py-40 lg:px-16"
+      className="relative w-full overflow-hidden bg-body px-6 pt-32 pb-8 sm:px-10 sm:pt-40 sm:pb-10 lg:px-16"
     >
       <div className="relative mx-auto grid max-w-container gap-12 lg:grid-cols-[minmax(320px,0.82fr)_minmax(0,1.18fr)] lg:items-center lg:gap-16">
         {/* Copy */}
