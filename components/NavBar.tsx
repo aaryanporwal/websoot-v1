@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useSiteSounds } from "../hooks/useSiteSounds";
 import { HERO_CHROME_REVEAL_DELAY } from "./animationTimings";
+import { PaletteIcon } from "./theme/ThemeMenu";
 
 const BLOG_URL = "/blog/";
 const LINKEDIN_URL = "https://www.linkedin.com/in/aaryan-porwal/";
@@ -15,11 +16,15 @@ const LINKS = [
   { label: "Blog", href: BLOG_URL },
 ];
 
+type Props = {
+  onOpenTheme: () => void;
+};
+
 function openCommandSwitcher() {
   window.dispatchEvent(new CustomEvent("command-switcher:open"));
 }
 
-export default function NavBar() {
+export default function NavBar({ onOpenTheme }: Props) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [heroVisible, setHeroVisible] = useState(true);
@@ -88,6 +93,17 @@ export default function NavBar() {
                 <span className="absolute -bottom-1 left-0 h-px w-0 bg-voltage transition-all duration-300 group-hover:w-full" />
               </a>
             ))}
+            <button
+              type="button"
+              aria-label="Open theme menu"
+              onClick={() => {
+                sounds.tap();
+                onOpenTheme();
+              }}
+              className="grid h-8 w-8 place-items-center rounded-md border border-line bg-surface/30 text-muted transition-colors hover:border-voltage hover:text-voltage focus-visible:border-voltage focus-visible:text-voltage focus-visible:outline-none"
+            >
+              <PaletteIcon />
+            </button>
             <button
               type="button"
               aria-label="Open command switcher"
@@ -165,13 +181,25 @@ export default function NavBar() {
                   {l.label}
                 </motion.a>
               ))}
+              <button
+                type="button"
+                onClick={() => {
+                  sounds.tap();
+                  setOpen(false);
+                  onOpenTheme();
+                }}
+                className="flex items-center justify-between border-b border-line/60 py-4 text-left font-display text-3xl font-medium text-white"
+              >
+                Theme
+                <PaletteIcon className="h-6 w-6" />
+              </button>
               <a
                 href="#contact"
                 onClick={() => {
                   sounds.tap();
                   setOpen(false);
                 }}
-                className="mt-5 rounded-full bg-voltage px-6 py-3 text-center font-display text-lg font-semibold text-body"
+                className="mt-5 rounded-full bg-voltage px-6 py-3 text-center font-display text-lg font-semibold text-on-accent"
               >
                 Contact
               </a>

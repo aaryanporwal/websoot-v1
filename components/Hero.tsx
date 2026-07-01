@@ -132,7 +132,7 @@ export default function Hero() {
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            className="rounded-full bg-voltage px-8 py-3.5 font-display text-base font-semibold text-body"
+            className="rounded-full bg-voltage px-8 py-3.5 font-display text-base font-semibold text-on-accent"
           >
             View work
           </motion.a>

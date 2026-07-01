@@ -206,7 +206,7 @@ export default function CommandSwitcher({ commands }: Props) {
                     onClick={() => openCommand(command)}
                     className={`flex w-full items-center justify-between gap-4 rounded-md px-3 py-3 text-left transition-colors sm:px-4 ${
                       active
-                        ? "bg-voltage text-body"
+                        ? "bg-voltage text-on-accent"
                         : "text-white hover:bg-surface"
                     }`}
                   >
@@ -216,7 +216,7 @@ export default function CommandSwitcher({ commands }: Props) {
                       </span>
                       <span
                         className={`mt-1 block truncate font-sans text-sm ${
-                          active ? "text-body/70" : "text-muted"
+                          active ? "text-on-accent/70" : "text-muted"
                         }`}
                       >
                         {command.description || command.href}
@@ -225,7 +225,7 @@ export default function CommandSwitcher({ commands }: Props) {
                     <span
                       className={`shrink-0 rounded-full border px-2.5 py-1 font-sans text-[11px] font-semibold ${
                         active
-                          ? "border-body/25 text-body"
+                          ? "border-on-accent/25 text-on-accent"
                           : "border-line text-muted"
                       }`}
                     >
