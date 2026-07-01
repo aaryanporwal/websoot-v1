@@ -10,7 +10,7 @@ const SOCIALS = [
 
 export function Footer() {
   return (
-    <footer className="relative w-full bg-body px-6 pb-10 pt-16 sm:px-10 lg:px-16">
+    <footer className="relative w-full bg-body px-6 pb-10 pt-6 sm:px-10 lg:px-16">
       <div className="mx-auto flex max-w-container flex-col gap-6 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between">
         <ul className="flex flex-wrap gap-x-8 gap-y-3 font-sans text-base">
           {SOCIALS.map((s) => (
