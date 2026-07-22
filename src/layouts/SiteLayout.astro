@@ -11,6 +11,9 @@ type Props = {
   title?: string;
   description?: string;
   canonicalPath?: string;
+  socialImage?: string;
+  socialImageAlt?: string;
+  socialType?: "website" | "article";
   bodyClass?: string;
 };
 
@@ -18,10 +21,14 @@ const {
   title = "Aaryan Porwal · AI Systems & Web Engineer",
   description = "Aaryan Porwal builds software with care and curiosity: interfaces, systems, React, agents, LLMs, and RAG tools that feel good to use.",
   canonicalPath = Astro.url.pathname,
+  socialImage = "/og-image.jpg",
+  socialImageAlt = "Aaryan Porwal — AI Systems & Web Engineer",
+  socialType = "website",
   bodyClass = "grain bg-body font-sans text-white antialiased",
 } = Astro.props;
 
 const canonical = new URL(canonicalPath, Astro.site ?? "https://aaryanporwal.com");
+const socialImageUrl = new URL(socialImage, Astro.site ?? "https://aaryanporwal.com");
 
 const posts = sortPosts(
   await getCollection("blog", ({ data }) => data.draft !== true),
@@ -96,6 +103,28 @@ const commands: CommandItem[] = [
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#08080B" />
+
+    <meta property="og:type" content={socialType} />
+    <meta property="og:site_name" content="Aaryan Porwal" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImageUrl} />
+    <meta property="og:image:secure_url" content={socialImageUrl} />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="2496" />
+    <meta property="og:image:height" content="1569" />
+    <meta property="og:image:alt" content={socialImageAlt} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@aaryan7476" />
+    <meta name="twitter:creator" content="@aaryan7476" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageUrl} />
+    <meta name="twitter:image:alt" content={socialImageAlt} />
     <link rel="icon" href="/favicon.png" type="image/png" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.ico" sizes="any" />
