@@ -6,7 +6,10 @@
     "dev": "astro dev",
     "build": "astro build",
     "start": "astro preview",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "tweets:fetch": "bun run scripts/fetch-tweets.ts",
+    "prebuild": "bun run tweets:fetch",
+    "tweet:import": "bun run scripts/tweet-to-draft.ts"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.0",

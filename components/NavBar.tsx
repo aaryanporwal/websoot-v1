@@ -53,7 +53,7 @@ export default function NavBar({ onOpenTheme }: Props) {
   }, []);
 
   useEffect(() => {
-    const sectionIds = ["about", "work", "skills", "tweets", "contact"];
+    const sectionIds = ["about", "work", "skills", "contact"];
     const onScroll = () => {
       const marker = window.innerHeight * 0.35;
       let current = "";

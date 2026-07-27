@@ -1,0 +1,46 @@
+name: Import tweets as blog drafts
+
+on:
+  schedule:
+    # Daily at 6:00 AM UTC
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import-tweets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install twitter CLI
+        run: pip install twitter-cli
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Import tweets
+        run: |
+          bun run tweet:import
+          bun run tweets:fetch
+        env:
+          TWITTER_AUTH_TOKEN: ${{ secrets.TWITTER_AUTH_TOKEN }}
+          TWITTER_CT0: ${{ secrets.TWITTER_CT0 }}
+          X_USERNAME: aaryan7476
+
+      - name: Commit draft posts
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: import new tweet drafts"
+          file_pattern: src/content/blog/tweets/*.md scripts/.tweet-state.json src/data/recent-tweets.json

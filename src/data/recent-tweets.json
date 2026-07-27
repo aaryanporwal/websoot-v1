@@ -1,0 +1,86 @@
+{
+  "username": "aaryan7476",
+  "fetchedAt": "2026-07-27T23:17:00.788Z",
+  "tweets": [
+    {
+      "id": "2081829079339479439",
+      "text": "trying out @Kimi_Moonshot K3 on @digitalocean \n\nmy prompt:\ninvent a startup that is:\n- no LLM wrapper\n- has $10B+ potential\n- 2 enggs can build the MVP\n- users instantly get\n- AI is essential but invisible\n\nThen spend more time criticizing it than selling it. https://t.co/QL3YnpR9rf",
+      "createdAt": "2026-07-27T19:48:25+00:00",
+      "url": "https://x.com/aaryan7476/status/2081829079339479439",
+      "media": [
+        {
+          "type": "photo",
+          "url": "https://pbs.twimg.com/media/HOQj0SVb0AASXCC.jpg"
+        }
+      ],
+      "metrics": {
+        "likes": 0,
+        "replies": 1,
+        "views": 35
+      }
+    },
+    {
+      "id": "2081752027626152180",
+      "text": "Built Reelprint in a few hours at the @fal  hackathon.\nDrop in a reference reel + one product photo, and it rebuilds the reel around your product while keeping the same hook, rhythm, and structure.\nHappyHorse, Gemini 3.1 Pro, BiRefNet, Seedance 2.0, FFmpeg, all stitched thru fal https://t.co/6VRb9kJdrL",
+      "createdAt": "2026-07-27T14:42:15+00:00",
+      "url": "https://x.com/aaryan7476/status/2081752027626152180",
+      "media": [],
+      "metrics": {
+        "likes": 10,
+        "replies": 3,
+        "views": 643
+      }
+    },
+    {
+      "id": "2080262188036772009",
+      "text": "Impressed with how smart Composer-2.5 is in Cursor! https://t.co/rT2OOTDD81",
+      "createdAt": "2026-07-23T12:02:09+00:00",
+      "url": "https://x.com/aaryan7476/status/2080262188036772009",
+      "media": [
+        {
+          "type": "photo",
+          "url": "https://pbs.twimg.com/media/HN6Gj_paUAAojQw.jpg"
+        }
+      ],
+      "metrics": {
+        "likes": 1,
+        "replies": 0,
+        "views": 203
+      }
+    },
+    {
+      "id": "2078209443893031017",
+      "text": "A full-circle moment at #GSoC Alumni Camp India 2026! 🚀\n\nBack in 2021, I contributed visual regression testing to the Ceph Dashboard. It’s rewarding to see it still in use today.\n\nThe depth of the work and passion in this community are inspiring. https://t.co/r3Czv63FQd",
+      "createdAt": "2026-07-17T20:05:17+00:00",
+      "url": "https://x.com/aaryan7476/status/2078209443893031017",
+      "media": [
+        {
+          "type": "photo",
+          "url": "https://pbs.twimg.com/media/HNdILCFa4AA-nNz.jpg"
+        }
+      ],
+      "metrics": {
+        "likes": 17,
+        "replies": 2,
+        "views": 643
+      }
+    },
+    {
+      "id": "2078080789967986875",
+      "text": "Here at @GoogleOSS ‘s GSoC alumni camp! Excited to meet all the open-sourcerers 🧙\nCome say hi if you’re here too! https://t.co/iCKFZ0bg1Q",
+      "createdAt": "2026-07-17T11:34:03+00:00",
+      "url": "https://x.com/aaryan7476/status/2078080789967986875",
+      "media": [
+        {
+          "type": "photo",
+          "url": "https://pbs.twimg.com/media/HNbTdWOaYAA3uEl.jpg"
+        }
+      ],
+      "metrics": {
+        "likes": 6,
+        "replies": 0,
+        "views": 296
+      }
+    }
+  ]
+}
