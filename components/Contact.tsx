@@ -309,8 +309,8 @@ export default function Contact() {
               {
                 y: 0,
                 opacity: 1,
-                duration: 0.9,
-                stagger: 0.08,
+                duration: 0.55,
+                stagger: 0.05,
                 ease: "expo.out",
                 overwrite: "auto",
               },

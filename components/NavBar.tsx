@@ -10,7 +10,7 @@ const SCRAPBOOK_URL = "https://scrapbook.hackclub.com/aaryan";
 const PROJECTS_URL = "https://github.com/aaryanporwal?tab=repositories";
 
 const LINKS = [
-  { label: "Work", href: "#work" },
+  { label: "Work", href: "#work", sectionId: "work" },
   { label: "GitHub", href: PROJECTS_URL, external: true },
   { label: "Scrapbook", href: SCRAPBOOK_URL, external: true },
   { label: "Blog", href: BLOG_URL },
@@ -28,6 +28,7 @@ export default function NavBar({ onOpenTheme }: Props) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [heroVisible, setHeroVisible] = useState(true);
+  const [activeSection, setActiveSection] = useState("");
   const sounds = useSiteSounds();
   const prefersReducedMotion = useReducedMotion();
 
@@ -49,6 +50,27 @@ export default function NavBar({ onOpenTheme }: Props) {
 
     observer.observe(hero);
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const sectionIds = ["about", "work", "skills", "tweets", "contact"];
+    const onScroll = () => {
+      const marker = window.innerHeight * 0.35;
+      let current = "";
+
+      for (const id of sectionIds) {
+        const section = document.getElementById(id);
+        if (section && section.getBoundingClientRect().top <= marker) {
+          current = id;
+        }
+      }
+
+      setActiveSection(current);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
@@ -85,19 +107,33 @@ export default function NavBar({ onOpenTheme }: Props) {
           </a>
 
           <nav className="hidden items-center gap-9 font-sans text-sm font-medium md:flex">
-            {LINKS.map((l) => (
+            {LINKS.map((l) => {
+              const isActive =
+                "sectionId" in l && l.sectionId === activeSection;
+
+              return (
               <a
                 key={l.label}
                 href={l.href}
                 target={l.external ? "_blank" : undefined}
                 rel={l.external ? "noreferrer" : undefined}
                 onClick={sounds.tap}
-                className="group relative text-muted transition-colors duration-200 ease-out-strong hover:text-white"
+                aria-current={isActive ? "page" : undefined}
+                className={`group relative transition-colors duration-200 ease-out-strong ${
+                  isActive ? "text-white" : "text-muted hover:text-white"
+                }`}
               >
                 {l.label}
-                <span className="absolute -bottom-1 left-0 h-px w-0 bg-voltage transition-[width] duration-200 ease-out-strong [@media(hover:hover)_and_(pointer:fine)]:group-hover:w-full" />
+                <span
+                  className={`absolute -bottom-1 left-0 h-px bg-voltage transition-[width] duration-200 ease-out-strong ${
+                    isActive
+                      ? "w-full"
+                      : "w-0 [@media(hover:hover)_and_(pointer:fine)]:group-hover:w-full"
+                  }`}
+                />
               </a>
-            ))}
+            );
+            })}
             <button
               type="button"
               aria-label="Open theme menu"
@@ -120,16 +156,18 @@ export default function NavBar({ onOpenTheme }: Props) {
             >
               ⌘K
             </button>
-            <motion.a
+            <a
               href="#contact"
               onClick={sounds.tap}
-              whileHover={prefersReducedMotion ? undefined : { scale: 1.05 }}
-              whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}
-              transition={{ type: "spring", stiffness: 400, damping: 20 }}
-              className="rounded-full bg-white px-6 py-2.5 font-display font-semibold text-body"
+              aria-current={activeSection === "contact" ? "page" : undefined}
+              className={`rounded-full px-6 py-2.5 font-display font-semibold transition-[transform,box-shadow] duration-press ease-out-strong active:scale-[0.97] [@media(hover:hover)_and_(pointer:fine)]:hover:scale-[1.02] ${
+                activeSection === "contact"
+                  ? "bg-voltage text-on-accent shadow-[0_0_0_2px_rgb(var(--color-accent)/0.35)]"
+                  : "bg-white text-body"
+              }`}
             >
               Contact
-            </motion.a>
+            </a>
           </nav>
 
           {/* Mobile toggle */}
