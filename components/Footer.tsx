@@ -19,7 +19,7 @@ export function Footer() {
                 href={s.href}
                 target="_blank"
                 rel="noreferrer"
-                className="text-muted outline-none transition-colors hover:text-voltage focus-visible:text-voltage"
+                className="inline-block text-muted outline-none transition-[transform,color] duration-200 ease-out-strong active:scale-[0.97] hover:text-voltage focus-visible:text-voltage"
               >
                 {s.label}
               </a>

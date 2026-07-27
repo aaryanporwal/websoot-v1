@@ -2,7 +2,6 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { motion, useReducedMotion } from "motion/react";
 import { useSiteSounds } from "../hooks/useSiteSounds";
 
 if (typeof window !== "undefined") {
@@ -16,6 +15,7 @@ const PROJECTS = [
     desc: "Shaped an AI-assisted inline diff review in CodeMirror 6, built full-stack Git version control, and made 10K+ file trees easier to navigate.",
     cta: "fused.io",
     href: "https://fused.io",
+    logo: "/works/fused-logo.png",
     image: "/works/fused.png",
     width: 2872,
     height: 1667,
@@ -26,6 +26,7 @@ const PROJECTS = [
     desc: "Built React components for ubuntu.com's Vanilla Framework, a browser debugging environment for Anbox Cloud, and real-time Android Automotive sensor simulation.",
     cta: "ubuntu.com",
     href: "https://ubuntu.com",
+    logo: "/works/canonical-favicon.png",
     image: "/works/canonical.png",
     width: 1325,
     height: 807,
@@ -36,6 +37,7 @@ const PROJECTS = [
     desc: "Added visual regression testing to Ceph Dashboard with Applitools Eyes and Cypress, catching 15+ UI defects a month before they reached users.",
     cta: "View on GitHub",
     href: "https://github.com/ceph/ceph",
+    logo: "/works/gsoc-favicon.png",
     image: "/works/gsoc.png",
     width: 1680,
     height: 936,
@@ -46,6 +48,7 @@ const PROJECTS = [
     desc: "Published 3 technical workshops on Node.js, DevOps, and HTML5 Canvas, then taught CLI application building live at Figma HQ.",
     cta: "hackclub.com",
     href: "https://hackclub.com",
+    logo: "/works/hackclub-logo.png",
     image: "/works/hackclub.png",
     width: 1672,
     height: 941,
@@ -56,6 +59,7 @@ const PROJECTS = [
     desc: "Built the official Ubuntu Summit 2024 site in Flask for a 5,000+ attendee, 3-day conference in The Hague.",
     cta: "Read more",
     href: "https://ubuntu.com/blog/tag/ubuntu-summit-2024",
+    logo: "/works/canonical-favicon.png",
     image: "/works/ubuntu-summit.png",
     width: 2172,
     height: 724,
@@ -66,11 +70,32 @@ export default function Work() {
   const root = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const sounds = useSiteSounds();
-  const prefersReducedMotion = useReducedMotion();
 
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const figures =
+          gsap.utils.toArray<HTMLElement>(".work-card-media");
+
+        figures.forEach((figure) => {
+          const img = figure.querySelector("img");
+          if (!img) return;
+
+          gsap.set(img, { clipPath: "inset(0 0 100% 0)" });
+          gsap.to(img, {
+            clipPath: "inset(0 0 0 0)",
+            duration: 0.55,
+            ease: "expo.out",
+            scrollTrigger: {
+              trigger: figure,
+              start: "top 88%",
+              once: true,
+            },
+          });
+        });
+      });
 
       mm.add(
         "(min-width: 768px) and (prefers-reduced-motion: no-preference)",
@@ -107,7 +132,7 @@ export default function Work() {
     >
       <div className="flex items-end justify-between px-6 pb-10 pt-8 sm:px-10 md:pt-20 lg:px-16">
         <h2 className="font-display text-fluid-md font-semibold leading-none tracking-tightest text-white">
-          Selected
+          Featured
           <br />
           <span className="text-stroke">Work</span>
         </h2>
@@ -121,13 +146,11 @@ export default function Work() {
         className="flex flex-col gap-6 px-6 pb-8 sm:px-10 md:w-max md:flex-row md:flex-nowrap md:items-stretch md:gap-8 md:px-16"
       >
         {PROJECTS.map((p, i) => (
-          <motion.article
+          <article
             key={p.title}
-            whileHover={prefersReducedMotion ? undefined : { y: -10 }}
-            transition={{ type: "spring", stiffness: 300, damping: 22 }}
-            className="group relative flex w-full flex-col overflow-hidden rounded-3xl border border-line bg-surface md:w-[34rem]"
+            className="group relative flex w-full flex-col overflow-hidden rounded-3xl border border-line bg-surface transition-[transform,border-color] duration-300 ease-out-strong [@media(hover:hover)_and_(pointer:fine)]:hover:-translate-y-2.5 [@media(hover:hover)_and_(pointer:fine)]:hover:border-white/15 motion-reduce:hover:translate-y-0 md:w-[34rem]"
           >
-            <figure className="relative h-40 shrink-0 overflow-hidden md:h-56">
+            <figure className="work-card-media relative h-40 shrink-0 overflow-hidden md:h-56">
               <img
                 src={p.image}
                 alt={`${p.title} project preview`}
@@ -135,7 +158,7 @@ export default function Work() {
                 height={p.height}
                 loading={i === 0 ? "eager" : "lazy"}
                 decoding="async"
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:group-hover:scale-100"
+                className="h-full w-full object-cover transition-transform duration-300 ease-out-strong [@media(hover:hover)_and_(pointer:fine)]:group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
               />
             </figure>
 
@@ -148,9 +171,20 @@ export default function Work() {
               </header>
 
               <div className="relative mt-4">
-                <h3 className="font-display text-3xl font-semibold leading-tight text-white md:text-4xl">
-                  {p.title}
-                </h3>
+                <div className="flex items-center gap-4">
+                  <img
+                    src={p.logo}
+                    alt={`${p.title} logo`}
+                    width={44}
+                    height={44}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-11 w-11 shrink-0 rounded-xl object-contain"
+                  />
+                  <h3 className="font-display text-3xl font-semibold leading-tight text-white md:text-4xl">
+                    {p.title}
+                  </h3>
+                </div>
                 <p className="mt-3 max-w-sm font-sans text-sm text-muted md:text-base">
                   {p.desc}
                 </p>
@@ -159,14 +193,14 @@ export default function Work() {
                   target={p.href.startsWith("#") ? undefined : "_blank"}
                   rel={p.href.startsWith("#") ? undefined : "noreferrer"}
                   onClick={sounds.tap}
-                  className="mt-6 inline-flex items-center gap-2 font-display text-sm font-semibold text-voltage transition-transform duration-300 hover:translate-x-1.5"
+                  className="mt-6 inline-flex items-center gap-2 font-display text-sm font-semibold text-voltage transition-transform duration-200 ease-out-strong active:scale-[0.97] [@media(hover:hover)_and_(pointer:fine)]:hover:translate-x-1.5"
                 >
                   {p.cta}
                   <span>→</span>
                 </a>
               </div>
             </div>
-          </motion.article>
+          </article>
         ))}
       </div>
       <div aria-hidden="true" className="hidden md:block md:h-16" />

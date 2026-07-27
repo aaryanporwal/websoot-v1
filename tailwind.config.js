@@ -37,6 +37,12 @@ module.exports = {
       },
       transitionTimingFunction: {
         "out-expo": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "out-strong": "cubic-bezier(0.23, 1, 0.32, 1)",
+        "in-out-strong": "cubic-bezier(0.77, 0, 0.175, 1)",
+      },
+      transitionDuration: {
+        press: "150ms",
+        ui: "200ms",
       },
       keyframes: {
         marquee: {

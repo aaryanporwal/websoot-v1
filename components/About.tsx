@@ -30,8 +30,11 @@ export default function About() {
       const foregroundColor = `rgb(${foreground})`;
       const mutedColor = `rgb(${muted} / 0.45)`;
 
+      const stats = gsap.utils.toArray<HTMLElement>(".about-stat");
+
       if (reduce) {
         gsap.set(textRef.current, { color: foregroundColor });
+        gsap.set(stats, { clearProps: "opacity,transform" });
         return;
       }
 
@@ -47,6 +50,19 @@ export default function About() {
           start: "top 75%",
           end: "bottom 65%",
           scrub: true,
+        },
+      });
+
+      gsap.from(stats, {
+        y: 20,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.08,
+        ease: "expo.out",
+        scrollTrigger: {
+          trigger: stats[0],
+          start: "top 88%",
+          once: true,
         },
       });
 
@@ -76,7 +92,7 @@ export default function About() {
             { n: "1", l: "Cat (my chief architect)" },
             { n: "∞", l: "Passion" },
           ].map((s) => (
-            <div key={s.l}>
+            <div key={s.l} className="about-stat">
               <div className="font-display text-4xl font-semibold text-white sm:text-6xl">
                 {s.n}
               </div>

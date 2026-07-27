@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useReducedMotion } from "motion/react";
 import { THEME_OPTIONS, type ThemeId } from "./theme";
 
 type ThemeMenuProps = {
@@ -90,7 +91,7 @@ export default function ThemeMenu({
             aria-label="Close theme menu"
             autoFocus
             onClick={onClose}
-            className="grid h-9 w-9 place-items-center rounded-md border border-line text-muted transition-colors hover:border-voltage hover:text-voltage focus-visible:border-voltage focus-visible:text-voltage focus-visible:outline-none"
+            className="grid h-9 w-9 place-items-center rounded-md border border-line text-muted transition-[transform,border-color,color] duration-press ease-out-strong active:scale-[0.97] hover:border-voltage hover:text-voltage focus-visible:border-voltage focus-visible:text-voltage focus-visible:outline-none"
           >
             <svg aria-hidden="true" viewBox="0 0 20 20" className="h-4 w-4">
               <path
@@ -114,7 +115,7 @@ export default function ThemeMenu({
                 type="button"
                 aria-pressed={selected}
                 onClick={() => onSelect(option.id)}
-                className="group rounded-md border border-line bg-surface/35 p-2 text-left transition-colors hover:border-voltage focus-visible:border-voltage focus-visible:outline-none"
+                className="group rounded-md border border-line bg-surface/35 p-2 text-left transition-[transform,border-color] duration-press ease-out-strong active:scale-[0.97] hover:border-voltage focus-visible:border-voltage focus-visible:outline-none"
               >
                 <span className="grid h-16 overflow-hidden rounded grid-cols-2 border border-line/70">
                   {option.swatches.map((color) => (
