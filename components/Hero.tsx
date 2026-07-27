@@ -71,7 +71,7 @@ export default function Hero() {
               yPercent: -110,
               opacity: 0,
               duration: 0.5,
-              ease: "power2.in",
+              ease: "expo.out",
               delay: 1.4,
             });
         });
@@ -108,8 +108,8 @@ export default function Hero() {
 
         <div className="hero-fade mt-8 max-w-2xl font-sans text-lg text-muted sm:text-2xl">
           <p>
-            I build software with care, curiosity, and a suspiciously loud
-            keyboard. Interfaces, systems, and tools that feel good to use.
+            I build software with care and curiosity. Interfaces, systems, and
+            tools that feel good to use.
           </p>
         </div>
 
@@ -142,7 +142,7 @@ export default function Hero() {
             whileHover={prefersReducedMotion ? undefined : { scale: 1.04 }}
             whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            className="rounded-full border border-line px-8 py-3.5 font-display text-base font-semibold text-white hover:border-white"
+            className="rounded-full border border-line px-8 py-3.5 font-display text-base font-semibold text-white transition-[transform,border-color] duration-press ease-out-strong hover:border-white"
           >
             Say hi
           </motion.a>

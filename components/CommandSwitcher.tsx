@@ -230,7 +230,7 @@ export default function CommandSwitcher({ commands }: Props) {
                     aria-selected={active}
                     onMouseEnter={() => setActiveIndex(index)}
                     onClick={() => openCommand(command)}
-                    className={`flex w-full items-center justify-between gap-4 rounded-md px-3 py-3 text-left transition-colors sm:px-4 ${
+                    className={`flex w-full items-center justify-between gap-4 rounded-md px-3 py-3 text-left transition-[transform,background-color,color] duration-press ease-out-strong active:scale-[0.99] sm:px-4 ${
                       active
                         ? "bg-voltage text-on-accent"
                         : "text-white hover:bg-surface"

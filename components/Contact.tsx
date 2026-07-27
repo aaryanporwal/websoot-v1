@@ -603,7 +603,7 @@ export default function Contact() {
                 rel="noreferrer"
                 onClick={tap}
                 onMouseEnter={tick}
-                className="group flex items-center justify-between gap-6 py-5 outline-none focus-visible:bg-surface/60"
+                className="group flex items-center justify-between gap-6 py-5 outline-none transition-[background-color,transform] duration-press ease-out-strong active:scale-[0.995] focus-visible:bg-surface/60"
               >
                 <span>
                   <span className="block font-display text-2xl font-semibold text-white sm:text-3xl">
@@ -615,7 +615,7 @@ export default function Contact() {
                 </span>
                 <span
                   aria-hidden
-                  className="font-display text-2xl text-voltage transition-transform duration-300 group-hover:translate-x-1"
+                  className="font-display text-2xl text-voltage transition-transform duration-200 ease-out-strong [@media(hover:hover)_and_(pointer:fine)]:group-hover:translate-x-1"
                 >
                   ↗
                 </span>
@@ -628,7 +628,7 @@ export default function Contact() {
                 rel="noreferrer"
                 onClick={tap}
                 onMouseEnter={tick}
-                className="group flex items-center justify-between gap-6 py-5 outline-none focus-visible:bg-surface/60"
+                className="group flex items-center justify-between gap-6 py-5 outline-none transition-[background-color,transform] duration-press ease-out-strong active:scale-[0.995] focus-visible:bg-surface/60"
               >
                 <span>
                   <span className="block font-display text-2xl font-semibold text-white sm:text-3xl">
@@ -640,7 +640,7 @@ export default function Contact() {
                 </span>
                 <span
                   aria-hidden
-                  className="font-display text-2xl text-voltage transition-transform duration-300 group-hover:translate-x-1"
+                  className="font-display text-2xl text-voltage transition-transform duration-200 ease-out-strong [@media(hover:hover)_and_(pointer:fine)]:group-hover:translate-x-1"
                 >
                   ↗
                 </span>
@@ -651,7 +651,7 @@ export default function Contact() {
                 href={`mailto:${EMAIL}`}
                 onClick={tap}
                 onMouseEnter={tick}
-                className="group flex items-center justify-between gap-6 py-5 outline-none focus-visible:bg-surface/60"
+                className="group flex items-center justify-between gap-6 py-5 outline-none transition-[background-color,transform] duration-press ease-out-strong active:scale-[0.995] focus-visible:bg-surface/60"
               >
                 <span>
                   <span className="block font-display text-2xl font-semibold text-white sm:text-3xl">
@@ -661,7 +661,7 @@ export default function Contact() {
                 </span>
                 <span
                   aria-hidden
-                  className="font-display text-2xl text-voltage transition-transform duration-300 group-hover:translate-x-1"
+                  className="font-display text-2xl text-voltage transition-transform duration-200 ease-out-strong [@media(hover:hover)_and_(pointer:fine)]:group-hover:translate-x-1"
                 >
                   ↗
                 </span>
@@ -672,7 +672,7 @@ export default function Contact() {
             type="button"
             onClick={resetToIdle}
             onMouseEnter={tick}
-            className="mt-6 font-sans text-sm text-muted underline decoration-line decoration-1 underline-offset-4 transition-colors hover:text-voltage hover:decoration-voltage"
+            className="mt-6 font-sans text-sm text-muted underline decoration-line decoration-1 underline-offset-4 transition-[color,text-decoration-color,transform] duration-200 ease-out-strong active:scale-[0.97] hover:text-voltage hover:decoration-voltage"
           >
             put her back to sleep
           </button>

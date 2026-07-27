@@ -63,7 +63,7 @@ export default function NavBar({ onOpenTheme }: Props) {
       className="fixed inset-x-0 top-0 z-50"
     >
       <div
-        className={`transition-all duration-500 ${
+        className={`transition-[border-color,background-color,backdrop-filter] duration-300 ease-out-strong ${
           scrolled
             ? "border-b border-line/80 bg-body/70 backdrop-blur-xl"
             : "border-b border-transparent bg-transparent"
@@ -75,7 +75,7 @@ export default function NavBar({ onOpenTheme }: Props) {
             onClick={sounds.tap}
             aria-hidden={heroVisible}
             tabIndex={heroVisible ? -1 : undefined}
-            className={`font-display text-2xl font-bold tracking-tightest text-white transition-all duration-300 sm:text-3xl ${
+            className={`font-display text-2xl font-bold tracking-tightest text-white transition-opacity duration-200 ease-out-strong sm:text-3xl ${
               heroVisible
                 ? "pointer-events-none opacity-0"
                 : "pointer-events-auto opacity-100"
@@ -92,10 +92,10 @@ export default function NavBar({ onOpenTheme }: Props) {
                 target={l.external ? "_blank" : undefined}
                 rel={l.external ? "noreferrer" : undefined}
                 onClick={sounds.tap}
-                className="group relative text-muted transition-colors hover:text-white"
+                className="group relative text-muted transition-colors duration-200 ease-out-strong hover:text-white"
               >
                 {l.label}
-                <span className="absolute -bottom-1 left-0 h-px w-0 bg-voltage transition-all duration-300 group-hover:w-full" />
+                <span className="absolute -bottom-1 left-0 h-px w-0 bg-voltage transition-[width] duration-200 ease-out-strong [@media(hover:hover)_and_(pointer:fine)]:group-hover:w-full" />
               </a>
             ))}
             <button
@@ -105,7 +105,7 @@ export default function NavBar({ onOpenTheme }: Props) {
                 sounds.tap();
                 onOpenTheme();
               }}
-              className="grid h-8 w-8 place-items-center rounded-md border border-line bg-surface/30 text-muted transition-colors hover:border-voltage hover:text-voltage focus-visible:border-voltage focus-visible:text-voltage focus-visible:outline-none"
+              className="grid h-8 w-8 place-items-center rounded-md border border-line bg-surface/30 text-muted transition-[transform,border-color,color] duration-press ease-out-strong active:scale-[0.97] hover:border-voltage hover:text-voltage focus-visible:border-voltage focus-visible:text-voltage focus-visible:outline-none"
             >
               <PaletteIcon />
             </button>
@@ -116,7 +116,7 @@ export default function NavBar({ onOpenTheme }: Props) {
                 sounds.tap();
                 openCommandSwitcher();
               }}
-              className="rounded-md border border-line bg-surface/30 px-2.5 py-1 font-sans text-[11px] font-semibold text-muted transition-colors hover:border-voltage hover:text-voltage focus-visible:border-voltage focus-visible:text-voltage"
+              className="rounded-md border border-line bg-surface/30 px-2.5 py-1 font-sans text-[11px] font-semibold text-muted transition-[transform,border-color,color] duration-press ease-out-strong active:scale-[0.97] hover:border-voltage hover:text-voltage focus-visible:border-voltage focus-visible:text-voltage"
             >
               ⌘K
             </button>
@@ -215,7 +215,7 @@ export default function NavBar({ onOpenTheme }: Props) {
                   sounds.tap();
                   setOpen(false);
                 }}
-                className="mt-5 rounded-full bg-voltage px-6 py-3 text-center font-display text-lg font-semibold text-on-accent"
+                className="mt-5 rounded-full bg-voltage px-6 py-3 text-center font-display text-lg font-semibold text-on-accent transition-transform duration-press ease-out-strong active:scale-[0.97]"
               >
                 Contact
               </a>
