@@ -2,76 +2,56 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import type { ResolvedPicture } from "../src/lib/resolvePicture";
+import type { WorkProjectPicture } from "../src/types/homeImages";
 import { useSiteSounds } from "../hooks/useSiteSounds";
 import { sectionReveal } from "./animation/sectionReveal";
+import ResponsivePicture from "./ResponsivePicture";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP, ScrollTrigger);
 }
 
-const PROJECTS = [
-  {
-    tag: "Full Stack",
-    title: "Fused",
-    desc: "Shaped an AI-assisted inline diff review in CodeMirror 6, built full-stack Git version control, and made 10K+ file trees easier to navigate.",
-    cta: "fused.io",
-    href: "https://fused.io",
-    logo: "/works/fused-logo.png",
-    image: "/works/fused.png",
-    width: 2872,
-    height: 1667,
-  },
-  {
-    tag: "Open Source",
-    title: "Canonical",
-    desc: "Built React components for ubuntu.com's Vanilla Framework, a browser debugging environment for Anbox Cloud, and real-time Android Automotive sensor simulation.",
-    cta: "ubuntu.com",
-    href: "https://ubuntu.com",
-    logo: "/works/canonical-favicon.png",
-    image: "/works/canonical.png",
-    width: 1325,
-    height: 807,
-  },
-  {
-    tag: "Open Source",
-    title: "GSoC",
-    desc: "Added visual regression testing to Ceph Dashboard with Applitools Eyes and Cypress, catching 15+ UI defects a month before they reached users.",
-    cta: "View on GitHub",
-    href: "https://github.com/ceph/ceph",
-    logo: "/works/gsoc-favicon.png",
-    image: "/works/gsoc.png",
-    width: 1680,
-    height: 936,
-  },
-  {
-    tag: "Community",
-    title: "Hack Club",
-    desc: "Published 3 technical workshops on Node.js, DevOps, and HTML5 Canvas, then taught CLI application building live at Figma HQ.",
-    cta: "hackclub.com",
-    href: "https://hackclub.com",
-    logo: "/works/hackclub-logo.png",
-    image: "/works/hackclub.png",
-    width: 1672,
-    height: 941,
-  },
-  {
-    tag: "Event",
-    title: "Ubuntu Summit",
-    desc: "Built the official Ubuntu Summit 2024 site in Flask for a 5,000+ attendee, 3-day conference in The Hague.",
-    cta: "Read more",
-    href: "https://ubuntu.com/blog/tag/ubuntu-summit-2024",
-    logo: "/works/canonical-favicon.png",
-    image: "/works/ubuntu-summit.png",
-    width: 2172,
-    height: 724,
-  },
-];
+type Props = {
+  projects: WorkProjectPicture[];
+};
 
-function preloadWorkImages() {
-  PROJECTS.forEach((project) => {
-    const img = new Image();
-    img.src = project.image;
-  });
+const WORK_IMAGE_SIZES = "(min-width: 768px) 34rem, 100vw";
+
+function getPreferredSrcSet(picture: ResolvedPicture) {
+  return (
+    picture.sources.find((source) => source.type === "image/avif")?.srcSet ??
+    picture.sources.find((source) => source.type === "image/webp")?.srcSet ??
+    picture.fallbackSrc
+  );
+}
+
+function preloadWorkImages(projects: WorkProjectPicture[]) {
+  return Promise.all(
+    projects.map(
+      (project) =>
+        new Promise<void>((resolve) => {
+          const img = new Image();
+          const srcSet = getPreferredSrcSet(project.picture);
+
+          img.sizes = WORK_IMAGE_SIZES;
+          if (srcSet.includes(" ")) {
+            img.srcset = srcSet;
+            img.src = srcSet.split(",")[0]?.trim().split(/\s+/)[0] ?? project.picture.fallbackSrc;
+          } else {
+            img.src = srcSet;
+          }
+
+          if (img.complete) {
+            resolve();
+            return;
+          }
+
+          img.addEventListener("load", () => resolve(), { once: true });
+          img.addEventListener("error", () => resolve(), { once: true });
+        }),
+    ),
+  );
 }
 
 function revealWorkImage(img: HTMLImageElement) {
@@ -90,24 +70,39 @@ function bindWorkImageReveal(figure: HTMLElement) {
   const img = figure.querySelector<HTMLImageElement>(".work-card-media__img");
   if (!img) return;
 
-  const runReveal = () => revealWorkImage(img);
+  const runReveal = () => {
+    if (img.dataset.revealed === "true") return;
+    if (img.complete && img.naturalWidth > 0) {
+      revealWorkImage(img);
+      return;
+    }
+    img.addEventListener("load", () => revealWorkImage(img), { once: true });
+  };
 
   ScrollTrigger.create({
     trigger: figure,
     start: "top 88%",
     once: true,
-    onEnter: () => {
-      if (img.complete && img.naturalWidth > 0) {
-        runReveal();
-        return;
-      }
-
-      img.addEventListener("load", runReveal, { once: true });
-    },
+    onEnter: runReveal,
   });
 }
 
-export default function Work() {
+function bindHorizontalWorkReveals(figures: HTMLElement[]) {
+  const revealVisibleCards = () => {
+    for (const figure of figures) {
+      const rect = figure.getBoundingClientRect();
+      const inView = rect.left < window.innerWidth * 0.98 && rect.right > window.innerWidth * 0.02;
+      if (!inView) continue;
+
+      const img = figure.querySelector<HTMLImageElement>(".work-card-media__img");
+      if (img) revealWorkImage(img);
+    }
+  };
+
+  return revealVisibleCards;
+}
+
+export default function Work({ projects }: Props) {
   const root = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const sounds = useSiteSounds();
@@ -117,13 +112,14 @@ export default function Work() {
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        preloadWorkImages();
-        sectionReveal(".work-section-reveal", { trigger: root.current });
+        void preloadWorkImages(projects).then(() => {
+          sectionReveal(".work-section-reveal", { trigger: root.current });
 
-        const figures =
-          gsap.utils.toArray<HTMLElement>(".work-card-media");
-
-        figures.forEach(bindWorkImageReveal);
+          const figures = gsap.utils.toArray<HTMLElement>(".work-card-media");
+          figures.forEach(bindWorkImageReveal);
+          const revealVisibleCards = bindHorizontalWorkReveals(figures);
+          revealVisibleCards();
+        });
       });
 
       mm.add(
@@ -132,6 +128,8 @@ export default function Work() {
           const track = trackRef.current;
           if (!track) return;
           const amount = () => track.scrollWidth - window.innerWidth;
+          const figures = gsap.utils.toArray<HTMLElement>(".work-card-media");
+          const revealVisibleCards = bindHorizontalWorkReveals(figures);
 
           gsap.to(track, {
             x: () => -amount(),
@@ -143,6 +141,7 @@ export default function Work() {
               pin: true,
               scrub: 1,
               invalidateOnRefresh: true,
+              onUpdate: revealVisibleCards,
             },
           });
         },
@@ -150,7 +149,7 @@ export default function Work() {
 
       return () => mm.revert();
     },
-    { scope: root },
+    { scope: root, dependencies: [projects] },
   );
 
   return (
@@ -173,20 +172,20 @@ export default function Work() {
         ref={trackRef}
         className="flex flex-col gap-6 px-6 pb-8 sm:px-10 md:w-max md:flex-row md:flex-nowrap md:items-stretch md:gap-8 md:px-16"
       >
-        {PROJECTS.map((p, i) => (
+        {projects.map((p, i) => (
           <article
             key={p.title}
             className="group relative flex w-full flex-col overflow-hidden rounded-3xl border border-line bg-surface transition-[transform,border-color] duration-300 ease-out-strong [@media(hover:hover)_and_(pointer:fine)]:hover:-translate-y-2.5 [@media(hover:hover)_and_(pointer:fine)]:hover:border-white/15 motion-reduce:hover:translate-y-0 md:w-[34rem]"
           >
             <figure className="work-card-media relative h-40 shrink-0 overflow-hidden md:h-56">
-              <img
-                src={p.image}
+              <ResponsivePicture
+                picture={p.picture}
                 alt={`${p.title} project preview`}
-                width={p.width}
-                height={p.height}
                 loading="eager"
-                decoding="async"
-                className="work-card-media__img h-full w-full object-cover transition-transform duration-300 ease-out-strong [@media(hover:hover)_and_(pointer:fine)]:group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
+                fetchPriority={i === 0 ? "high" : "auto"}
+                sizes={WORK_IMAGE_SIZES}
+                imgClassName="work-card-media__img h-full w-full object-cover transition-transform duration-300 ease-out-strong [@media(hover:hover)_and_(pointer:fine)]:group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
+                className="block h-full w-full"
               />
             </figure>
 
@@ -205,7 +204,7 @@ export default function Work() {
                     alt={`${p.title} logo`}
                     width={44}
                     height={44}
-                    loading="lazy"
+                    loading="eager"
                     decoding="async"
                     className="h-11 w-11 shrink-0 rounded-xl object-contain"
                   />
