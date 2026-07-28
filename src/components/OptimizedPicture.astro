@@ -1,0 +1,26 @@
+---
+import { Picture, type LocalImageProps } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+type Props = Omit<LocalImageProps, "src"> & {
+  src: ImageMetadata;
+  displayWidth?: number;
+};
+
+const {
+  src,
+  displayWidth,
+  formats = ["avif", "webp"],
+  widths,
+  ...rest
+} = Astro.props;
+
+const responsiveWidths = widths ?? (displayWidth ? [displayWidth, displayWidth * 2] : undefined);
+---
+
+<Picture
+  src={src}
+  formats={formats}
+  widths={responsiveWidths}
+  {...rest}
+/>

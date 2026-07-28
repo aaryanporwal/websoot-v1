@@ -7,7 +7,9 @@ import { InertiaPlugin } from "gsap/InertiaPlugin";
 import { CustomWiggle } from "gsap/CustomWiggle";
 import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import type { HomeImages } from "../src/types/homeImages";
 import { useSiteSounds } from "../hooks/useSiteSounds";
+import ResponsivePicture from "./ResponsivePicture";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(
@@ -35,7 +37,7 @@ const STATE = {
 
 type Phase = (typeof STATE)[keyof typeof STATE];
 
-export default function Contact() {
+export default function Contact({ images }: { images: HomeImages["contact"] }) {
   const root = useRef<HTMLElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const bagRef = useRef<HTMLDivElement>(null);
@@ -533,25 +535,30 @@ export default function Contact() {
             className="absolute bottom-4 right-0 h-[54%] w-[64%] max-w-[430px] sm:bottom-6 sm:right-4 lg:h-[60%] lg:w-[56%]"
           >
             <div className="relative h-full w-full">
-              <img
-                ref={sleepyRef}
-                src="/anya/head-sleepy.png"
+              <ResponsivePicture
+                picture={images.headSleepy}
                 alt="Anya, sleeping, sole gatekeeper of the inbox."
-                className="absolute inset-0 h-full w-full object-contain object-bottom"
+                imgRef={sleepyRef}
+                className="absolute inset-0 h-full w-full"
+                imgClassName="h-full w-full object-contain object-bottom"
               />
-              <img
-                ref={alertRef}
-                src="/anya/head-alert.png"
+              <ResponsivePicture
+                picture={images.headAlert}
                 alt=""
                 aria-hidden
-                className="absolute inset-0 h-full w-full object-contain object-bottom"
+                imgRef={alertRef}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full"
+                imgClassName="h-full w-full object-contain object-bottom"
               />
-              <img
-                ref={neutralRef}
-                src="/anya/head-neutral.png"
+              <ResponsivePicture
+                picture={images.headNeutral}
                 alt=""
                 aria-hidden
-                className="absolute inset-0 h-full w-full object-contain object-bottom"
+                imgRef={neutralRef}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full"
+                imgClassName="h-full w-full object-contain object-bottom"
               />
             </div>
           </div>
@@ -571,15 +578,15 @@ export default function Contact() {
             onMouseEnter={tick}
             className="absolute bottom-8 left-6 z-30 cursor-grab touch-none rounded-xl outline-none ring-voltage/70 focus-visible:ring-2 active:cursor-grabbing motion-reduce:cursor-pointer sm:bottom-10 sm:left-10"
           >
-            <img
-              src="/cat-treat.out.png"
+            <ResponsivePicture
+              picture={images.treat}
               alt=""
               aria-hidden
-              width={1448}
-              height={1086}
+              loading="lazy"
               sizes="(min-width: 640px) 176px, 144px"
-              className="h-36 w-36 object-contain drop-shadow-[0_18px_36px_rgba(0,0,0,0.35)] sm:h-44 sm:w-44"
               draggable={false}
+              className="h-36 w-36 sm:h-44 sm:w-44"
+              imgClassName="h-full w-full object-contain drop-shadow-[0_18px_36px_rgba(0,0,0,0.35)]"
             />
           </div>
         </div>

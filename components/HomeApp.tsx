@@ -1,3 +1,4 @@
+import type { HomeImages } from "../src/types/homeImages";
 import SmoothScroll from "./SmoothScroll";
 import NavBar from "./NavBar";
 import Hero from "./Hero";
@@ -10,7 +11,7 @@ import ThemeMenu from "./theme/ThemeMenu";
 import { useTheme } from "./theme/useTheme";
 import { useState } from "react";
 
-export default function HomeApp() {
+export default function HomeApp({ images }: { images: HomeImages }) {
   const [themeOpen, setThemeOpen] = useState(false);
   const { theme, setTheme } = useTheme();
 
@@ -21,9 +22,9 @@ export default function HomeApp() {
         <main>
           <Hero />
           <About />
-          <Work />
+          <Work projects={images.work} />
           <Skills />
-          <Contact />
+          <Contact images={images.contact} />
         </main>
         <Footer />
       </div>
