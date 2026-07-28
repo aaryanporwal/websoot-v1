@@ -39,7 +39,7 @@ export default function ResponsivePicture({
         height={picture.height}
         loading={loading}
         decoding={decoding}
-        fetchPriority={fetchPriority}
+        fetchpriority={fetchPriority}
         draggable={draggable}
         aria-hidden={ariaHidden}
         className={imgClassName}
