@@ -1,10 +1,6 @@
 import { useEffect, useState, type RefObject } from "react";
 import { useReducedMotion } from "motion/react";
 
-function prefersCoarsePointer() {
-  return window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-}
-
 function prefersSaveData() {
   const connection = (
     navigator as Navigator & {
@@ -20,10 +16,10 @@ export function useDitherActive(targetRef: RefObject<HTMLElement | null>) {
   const [documentVisible, setDocumentVisible] = useState(
     () => typeof document === "undefined" || !document.hidden,
   );
-  const [deviceSupported, setDeviceSupported] = useState(true);
+  const [dataAllowed, setDataAllowed] = useState(true);
 
   useEffect(() => {
-    setDeviceSupported(!prefersCoarsePointer() && !prefersSaveData());
+    setDataAllowed(!prefersSaveData());
   }, []);
 
   useEffect(() => {
@@ -49,7 +45,7 @@ export function useDitherActive(targetRef: RefObject<HTMLElement | null>) {
   }, []);
 
   const shouldRun =
-    deviceSupported && !prefersReducedMotion && inView && documentVisible;
+    dataAllowed && !prefersReducedMotion && inView && documentVisible;
 
   return { shouldRun, inView };
 }
