@@ -30,6 +30,8 @@ uniform vec2 mousePos;
 uniform int enableMouseInteraction;
 uniform float mouseRadius;
 uniform float interactionStrength;
+uniform vec2 blastOrigin;
+uniform float blastAge;
 
 vec4 mod289(vec4 x) { return x - floor(x * (1.0/289.0)) * 289.0; }
 vec4 permute(vec4 x) { return mod289(((x * 34.0) + 1.0) * x); }
@@ -87,6 +89,24 @@ void main() {
   uv -= 0.5;
   uv.x *= resolution.x / resolution.y;
   float f = pattern(uv);
+
+  if (blastAge < 1.0) {
+    vec2 blastUv = blastOrigin - 0.5;
+    blastUv.y *= -1.0;
+    blastUv.x *= resolution.x / resolution.y;
+
+    float blastDistance = length(uv - blastUv);
+    float blastRadius = mix(0.0, 0.12, blastAge);
+    float blastWidth = mix(0.12, 0.035, blastAge);
+    float ring = exp(-pow((blastDistance - blastRadius) / blastWidth, 2.0));
+    float core = exp(-blastDistance * 10.0) * (1.0 - smoothstep(0.0, 0.38, blastAge));
+    float decay = pow(1.0 - blastAge, 1.35);
+
+    // Break the otherwise-perfect circle with the same living noise as the field.
+    float breakup = 0.42 + 0.28 * cnoise(uv * 9.0 - blastAge * 2.0);
+    f += (ring * breakup * 0.56 + core * 0.88) * decay;
+  }
+
   if (enableMouseInteraction == 1) {
     vec2 mouseNDC = (mousePos / resolution - 0.5) * vec2(1.0, -1.0);
     mouseNDC.x *= resolution.x / resolution.y;
@@ -188,6 +208,7 @@ type DitheredWavesProps = {
   mouseRadius: number;
   externalPointer: { clientX: number; clientY: number } | null;
   clickToken: number;
+  blastOrigin: [number, number];
   active: boolean;
 };
 
@@ -203,10 +224,12 @@ function DitheredWaves({
   mouseRadius,
   externalPointer,
   clickToken,
+  blastOrigin,
   active,
 }: DitheredWavesProps) {
   const mesh = useRef<THREE.Mesh>(null);
   const retroRef = useRef<RetroEffectImpl>(null);
+  const previousClickToken = useRef(clickToken);
   const { viewport, size, gl } = useThree();
 
   const waveUniformsRef = useRef({
@@ -220,15 +243,26 @@ function DitheredWaves({
     enableMouseInteraction: new THREE.Uniform(enableMouseInteraction ? 1 : 0),
     mouseRadius: new THREE.Uniform(mouseRadius),
     interactionStrength: new THREE.Uniform(0),
+    blastOrigin: new THREE.Uniform(new THREE.Vector2(...blastOrigin)),
+    blastAge: new THREE.Uniform(2),
   });
 
   useEffect(() => {
-    waveUniformsRef.current.interactionStrength.value = 1.75;
     if (retroRef.current) {
       retroRef.current.pixelSize = 1;
     }
     invalidate();
-  }, [clickToken]);
+  }, []);
+
+  useEffect(() => {
+    if (clickToken === previousClickToken.current) return;
+    previousClickToken.current = clickToken;
+
+    const uniforms = waveUniformsRef.current;
+    uniforms.blastOrigin.value.set(...blastOrigin);
+    uniforms.blastAge.value = 0;
+    invalidate();
+  }, [blastOrigin[0], blastOrigin[1], clickToken]);
 
   useEffect(() => {
     const dpr = gl.getPixelRatio();
@@ -269,6 +303,10 @@ function DitheredWaves({
         0,
         u.interactionStrength.value - delta * 2.5,
       );
+    }
+
+    if (u.blastAge.value < 1) {
+      u.blastAge.value = Math.min(1, u.blastAge.value + delta / 0.9);
     }
 
     if (retroRef.current && retroRef.current.pixelSize < pixelSize) {
@@ -313,6 +351,7 @@ export type DitherProps = {
   mouseRadius?: number;
   externalPointer?: { clientX: number; clientY: number } | null;
   clickToken?: number;
+  blastOrigin?: [number, number];
   active?: boolean;
 };
 
@@ -328,6 +367,7 @@ export default function Dither({
   mouseRadius = 1,
   externalPointer = null,
   clickToken = 0,
+  blastOrigin = [0.5, 0.5],
   active = true,
 }: DitherProps) {
   return (
@@ -350,6 +390,7 @@ export default function Dither({
         mouseRadius={mouseRadius}
         externalPointer={externalPointer}
         clickToken={clickToken}
+        blastOrigin={blastOrigin}
         active={active}
       />
     </Canvas>

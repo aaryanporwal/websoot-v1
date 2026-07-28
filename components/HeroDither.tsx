@@ -4,7 +4,7 @@ import { useTheme } from "./theme/useTheme";
 
 type HeroDitherProps = {
   active: boolean;
-  clickToken: number;
+  blast: { x: number; y: number; token: number };
 };
 
 function readCssRgbTriplet(variable: string): [number, number, number] {
@@ -20,7 +20,7 @@ function accentWaveColor(): [number, number, number] {
   return [r * 0.4, g * 0.4, b * 0.4];
 }
 
-export default function HeroDither({ active, clickToken }: HeroDitherProps) {
+export default function HeroDither({ active, blast }: HeroDitherProps) {
   const { theme } = useTheme();
   const [Dither, setDither] = useState<ComponentType<DitherProps> | null>(null);
   const [waveColor, setWaveColor] = useState<[number, number, number]>([
@@ -64,7 +64,8 @@ export default function HeroDither({ active, clickToken }: HeroDitherProps) {
         waveColor={waveColor}
         disableAnimation={false}
         enableMouseInteraction={false}
-        clickToken={clickToken}
+        clickToken={blast.token}
+        blastOrigin={[blast.x, blast.y]}
         mouseRadius={0.18}
         colorNum={4}
         waveAmplitude={0.22}
