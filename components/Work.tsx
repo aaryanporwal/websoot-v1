@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useSiteSounds } from "../hooks/useSiteSounds";
+import { sectionReveal } from "./animation/sectionReveal";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -66,6 +67,46 @@ const PROJECTS = [
   },
 ];
 
+function preloadWorkImages() {
+  PROJECTS.forEach((project) => {
+    const img = new Image();
+    img.src = project.image;
+  });
+}
+
+function revealWorkImage(img: HTMLImageElement) {
+  if (img.dataset.revealed === "true") return;
+  img.dataset.revealed = "true";
+
+  gsap.to(img, {
+    clipPath: "inset(0 0 0 0)",
+    duration: 0.55,
+    ease: "expo.out",
+    overwrite: true,
+  });
+}
+
+function bindWorkImageReveal(figure: HTMLElement) {
+  const img = figure.querySelector<HTMLImageElement>(".work-card-media__img");
+  if (!img) return;
+
+  const runReveal = () => revealWorkImage(img);
+
+  ScrollTrigger.create({
+    trigger: figure,
+    start: "top 88%",
+    once: true,
+    onEnter: () => {
+      if (img.complete && img.naturalWidth > 0) {
+        runReveal();
+        return;
+      }
+
+      img.addEventListener("load", runReveal, { once: true });
+    },
+  });
+}
+
 export default function Work() {
   const root = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -76,25 +117,13 @@ export default function Work() {
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
+        preloadWorkImages();
+        sectionReveal(".work-section-reveal", { trigger: root.current });
+
         const figures =
           gsap.utils.toArray<HTMLElement>(".work-card-media");
 
-        figures.forEach((figure) => {
-          const img = figure.querySelector("img");
-          if (!img) return;
-
-          gsap.set(img, { clipPath: "inset(0 0 100% 0)" });
-          gsap.to(img, {
-            clipPath: "inset(0 0 0 0)",
-            duration: 0.55,
-            ease: "expo.out",
-            scrollTrigger: {
-              trigger: figure,
-              start: "top 88%",
-              once: true,
-            },
-          });
-        });
+        figures.forEach(bindWorkImageReveal);
       });
 
       mm.add(
@@ -132,11 +161,10 @@ export default function Work() {
     >
       <div className="flex items-end justify-between px-6 pb-10 pt-8 sm:px-10 md:pt-20 lg:px-16">
         <h2 className="font-display text-fluid-md font-semibold leading-none tracking-tightest text-white">
-          Featured
-          <br />
-          <span className="text-stroke">Work</span>
+          <span className="work-section-reveal block">Featured</span>
+          <span className="work-section-reveal block text-stroke">Work</span>
         </h2>
-        <span className="hidden font-sans text-sm uppercase tracking-[0.3em] text-muted md:block">
+        <span className="work-section-reveal hidden font-sans text-sm uppercase tracking-[0.3em] text-muted md:block">
           Scroll →
         </span>
       </div>
@@ -156,9 +184,9 @@ export default function Work() {
                 alt={`${p.title} project preview`}
                 width={p.width}
                 height={p.height}
-                loading={i === 0 ? "eager" : "lazy"}
+                loading="eager"
                 decoding="async"
-                className="h-full w-full object-cover transition-transform duration-300 ease-out-strong [@media(hover:hover)_and_(pointer:fine)]:group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
+                className="work-card-media__img h-full w-full object-cover transition-transform duration-300 ease-out-strong [@media(hover:hover)_and_(pointer:fine)]:group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
               />
             </figure>
 

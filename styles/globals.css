@@ -163,6 +163,22 @@ li {
   color: rgb(var(--color-foreground));
 }
 
+/* Hidden before GSAP reveal; avoids a flash of full images on hydrate */
+.work-card-media__img {
+  clip-path: inset(0 0 100% 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-card-media__img {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+html.theme-transitioning body {
+  filter: blur(2px);
+  transition: filter 200ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
 :root[data-theme="light"] .hero-signature {
   color: #000;
 }
@@ -170,14 +186,14 @@ li {
 #signature {
   stroke-dasharray: 791;
   stroke-dashoffset: 791;
-  animation: sign 4s ease;
+  animation: sign 4s cubic-bezier(0.23, 1, 0.32, 1);
   animation-fill-mode: forwards;
 }
 
 #arrow {
   stroke-dasharray: 829;
   stroke-dashoffset: 829;
-  animation: sign2 2s ease;
+  animation: sign2 2s cubic-bezier(0.23, 1, 0.32, 1);
   animation-fill-mode: forwards;
   animation-delay: 4s;
 }
@@ -202,6 +218,10 @@ li {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+
+  html.theme-transitioning body {
+    filter: none !important;
   }
 }
 
