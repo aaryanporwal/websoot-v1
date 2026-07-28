@@ -217,14 +217,27 @@ html.theme-transitioning body {
 }
 
 .blog-prose {
+  --tw-prose-body: rgb(var(--color-foreground) / 0.82);
+  --tw-prose-headings: rgb(var(--color-foreground));
+  --tw-prose-lead: rgb(var(--color-foreground) / 0.82);
+  --tw-prose-links: rgb(var(--color-accent));
+  --tw-prose-bold: rgb(var(--color-foreground));
+  --tw-prose-counters: rgb(var(--color-accent));
+  --tw-prose-bullets: rgb(var(--color-accent));
+  --tw-prose-hr: rgb(var(--color-line));
+  --tw-prose-quotes: rgb(var(--color-foreground));
+  --tw-prose-quote-borders: rgb(var(--color-accent));
+  --tw-prose-captions: rgb(var(--color-muted));
+  --tw-prose-code: rgb(var(--color-foreground));
+  --tw-prose-pre-code: rgb(var(--color-foreground));
+  --tw-prose-pre-bg: rgb(var(--color-ink));
+  --tw-prose-th-borders: rgb(var(--color-line));
+  --tw-prose-td-borders: rgb(var(--color-line));
+  max-width: none;
   color: rgb(var(--color-foreground) / 0.82);
   font-family: "General Sans", sans-serif;
   font-size: 1.0625rem;
   line-height: 1.8;
-}
-
-.blog-prose > * + * {
-  margin-top: 1.35em;
 }
 
 .blog-prose h1,
@@ -258,14 +271,7 @@ html.theme-transitioning body {
   color: rgb(var(--color-accent));
 }
 
-.blog-prose p {
-  margin: 0;
-  padding-left: 0;
-}
-
 .blog-prose a {
-  color: rgb(var(--color-accent));
-  text-decoration: underline;
   text-decoration-color: rgb(var(--color-accent) / 0.35);
   text-underline-offset: 0.25em;
 }
@@ -275,27 +281,19 @@ html.theme-transitioning body {
   text-decoration-color: rgb(var(--color-accent));
 }
 
-.blog-prose ul,
-.blog-prose ol {
-  padding-left: 1.35rem;
-}
-
-.blog-prose li + li {
-  margin-top: 0.45em;
-}
-
 .blog-prose blockquote {
-  border-left: 2px solid rgb(var(--color-accent));
-  color: rgb(var(--color-foreground));
-  margin-left: 0;
   padding-left: 1.2rem;
 }
 
-.blog-prose code {
+.blog-prose code::before,
+.blog-prose code::after {
+  content: none;
+}
+
+.blog-prose :not(pre) > code {
   border: 1px solid rgb(var(--color-line));
   border-radius: 0.35rem;
   background: rgb(var(--color-surface));
-  color: rgb(var(--color-foreground));
   font-family:
     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
     monospace;
@@ -304,11 +302,8 @@ html.theme-transitioning body {
 }
 
 .blog-prose pre {
-  overflow-x: auto;
   border: 1px solid rgb(var(--color-line));
   border-radius: 0.75rem;
-  background: rgb(var(--color-ink));
-  padding: 1.15rem;
 }
 
 .blog-prose pre code {
@@ -325,22 +320,14 @@ html.theme-transitioning body {
 .blog-prose img {
   border: 1px solid rgb(var(--color-line));
   border-radius: 0.75rem;
-  display: block;
-  height: auto;
-  margin: 2rem auto;
-  max-width: 100%;
 }
 
 .blog-prose table {
-  border-collapse: collapse;
   display: block;
   overflow-x: auto;
-  width: 100%;
 }
 
 .blog-prose th,
 .blog-prose td {
-  border-bottom: 1px solid rgb(var(--color-line));
   padding: 0.65rem 0.85rem;
-  text-align: left;
 }
