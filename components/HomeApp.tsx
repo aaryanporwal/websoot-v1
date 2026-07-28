@@ -16,9 +16,9 @@ export default function HomeApp() {
 
   return (
     <SmoothScroll>
-      <div className="grain relative min-h-screen bg-body text-white">
+      <div className="relative min-h-screen bg-body text-white">
         <NavBar onOpenTheme={() => setThemeOpen(true)} />
-        <main>
+        <main className="relative z-10">
           <Hero />
           <About />
           <Work />

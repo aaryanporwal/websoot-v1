@@ -110,7 +110,7 @@ export default function ErrorApp({ status }: ErrorAppProps) {
 
   return (
     <div
-      className="grain relative min-h-screen overflow-hidden bg-body px-6 py-6 text-white sm:px-10 lg:px-16"
+      className="relative min-h-screen overflow-hidden bg-body px-6 py-6 text-white sm:px-10 lg:px-16"
       style={
         {
           "--mx": `${pointer.x}%`,

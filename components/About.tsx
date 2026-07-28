@@ -24,11 +24,10 @@ export default function About() {
       const foreground = getComputedStyle(document.documentElement)
         .getPropertyValue("--color-foreground")
         .trim();
-      const muted = getComputedStyle(document.documentElement)
-        .getPropertyValue("--color-muted")
-        .trim();
       const foregroundColor = `rgb(${foreground})`;
-      const mutedColor = `rgb(${muted} / 0.45)`;
+      const theme = document.documentElement.dataset.theme;
+      const startOpacity = theme === "light" ? 0.55 : 0.42;
+      const mutedColor = `rgb(${foreground} / ${startOpacity})`;
 
       const stats = gsap.utils.toArray<HTMLElement>(".about-stat");
 
@@ -80,7 +79,7 @@ export default function About() {
       <div className="mx-auto max-w-container">
         <p
           ref={textRef}
-          className="max-w-5xl font-display text-fluid-md font-medium leading-[1.15] tracking-tight"
+          className="max-w-5xl font-display text-fluid-md font-medium leading-[1.15] tracking-tight text-white"
         >
           {STATEMENT}
         </p>
