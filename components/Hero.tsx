@@ -14,6 +14,7 @@ if (typeof window !== "undefined") {
 }
 
 const ROTATING = ["Python", "LLMs", "React", "Agents", "RAG"];
+type DitherBlast = { x: number; y: number; token: number };
 
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -23,12 +24,22 @@ export default function Hero() {
   const sounds = useSiteSounds();
   const prefersReducedMotion = useReducedMotion();
   const { shouldRun: ditherActive } = useDitherActive(root);
-  const [ditherClickToken, setDitherClickToken] = useState(0);
+  const [ditherBlast, setDitherBlast] = useState<DitherBlast>({
+    x: 0.5,
+    y: 0.5,
+    token: 0,
+  });
 
   const handleDitherPointerDown = useCallback(
     (event: React.PointerEvent<HTMLElement>) => {
       if (!ditherActive) return;
-      setDitherClickToken((token) => token + 1);
+
+      const bounds = event.currentTarget.getBoundingClientRect();
+      setDitherBlast((blast) => ({
+        x: (event.clientX - bounds.left) / bounds.width,
+        y: (event.clientY - bounds.top) / bounds.height,
+        token: blast.token + 1,
+      }));
     },
     [ditherActive],
   );
@@ -106,7 +117,7 @@ export default function Hero() {
       className="relative min-h-screen w-full overflow-hidden px-6 pt-32 sm:px-10 lg:px-16"
       onPointerDown={handleDitherPointerDown}
     >
-      <HeroDither active={ditherActive} clickToken={ditherClickToken} />
+      <HeroDither active={ditherActive} blast={ditherBlast} />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_28%_42%,rgb(var(--color-body)/0.92),rgb(var(--color-body)/0.55)_55%,transparent_78%)]"
