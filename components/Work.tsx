@@ -6,10 +6,7 @@ import type { ResolvedPicture } from "../src/lib/resolvePicture";
 import type { WorkProjectPicture } from "../src/types/homeImages";
 import { useSiteSounds } from "../hooks/useSiteSounds";
 import { sectionReveal } from "./animation/sectionReveal";
-<<<<<<< HEAD
 import ResponsivePicture from "./ResponsivePicture";
-=======
->>>>>>> origin/main
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -19,7 +16,6 @@ type Props = {
   projects: WorkProjectPicture[];
 };
 
-<<<<<<< HEAD
 const WORK_IMAGE_SIZES = "(min-width: 768px) 34rem, 100vw";
 
 function getPreferredSrcSet(picture: ResolvedPicture) {
@@ -56,13 +52,6 @@ function preloadWorkImages(projects: WorkProjectPicture[]) {
         }),
     ),
   );
-=======
-function preloadWorkImages() {
-  PROJECTS.forEach((project) => {
-    const img = new Image();
-    img.src = project.image;
-  });
->>>>>>> origin/main
 }
 
 function revealWorkImage(img: HTMLImageElement) {
@@ -81,7 +70,6 @@ function bindWorkImageReveal(figure: HTMLElement) {
   const img = figure.querySelector<HTMLImageElement>(".work-card-media__img");
   if (!img) return;
 
-<<<<<<< HEAD
   const runReveal = () => {
     if (img.dataset.revealed === "true") return;
     if (img.complete && img.naturalWidth > 0) {
@@ -90,15 +78,11 @@ function bindWorkImageReveal(figure: HTMLElement) {
     }
     img.addEventListener("load", () => revealWorkImage(img), { once: true });
   };
-=======
-  const runReveal = () => revealWorkImage(img);
->>>>>>> origin/main
 
   ScrollTrigger.create({
     trigger: figure,
     start: "top 88%",
     once: true,
-<<<<<<< HEAD
     onEnter: runReveal,
   });
 }
@@ -119,20 +103,6 @@ function bindHorizontalWorkReveals(figures: HTMLElement[]) {
 }
 
 export default function Work({ projects }: Props) {
-=======
-    onEnter: () => {
-      if (img.complete && img.naturalWidth > 0) {
-        runReveal();
-        return;
-      }
-
-      img.addEventListener("load", runReveal, { once: true });
-    },
-  });
-}
-
-export default function Work() {
->>>>>>> origin/main
   const root = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const sounds = useSiteSounds();
@@ -142,7 +112,6 @@ export default function Work() {
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-<<<<<<< HEAD
         void preloadWorkImages(projects).then(() => {
           sectionReveal(".work-section-reveal", { trigger: root.current });
 
@@ -151,15 +120,6 @@ export default function Work() {
           const revealVisibleCards = bindHorizontalWorkReveals(figures);
           revealVisibleCards();
         });
-=======
-        preloadWorkImages();
-        sectionReveal(".work-section-reveal", { trigger: root.current });
-
-        const figures =
-          gsap.utils.toArray<HTMLElement>(".work-card-media");
-
-        figures.forEach(bindWorkImageReveal);
->>>>>>> origin/main
       });
 
       mm.add(
@@ -221,19 +181,11 @@ export default function Work() {
               <ResponsivePicture
                 picture={p.picture}
                 alt={`${p.title} project preview`}
-<<<<<<< HEAD
                 loading="eager"
                 fetchPriority={i === 0 ? "high" : "auto"}
                 sizes={WORK_IMAGE_SIZES}
                 imgClassName="work-card-media__img h-full w-full object-cover transition-transform duration-300 ease-out-strong [@media(hover:hover)_and_(pointer:fine)]:group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
                 className="block h-full w-full"
-=======
-                width={p.width}
-                height={p.height}
-                loading="eager"
-                decoding="async"
-                className="work-card-media__img h-full w-full object-cover transition-transform duration-300 ease-out-strong [@media(hover:hover)_and_(pointer:fine)]:group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
->>>>>>> origin/main
               />
             </figure>
 
