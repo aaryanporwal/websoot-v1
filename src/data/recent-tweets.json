@@ -1,6 +1,6 @@
 {
   "username": "aaryan7476",
-  "fetchedAt": "2026-07-27T23:17:00.788Z",
+  "fetchedAt": "2026-07-28T18:48:14.301Z",
   "tweets": [
     {
       "id": "2081829079339479439",
@@ -14,9 +14,9 @@
         }
       ],
       "metrics": {
-        "likes": 0,
+        "likes": 2,
         "replies": 1,
-        "views": 35
+        "views": 102
       }
     },
     {
@@ -26,9 +26,9 @@
       "url": "https://x.com/aaryan7476/status/2081752027626152180",
       "media": [],
       "metrics": {
-        "likes": 10,
-        "replies": 3,
-        "views": 643
+        "likes": 13,
+        "replies": 5,
+        "views": 1197
       }
     },
     {
@@ -45,7 +45,7 @@
       "metrics": {
         "likes": 1,
         "replies": 0,
-        "views": 203
+        "views": 208
       }
     },
     {
@@ -62,7 +62,7 @@
       "metrics": {
         "likes": 17,
         "replies": 2,
-        "views": 643
+        "views": 646
       }
     },
     {
@@ -79,7 +79,7 @@
       "metrics": {
         "likes": 6,
         "replies": 0,
-        "views": 296
+        "views": 298
       }
     }
   ]
