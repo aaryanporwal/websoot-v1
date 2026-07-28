@@ -32,6 +32,7 @@ uniform float mouseRadius;
 uniform float interactionStrength;
 uniform vec2 blastOrigin;
 uniform float blastAge;
+uniform float catPhase;
 
 vec4 mod289(vec4 x) { return x - floor(x * (1.0/289.0)) * 289.0; }
 vec4 permute(vec4 x) { return mod289(((x * 34.0) + 1.0) * x); }
@@ -84,11 +85,104 @@ float pattern(vec2 p) {
   return fbm(p + fbm(p2)); 
 }
 
+float sdTriangle(vec2 p, vec2 p0, vec2 p1, vec2 p2) {
+  vec2 e0 = p1 - p0;
+  vec2 e1 = p2 - p1;
+  vec2 e2 = p0 - p2;
+  vec2 v0 = p - p0;
+  vec2 v1 = p - p1;
+  vec2 v2 = p - p2;
+  vec2 pq0 = v0 - e0 * clamp(dot(v0, e0) / dot(e0, e0), 0.0, 1.0);
+  vec2 pq1 = v1 - e1 * clamp(dot(v1, e1) / dot(e1, e1), 0.0, 1.0);
+  vec2 pq2 = v2 - e2 * clamp(dot(v2, e2) / dot(e2, e2), 0.0, 1.0);
+  float s = sign(e0.x * e2.y - e0.y * e2.x);
+  vec2 d = min(
+    min(vec2(dot(pq0, pq0), s * (v0.x * e0.y - v0.y * e0.x)),
+        vec2(dot(pq1, pq1), s * (v1.x * e1.y - v1.y * e1.x))),
+    vec2(dot(pq2, pq2), s * (v2.x * e2.y - v2.y * e2.x))
+  );
+  return -sqrt(d.x) * sign(d.y);
+}
+
+float lineMask(vec2 p, vec2 a, vec2 b, float width) {
+  vec2 pa = p - a;
+  vec2 ba = b - a;
+  float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+  return 1.0 - smoothstep(width, width + 0.004, length(pa - ba * h));
+}
+
+float ditherCat(vec2 screenUv, float aspect) {
+  vec2 p = screenUv - vec2(aspect > 1.0 ? 0.76 : 0.62, 0.48);
+  p.x *= aspect;
+  p /= aspect > 1.0 ? 0.34 : 0.31;
+
+  float head = 1.0 - smoothstep(0.96, 1.04, length(vec2(p.x / 0.29, (p.y + 0.01) / 0.25)));
+  float cheekL = 1.0 - smoothstep(0.96, 1.04, length(vec2((p.x + 0.13) / 0.20, (p.y + 0.09) / 0.17)));
+  float cheekR = 1.0 - smoothstep(0.96, 1.04, length(vec2((p.x - 0.13) / 0.20, (p.y + 0.09) / 0.17)));
+  float earL = 1.0 - smoothstep(
+    -0.026,
+    0.026,
+    sdTriangle(p, vec2(-0.26, 0.13), vec2(-0.19, 0.39), vec2(-0.04, 0.21))
+  );
+  float earR = 1.0 - smoothstep(
+    -0.026,
+    0.026,
+    sdTriangle(p, vec2(0.26, 0.13), vec2(0.19, 0.39), vec2(0.04, 0.21))
+  );
+  float silhouette = max(max(head, max(cheekL, cheekR)), max(earL, earR));
+
+  float eyeL = 1.0 - smoothstep(0.94, 1.08, length(vec2((p.x + 0.105) / 0.060, (p.y - 0.035) / 0.025)));
+  float eyeR = 1.0 - smoothstep(0.94, 1.08, length(vec2((p.x - 0.105) / 0.060, (p.y - 0.035) / 0.025)));
+  float pupilL = 1.0 - smoothstep(0.86, 1.08, length(vec2((p.x + 0.105) / 0.008, (p.y - 0.035) / 0.020)));
+  float pupilR = 1.0 - smoothstep(0.86, 1.08, length(vec2((p.x - 0.105) / 0.008, (p.y - 0.035) / 0.020)));
+  float nose = 1.0 - smoothstep(0.92, 1.08, length(vec2(p.x / 0.022, (p.y + 0.045) / 0.014)));
+  float muzzleL = lineMask(p, vec2(0.0, -0.057), vec2(-0.028, -0.082), 0.004);
+  float muzzleR = lineMask(p, vec2(0.0, -0.057), vec2(0.028, -0.082), 0.004);
+
+  float whiskers = 0.0;
+  whiskers += lineMask(p, vec2(-0.035, -0.075), vec2(-0.18, -0.065), 0.004);
+  whiskers += lineMask(p, vec2(-0.18, -0.065), vec2(-0.31, -0.035), 0.004);
+  whiskers += lineMask(p, vec2(-0.035, -0.10), vec2(-0.19, -0.115), 0.004);
+  whiskers += lineMask(p, vec2(-0.19, -0.115), vec2(-0.31, -0.145), 0.004);
+  whiskers += lineMask(p, vec2(0.035, -0.075), vec2(0.18, -0.065), 0.004);
+  whiskers += lineMask(p, vec2(0.18, -0.065), vec2(0.31, -0.035), 0.004);
+  whiskers += lineMask(p, vec2(0.035, -0.10), vec2(0.19, -0.115), 0.004);
+  whiskers += lineMask(p, vec2(0.19, -0.115), vec2(0.31, -0.145), 0.004);
+
+  float faceCuts = max(max(eyeL, eyeR), nose);
+  float faceMarks = max(max(pupilL, pupilR), max(max(muzzleL, muzzleR), whiskers));
+  float livingTexture = 0.60 + 0.34 * cnoise(p * 11.0 + time * 0.08);
+  return max((silhouette * livingTexture) - faceCuts, faceMarks);
+}
+
 void main() {
-  vec2 uv = gl_FragCoord.xy / resolution.xy;
+  vec2 screenUv = gl_FragCoord.xy / resolution.xy;
+  vec2 uv = screenUv;
   uv -= 0.5;
   uv.x *= resolution.x / resolution.y;
   float f = pattern(uv);
+
+  if (catPhase > 0.001) {
+    float dissolve = max(catPhase - 1.0, 0.0);
+    float backgroundKeep = catPhase <= 1.0 ? 1.0 - catPhase : dissolve;
+    f *= backgroundKeep;
+
+    vec2 pixelCell = floor(gl_FragCoord.xy / 3.0);
+    float pixelNoise = fract(sin(dot(pixelCell, vec2(12.9898, 78.233))) * 43758.5453);
+    vec2 dustUv = screenUv;
+    dustUv.x -= (pixelNoise - 0.5) * dissolve * 0.055;
+    dustUv.y -= dissolve * (0.025 + pixelNoise * 0.085);
+
+    float cat = ditherCat(dustUv, resolution.x / resolution.y);
+    float particleKeep = 1.0 - smoothstep(
+      pixelNoise - 0.12,
+      pixelNoise + 0.12,
+      dissolve
+    );
+    float catOpacity = catPhase <= 1.0 ? catPhase : particleKeep;
+    float catMix = catOpacity * smoothstep(0.02, 0.18, cat) * 0.88;
+    f = mix(f, max(f * 0.28, cat), catMix);
+  }
 
   if (blastAge < 1.0) {
     vec2 blastUv = blastOrigin - 0.5;
@@ -209,6 +303,7 @@ type DitheredWavesProps = {
   externalPointer: { clientX: number; clientY: number } | null;
   clickToken: number;
   blastOrigin: [number, number];
+  catVisible: boolean;
   active: boolean;
 };
 
@@ -225,6 +320,7 @@ function DitheredWaves({
   externalPointer,
   clickToken,
   blastOrigin,
+  catVisible,
   active,
 }: DitheredWavesProps) {
   const mesh = useRef<THREE.Mesh>(null);
@@ -245,6 +341,7 @@ function DitheredWaves({
     interactionStrength: new THREE.Uniform(0),
     blastOrigin: new THREE.Uniform(new THREE.Vector2(...blastOrigin)),
     blastAge: new THREE.Uniform(2),
+    catPhase: new THREE.Uniform(0),
   });
 
   useEffect(() => {
@@ -297,6 +394,17 @@ function DitheredWaves({
 
     u.enableMouseInteraction.value = enableMouseInteraction ? 1 : 0;
     u.mouseRadius.value = mouseRadius;
+    if (catVisible) {
+      u.catPhase.value = THREE.MathUtils.damp(
+        u.catPhase.value,
+        1,
+        7,
+        delta,
+      );
+    } else if (u.catPhase.value > 0) {
+      u.catPhase.value += delta / 0.85;
+      if (u.catPhase.value >= 2) u.catPhase.value = 0;
+    }
 
     if (u.interactionStrength.value > 0) {
       u.interactionStrength.value = Math.max(
@@ -352,6 +460,7 @@ export type DitherProps = {
   externalPointer?: { clientX: number; clientY: number } | null;
   clickToken?: number;
   blastOrigin?: [number, number];
+  catVisible?: boolean;
   active?: boolean;
 };
 
@@ -368,6 +477,7 @@ export default function Dither({
   externalPointer = null,
   clickToken = 0,
   blastOrigin = [0.5, 0.5],
+  catVisible = false,
   active = true,
 }: DitherProps) {
   return (
@@ -391,6 +501,7 @@ export default function Dither({
         externalPointer={externalPointer}
         clickToken={clickToken}
         blastOrigin={blastOrigin}
+        catVisible={catVisible}
         active={active}
       />
     </Canvas>

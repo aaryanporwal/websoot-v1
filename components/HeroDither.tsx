@@ -5,6 +5,7 @@ import { useTheme } from "./theme/useTheme";
 type HeroDitherProps = {
   active: boolean;
   blast: { x: number; y: number; token: number };
+  pixelArtVisible: boolean;
 };
 
 function readCssRgbTriplet(variable: string): [number, number, number] {
@@ -20,7 +21,11 @@ function accentWaveColor(): [number, number, number] {
   return [r * 0.4, g * 0.4, b * 0.4];
 }
 
-export default function HeroDither({ active, blast }: HeroDitherProps) {
+export default function HeroDither({
+  active,
+  blast,
+  pixelArtVisible,
+}: HeroDitherProps) {
   const { theme } = useTheme();
   const [Dither, setDither] = useState<ComponentType<DitherProps> | null>(null);
   const [waveColor, setWaveColor] = useState<[number, number, number]>([
@@ -58,20 +63,24 @@ export default function HeroDither({ active, blast }: HeroDitherProps) {
   if (!active || !Dither) return null;
 
   return (
-    <div aria-hidden className="absolute inset-0 z-0 h-full w-full opacity-60">
-      <Dither
-        active={active}
-        waveColor={waveColor}
-        disableAnimation={false}
-        enableMouseInteraction={false}
-        clickToken={blast.token}
-        blastOrigin={[blast.x, blast.y]}
-        mouseRadius={0.18}
-        colorNum={4}
-        waveAmplitude={0.22}
-        waveFrequency={3}
-        waveSpeed={0.05}
-      />
+    <div aria-hidden className="absolute inset-0 z-0 h-full w-full">
+      <div className="absolute inset-0 opacity-60">
+        <Dither
+          active={active}
+          waveColor={waveColor}
+          disableAnimation={false}
+          enableMouseInteraction={false}
+          clickToken={blast.token}
+          blastOrigin={[blast.x, blast.y]}
+          catVisible={pixelArtVisible}
+          mouseRadius={0.18}
+          colorNum={4}
+          waveAmplitude={0.22}
+          waveFrequency={3}
+          waveSpeed={0.05}
+        />
+      </div>
+
     </div>
   );
 }
