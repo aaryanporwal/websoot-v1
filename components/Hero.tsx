@@ -1,10 +1,12 @@
-import { useRef } from "react";
+import { useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
 import { motion, useReducedMotion } from "motion/react";
 import { Signature } from "./Signature";
+import HeroDither from "./HeroDither";
 import { useSiteSounds } from "../hooks/useSiteSounds";
+import { useDitherActive } from "../hooks/useDitherActive";
 import { HERO_CHROME_REVEAL_DELAY } from "./animationTimings";
 
 if (typeof window !== "undefined") {
@@ -20,6 +22,16 @@ export default function Hero() {
   const contentRef = useRef<HTMLDivElement>(null);
   const sounds = useSiteSounds();
   const prefersReducedMotion = useReducedMotion();
+  const { shouldRun: ditherActive } = useDitherActive(root);
+  const [ditherClickToken, setDitherClickToken] = useState(0);
+
+  const handleDitherPointerDown = useCallback(
+    (event: React.PointerEvent<HTMLElement>) => {
+      if (!ditherActive) return;
+      setDitherClickToken((token) => token + 1);
+    },
+    [ditherActive],
+  );
 
   useGSAP(
     () => {
@@ -36,7 +48,7 @@ export default function Hero() {
           type: "chars,lines",
           linesClass: "overflow-hidden",
         });
-        gsap.set(contentRef.current, { autoAlpha: 1, pointerEvents: "auto" });
+        gsap.set(contentRef.current, { autoAlpha: 1 });
         gsap.from(split.chars, {
           yPercent: 120,
           opacity: 0,
@@ -76,7 +88,7 @@ export default function Hero() {
             });
         });
       } else {
-        gsap.set(contentRef.current, { autoAlpha: 1, pointerEvents: "auto" });
+        gsap.set(contentRef.current, { autoAlpha: 1 });
         if (wordRef.current) wordRef.current.textContent = ROTATING[0];
       }
 
@@ -91,15 +103,21 @@ export default function Hero() {
     <section
       ref={root}
       id="top"
-      className="relative min-h-screen w-full overflow-hidden bg-body px-6 pt-32 sm:px-10 lg:px-16"
+      className="relative min-h-screen w-full overflow-hidden px-6 pt-32 sm:px-10 lg:px-16"
+      onPointerDown={handleDitherPointerDown}
     >
+      <HeroDither active={ditherActive} clickToken={ditherClickToken} />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_28%_42%,rgb(var(--color-body)/0.92),rgb(var(--color-body)/0.55)_55%,transparent_78%)]"
+      />
       <div
         ref={contentRef}
-        className="opacity-0 pointer-events-none relative mx-auto flex min-h-[calc(100vh-12rem)] max-w-container flex-col justify-center"
+        className="opacity-0 pointer-events-none relative z-10 mx-auto flex min-h-[calc(100vh-12rem)] max-w-container flex-col justify-center"
       >
         <h1
           ref={headingRef}
-          className="font-display text-fluid-xl font-semibold leading-[0.92] tracking-tightest text-white"
+          className="font-display text-fluid-xl font-semibold leading-[0.92] tracking-tightest text-white drop-shadow-[0_2px_20px_rgb(var(--color-body)/0.85)]"
         >
           Aaryan
           <br />
@@ -129,18 +147,18 @@ export default function Hero() {
           <a
             href="#work"
             onClick={sounds.tap}
-            className="rounded-full bg-voltage px-8 py-3.5 font-display text-base font-semibold text-on-accent transition-transform duration-press ease-out-strong active:scale-[0.97] [@media(hover:hover)_and_(pointer:fine)]:hover:scale-[1.02] motion-reduce:hover:scale-100"
+            className="pointer-events-auto rounded-full bg-voltage px-8 py-3.5 font-display text-base font-semibold text-on-accent transition-transform duration-press ease-out-strong active:scale-[0.97] [@media(hover:hover)_and_(pointer:fine)]:hover:scale-[1.02] motion-reduce:hover:scale-100"
           >
             View work
           </a>
           <a
             href="#contact"
             onClick={sounds.tap}
-            className="rounded-full border border-line px-8 py-3.5 font-display text-base font-semibold text-white transition-[transform,border-color] duration-press ease-out-strong active:scale-[0.97] hover:border-white [@media(hover:hover)_and_(pointer:fine)]:hover:scale-[1.02] motion-reduce:hover:scale-100"
+            className="pointer-events-auto rounded-full border border-line px-8 py-3.5 font-display text-base font-semibold text-white transition-[transform,border-color] duration-press ease-out-strong active:scale-[0.97] hover:border-white [@media(hover:hover)_and_(pointer:fine)]:hover:scale-[1.02] motion-reduce:hover:scale-100"
           >
             Say hi
           </a>
-          <div className="hero-signature ml-2">
+          <div className="hero-signature pointer-events-none ml-2">
             <Signature />
           </div>
         </div>
@@ -155,7 +173,7 @@ export default function Hero() {
             ? { duration: 0 }
             : { delay: HERO_CHROME_REVEAL_DELAY, duration: 0.8 }
         }
-        className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-xs uppercase tracking-[0.3em] text-muted sm:flex"
+        className="absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 text-xs uppercase tracking-[0.3em] text-muted sm:flex"
       >
         Scroll
         <motion.span
