@@ -154,6 +154,24 @@ li {
   color: rgb(var(--color-foreground));
 }
 
+/*
+ * The display scale normally follows viewport width. On wide, short laptop
+ * viewports that makes the two-line name consume the entire first fold, so cap
+ * it against the available height while preserving the larger desktop scale.
+ */
+@media (min-width: 768px) and (max-height: 850px) {
+  .hero-title {
+    font-size: clamp(
+      3.5rem,
+      min(
+        calc(0.5rem + 13vw),
+        calc((100svh - 31.5rem) * 0.5435)
+      ),
+      12rem
+    );
+  }
+}
+
 /* Hidden before GSAP reveal; avoids a flash of full images on hydrate */
 .work-card-media__img {
   clip-path: inset(0 0 100% 0);
