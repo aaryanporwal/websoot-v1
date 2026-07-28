@@ -129,8 +129,18 @@ const commands: CommandItem[] = [
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.ico" sizes="any" />
     <link
-      href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=general-sans@400,500,600&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      href="/fonts/general-sans-400.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/clash-display-600.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
     />
     <script is:inline>
       (() => {
@@ -162,6 +172,6 @@ const commands: CommandItem[] = [
         window.dispatchEvent(new CustomEvent("command-switcher:open"));
       });
     </script>
-    <CommandSwitcher client:load commands={commands} />
+    <CommandSwitcher client:idle commands={commands} />
   </body>
 </html>
