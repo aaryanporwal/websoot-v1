@@ -1,5 +1,5 @@
 ---
-title: "Why LLMs Aren’t Reliable at Spelling, Counting, or Reversing Words"
+title: "Why LLMs Can’t Count the Rs in Strawberry"
 date: 2026-07-28
 draft: false
 ---
