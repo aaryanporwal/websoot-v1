@@ -51,6 +51,9 @@ export default function ThemeMenu({
   onSelect,
   onClose,
 }: ThemeMenuProps) {
+  const [entered, setEntered] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
   useEffect(() => {
     if (!open) return;
 
@@ -61,11 +64,28 @@ export default function ThemeMenu({
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!open) {
+      setEntered(false);
+      return;
+    }
+
+    if (prefersReducedMotion) {
+      setEntered(true);
+      return;
+    }
+
+    const frame = window.requestAnimationFrame(() => setEntered(true));
+    return () => window.cancelAnimationFrame(frame);
+  }, [open, prefersReducedMotion]);
+
   if (!open) return null;
 
   return (
     <div
-      className="fixed inset-0 z-[110] flex items-start justify-center bg-body/75 px-4 py-20 backdrop-blur-md sm:px-6"
+      className={`fixed inset-0 z-[110] flex items-start justify-center px-4 py-20 backdrop-blur-md sm:px-6 transition-opacity duration-ui ease-out-strong motion-reduce:transition-none ${
+        entered ? "bg-body/75 opacity-100" : "bg-body/0 opacity-0"
+      }`}
       onKeyDown={(event) => {
         if (event.key === "Escape") onClose();
       }}
@@ -77,7 +97,9 @@ export default function ThemeMenu({
         role="dialog"
         aria-modal="true"
         aria-labelledby="theme-menu-title"
-        className="w-full max-w-md overflow-hidden rounded-lg border border-line bg-ink shadow-2xl shadow-black/40"
+        className={`w-full max-w-md origin-center overflow-hidden rounded-lg border border-line bg-ink shadow-2xl shadow-black/40 transition-[opacity,transform] duration-ui ease-out-strong motion-reduce:transition-none ${
+          entered ? "scale-100 opacity-100" : "scale-[0.97] opacity-0"
+        }`}
       >
         <div className="flex items-center justify-between border-b border-line bg-surface/70 px-5 py-4">
           <h2
@@ -127,10 +149,10 @@ export default function ThemeMenu({
                     {option.label}
                   </span>
                   <span
-                    className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border ${
+                    className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border transition-[border-color,background-color,transform,color] duration-press ease-out-strong ${
                       selected
-                        ? "border-voltage bg-voltage text-on-accent"
-                        : "border-line text-transparent"
+                        ? "scale-100 border-voltage bg-voltage text-on-accent"
+                        : "scale-95 border-line text-transparent"
                     }`}
                   >
                     {selected && <CheckIcon />}

@@ -56,5 +56,17 @@ export function normalizeTheme(value: string | null | undefined): ThemeId {
 }
 
 export function applyTheme(theme: ThemeId) {
-  document.documentElement.dataset.theme = theme;
+  const root = document.documentElement;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (reduce) {
+    root.dataset.theme = theme;
+    return;
+  }
+
+  root.classList.add("theme-transitioning");
+  root.dataset.theme = theme;
+  window.setTimeout(() => {
+    root.classList.remove("theme-transitioning");
+  }, 200);
 }

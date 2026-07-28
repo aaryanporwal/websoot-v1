@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BlogLayout from "../../../layouts/BlogLayout.astro";
+import BlogScrollAnimations from "../../../../components/BlogScrollAnimations";
 import {
   formatDate,
   postHref,
@@ -35,6 +36,7 @@ const { tag, posts } = Astro.props;
   description={`Posts tagged ${tag} by Aaryan Porwal.`}
   canonicalPath={`/blog/tags/${tagSlug(tag)}/`}
 >
+  <BlogScrollAnimations client:load />
   <main class="relative mx-auto max-w-container px-6 py-24 sm:px-10 lg:px-16">
     <a
       href="/blog/"
@@ -49,7 +51,7 @@ const { tag, posts } = Astro.props;
     <section class="mt-14 grid gap-6">
       {
         posts.map((post) => (
-          <article class="group border-y border-line py-8 transition-colors hover:border-voltage/70">
+          <article class="blog-post-item group border-y border-line py-8 transition-colors hover:border-voltage/70">
             <a href={postHref(post)} class="block outline-none focus-visible:bg-surface/50">
               <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
                 <div class="max-w-3xl">
@@ -66,7 +68,7 @@ const { tag, posts } = Astro.props;
                     {postSummary(post)}
                   </p>
                 </div>
-                <span class="font-display text-2xl text-voltage transition-transform duration-300 group-hover:translate-x-1">
+                <span class="font-display text-2xl text-voltage transition-transform duration-ui ease-out-strong [@media(hover:hover)_and_(pointer:fine)]:group-hover:translate-x-1">
                   →
                 </span>
               </div>

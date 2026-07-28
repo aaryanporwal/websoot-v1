@@ -126,26 +126,20 @@ export default function Hero() {
         </div>
 
         <div className="hero-fade mt-10 flex flex-wrap items-center gap-5">
-          <motion.a
+          <a
             href="#work"
             onClick={sounds.tap}
-            whileHover={prefersReducedMotion ? undefined : { scale: 1.04 }}
-            whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            className="rounded-full bg-voltage px-8 py-3.5 font-display text-base font-semibold text-on-accent"
+            className="rounded-full bg-voltage px-8 py-3.5 font-display text-base font-semibold text-on-accent transition-transform duration-press ease-out-strong active:scale-[0.97] [@media(hover:hover)_and_(pointer:fine)]:hover:scale-[1.02] motion-reduce:hover:scale-100"
           >
             View work
-          </motion.a>
-          <motion.a
+          </a>
+          <a
             href="#contact"
             onClick={sounds.tap}
-            whileHover={prefersReducedMotion ? undefined : { scale: 1.04 }}
-            whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            className="rounded-full border border-line px-8 py-3.5 font-display text-base font-semibold text-white transition-[transform,border-color] duration-press ease-out-strong hover:border-white"
+            className="rounded-full border border-line px-8 py-3.5 font-display text-base font-semibold text-white transition-[transform,border-color] duration-press ease-out-strong active:scale-[0.97] hover:border-white [@media(hover:hover)_and_(pointer:fine)]:hover:scale-[1.02] motion-reduce:hover:scale-100"
           >
             Say hi
-          </motion.a>
+          </a>
           <div className="hero-signature ml-2">
             <Signature />
           </div>
