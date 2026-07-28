@@ -1,8 +1,69 @@
 ---
 import HomeApp from "../../components/HomeApp";
 import SiteLayout from "../layouts/SiteLayout.astro";
+import headAlertImg from "../assets/anya/head-alert.png";
+import headNeutralImg from "../assets/anya/head-neutral.png";
+import headSleepyImg from "../assets/anya/head-sleepy.png";
+import catTreatImg from "../assets/cat-treat.out.png";
+import { WORK_PROJECTS } from "../data/workProjects";
+import { resolvePicture } from "../lib/resolvePicture";
+import type { HomeImages } from "../types/homeImages";
+
+const work = await Promise.all(
+  WORK_PROJECTS.map(async (project) => ({
+    tag: project.tag,
+    title: project.title,
+    desc: project.desc,
+    cta: project.cta,
+    href: project.href,
+    logo: project.logo,
+    picture: await resolvePicture({
+      src: project.image,
+      widths: [project.displayWidth, project.displayWidth * 2],
+    }),
+  })),
+);
+
+const contact = {
+  headSleepy: await resolvePicture({ src: headSleepyImg }),
+  headAlert: await resolvePicture({ src: headAlertImg }),
+  headNeutral: await resolvePicture({ src: headNeutralImg }),
+  treat: await resolvePicture({
+    src: catTreatImg,
+    widths: [144, 176, 352],
+  }),
+};
+
+const images: HomeImages = { work, contact };
+
+const workImageSizes = "(min-width: 768px) 34rem, 100vw";
 ---
 
 <SiteLayout>
-  <HomeApp client:load />
+  <Fragment slot="head">
+    {
+      work.map((project, index) => {
+        const avif = project.picture.sources.find(
+          (source) => source.type === "image/avif",
+        );
+        if (!avif) return null;
+
+        const href = avif.srcSet.split(",")[0]?.trim().split(/\s+/)[0];
+        if (!href) return null;
+
+        return (
+          <link
+            rel="preload"
+            as="image"
+            href={href}
+            type="image/avif"
+            imagesrcset={avif.srcSet}
+            imagesizes={workImageSizes}
+            fetchpriority={index === 0 ? "high" : "low"}
+          />
+        );
+      })
+    }
+  </Fragment>
+  <HomeApp client:load images={images} />
 </SiteLayout>
