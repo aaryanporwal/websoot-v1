@@ -150,7 +150,7 @@ export default function Hero() {
       >
         <h1
           ref={headingRef}
-          className="font-display text-fluid-xl font-semibold leading-[0.92] tracking-tightest text-white drop-shadow-[0_2px_20px_rgb(var(--color-body)/0.85)]"
+          className="hero-title font-display text-fluid-xl font-semibold leading-[0.92] tracking-tightest text-white drop-shadow-[0_2px_20px_rgb(var(--color-body)/0.85)]"
         >
           Aaryan
           <br />
