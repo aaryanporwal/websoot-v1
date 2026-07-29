@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
@@ -29,19 +29,37 @@ export default function Hero() {
     y: 0.5,
     token: 0,
   });
+  const [blastCount, setBlastCount] = useState(0);
+  const [pixelArtVisible, setPixelArtVisible] = useState(false);
+
+  useEffect(() => {
+    if (blastCount < 5) return;
+
+    const reveal = window.setTimeout(() => setPixelArtVisible(true), 520);
+    const hide = window.setTimeout(() => {
+      setPixelArtVisible(false);
+      setBlastCount(0);
+    }, 2520);
+
+    return () => {
+      window.clearTimeout(reveal);
+      window.clearTimeout(hide);
+    };
+  }, [blastCount]);
 
   const handleDitherPointerDown = useCallback(
     (event: React.PointerEvent<HTMLElement>) => {
-      if (!ditherActive) return;
+      if (!ditherActive || pixelArtVisible || blastCount >= 5) return;
 
       const bounds = event.currentTarget.getBoundingClientRect();
+      setBlastCount((count) => count + 1);
       setDitherBlast((blast) => ({
         x: (event.clientX - bounds.left) / bounds.width,
         y: (event.clientY - bounds.top) / bounds.height,
         token: blast.token + 1,
       }));
     },
-    [ditherActive],
+    [blastCount, ditherActive, pixelArtVisible],
   );
 
   useGSAP(
@@ -117,7 +135,11 @@ export default function Hero() {
       className="relative min-h-screen w-full overflow-hidden px-6 pt-32 sm:px-10 lg:px-16"
       onPointerDown={handleDitherPointerDown}
     >
-      <HeroDither active={ditherActive} blast={ditherBlast} />
+      <HeroDither
+        active={ditherActive}
+        blast={ditherBlast}
+        pixelArtVisible={pixelArtVisible}
+      />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_28%_42%,rgb(var(--color-body)/0.92),rgb(var(--color-body)/0.55)_55%,transparent_78%)]"
