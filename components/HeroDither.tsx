@@ -18,7 +18,28 @@ function readCssRgbTriplet(variable: string): [number, number, number] {
 
 function accentWaveColor(): [number, number, number] {
   const [r, g, b] = readCssRgbTriplet("--color-accent");
-  return [r * 0.4, g * 0.4, b * 0.4];
+  return [r * 0.7, g * 0.7, b * 0.7];
+}
+
+function prefersCoarsePointer() {
+  return window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+}
+
+function scheduleNonCriticalWork(fn: () => void, delayMs: number, idleTimeout: number) {
+  const run = () => {
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(fn, { timeout: idleTimeout });
+    } else {
+      setTimeout(fn, idleTimeout);
+    }
+  };
+
+  if (document.readyState === "complete") {
+    setTimeout(run, delayMs);
+    return;
+  }
+
+  window.addEventListener("load", () => setTimeout(run, delayMs), { once: true });
 }
 
 export default function HeroDither({
@@ -31,6 +52,7 @@ export default function HeroDither({
   const [waveColor, setWaveColor] = useState<[number, number, number]>([
     0.35, 0.45, 0.12,
   ]);
+  const [maxFps, setMaxFps] = useState(30);
 
   useEffect(() => {
     if (!active || Dither) return;
@@ -42,15 +64,10 @@ export default function HeroDither({
       });
     };
 
-    if ("requestIdleCallback" in window) {
-      const id = window.requestIdleCallback(load, { timeout: 1500 });
-      return () => {
-        cancelled = true;
-        window.cancelIdleCallback(id);
-      };
-    }
+    const coarse = prefersCoarsePointer();
+    setMaxFps(coarse ? 20 : 30);
+    scheduleNonCriticalWork(load, coarse ? 3500 : 2000, coarse ? 8000 : 5000);
 
-    load();
     return () => {
       cancelled = true;
     };
@@ -60,27 +77,31 @@ export default function HeroDither({
     setWaveColor(accentWaveColor());
   }, [theme]);
 
-  if (!active || !Dither) return null;
-
   return (
-    <div aria-hidden className="absolute inset-0 z-0 h-full w-full">
-      <div className="absolute inset-0 opacity-60">
-        <Dither
-          active={active}
-          waveColor={waveColor}
-          disableAnimation={false}
-          enableMouseInteraction={false}
-          clickToken={blast.token}
-          blastOrigin={[blast.x, blast.y]}
-          catVisible={pixelArtVisible}
-          mouseRadius={0.18}
-          colorNum={4}
-          waveAmplitude={0.22}
-          waveFrequency={3}
-          waveSpeed={0.05}
-        />
-      </div>
-
-    </div>
+    <>
+      <div
+        aria-hidden
+        className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_30%_40%,rgb(var(--color-accent)/0.18),transparent_65%)]"
+      />
+      {active && Dither ? (
+        <div aria-hidden className="absolute inset-0 z-0 h-full w-full opacity-[0.85]">
+          <Dither
+            active={active}
+            waveColor={waveColor}
+            disableAnimation={false}
+            enableMouseInteraction={false}
+            clickToken={blast.token}
+            blastOrigin={[blast.x, blast.y]}
+            catVisible={pixelArtVisible}
+            mouseRadius={0.18}
+            colorNum={4}
+            waveAmplitude={0.22}
+            waveFrequency={3}
+            waveSpeed={0.05}
+            maxFps={maxFps}
+          />
+        </div>
+      ) : null}
+    </>
   );
 }

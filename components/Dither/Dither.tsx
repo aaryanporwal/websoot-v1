@@ -1,8 +1,6 @@
 /* eslint-disable react/no-unknown-property */
-import { useRef, useEffect, forwardRef } from "react";
+import { useRef, useEffect } from "react";
 import { Canvas, useFrame, useThree, invalidate } from "@react-three/fiber";
-import { EffectComposer, wrapEffect } from "@react-three/postprocessing";
-import { Effect } from "postprocessing";
 import * as THREE from "three";
 
 import "./Dither.css";
@@ -33,6 +31,19 @@ uniform float interactionStrength;
 uniform vec2 blastOrigin;
 uniform float blastAge;
 uniform float catPhase;
+uniform float colorNum;
+uniform float pixelSize;
+
+const float bayerMatrix8x8[64] = float[64](
+  0.0/64.0, 48.0/64.0, 12.0/64.0, 60.0/64.0,  3.0/64.0, 51.0/64.0, 15.0/64.0, 63.0/64.0,
+  32.0/64.0,16.0/64.0, 44.0/64.0, 28.0/64.0, 35.0/64.0,19.0/64.0, 47.0/64.0, 31.0/64.0,
+  8.0/64.0, 56.0/64.0,  4.0/64.0, 52.0/64.0, 11.0/64.0,59.0/64.0,  7.0/64.0, 55.0/64.0,
+  40.0/64.0,24.0/64.0, 36.0/64.0, 20.0/64.0, 43.0/64.0,27.0/64.0, 39.0/64.0, 23.0/64.0,
+  2.0/64.0, 50.0/64.0, 14.0/64.0, 62.0/64.0,  1.0/64.0,49.0/64.0, 13.0/64.0, 61.0/64.0,
+  34.0/64.0,18.0/64.0, 46.0/64.0, 30.0/64.0, 33.0/64.0,17.0/64.0, 45.0/64.0, 29.0/64.0,
+  10.0/64.0,58.0/64.0,  6.0/64.0, 54.0/64.0,  9.0/64.0,57.0/64.0,  5.0/64.0, 53.0/64.0,
+  42.0/64.0,26.0/64.0, 38.0/64.0, 22.0/64.0, 41.0/64.0,25.0/64.0, 37.0/64.0, 21.0/64.0
+);
 
 vec4 mod289(vec4 x) { return x - floor(x * (1.0/289.0)) * 289.0; }
 vec4 permute(vec4 x) { return mod289(((x * 34.0) + 1.0) * x); }
@@ -155,6 +166,18 @@ float ditherCat(vec2 screenUv, float aspect) {
   return max((silhouette * livingTexture) - faceCuts, faceMarks);
 }
 
+vec3 applyDither(vec2 uv, vec3 color) {
+  vec2 scaledCoord = floor(uv * resolution / pixelSize);
+  int x = int(mod(scaledCoord.x, 8.0));
+  int y = int(mod(scaledCoord.y, 8.0));
+  float threshold = bayerMatrix8x8[y * 8 + x] - 0.25;
+  float step = 1.0 / (colorNum - 1.0);
+  color += threshold * step;
+  float bias = 0.2;
+  color = clamp(color - bias, 0.0, 1.0);
+  return floor(color * (colorNum - 1.0) + 0.5) / (colorNum - 1.0);
+}
+
 void main() {
   vec2 screenUv = gl_FragCoord.xy / resolution.xy;
   vec2 uv = screenUv;
@@ -196,7 +219,6 @@ void main() {
     float core = exp(-blastDistance * 10.0) * (1.0 - smoothstep(0.0, 0.38, blastAge));
     float decay = pow(1.0 - blastAge, 1.35);
 
-    // Break the otherwise-perfect circle with the same living noise as the field.
     float breakup = 0.42 + 0.28 * cnoise(uv * 9.0 - blastAge * 2.0);
     f += (ring * breakup * 0.56 + core * 0.88) * decay;
   }
@@ -209,86 +231,10 @@ void main() {
     f -= (0.5 + interactionStrength * 1.25) * effect;
   }
   vec3 col = mix(vec3(0.0), waveColor, f);
+  col = applyDither(gl_FragCoord.xy / resolution.xy, col);
   gl_FragColor = vec4(col, 1.0);
 }
 `;
-
-const ditherFragmentShader = `
-precision highp float;
-uniform float colorNum;
-uniform float pixelSize;
-const float bayerMatrix8x8[64] = float[64](
-  0.0/64.0, 48.0/64.0, 12.0/64.0, 60.0/64.0,  3.0/64.0, 51.0/64.0, 15.0/64.0, 63.0/64.0,
-  32.0/64.0,16.0/64.0, 44.0/64.0, 28.0/64.0, 35.0/64.0,19.0/64.0, 47.0/64.0, 31.0/64.0,
-  8.0/64.0, 56.0/64.0,  4.0/64.0, 52.0/64.0, 11.0/64.0,59.0/64.0,  7.0/64.0, 55.0/64.0,
-  40.0/64.0,24.0/64.0, 36.0/64.0, 20.0/64.0, 43.0/64.0,27.0/64.0, 39.0/64.0, 23.0/64.0,
-  2.0/64.0, 50.0/64.0, 14.0/64.0, 62.0/64.0,  1.0/64.0,49.0/64.0, 13.0/64.0, 61.0/64.0,
-  34.0/64.0,18.0/64.0, 46.0/64.0, 30.0/64.0, 33.0/64.0,17.0/64.0, 45.0/64.0, 29.0/64.0,
-  10.0/64.0,58.0/64.0,  6.0/64.0, 54.0/64.0,  9.0/64.0,57.0/64.0,  5.0/64.0, 53.0/64.0,
-  42.0/64.0,26.0/64.0, 38.0/64.0, 22.0/64.0, 41.0/64.0,25.0/64.0, 37.0/64.0, 21.0/64.0
-);
-
-vec3 dither(vec2 uv, vec3 color) {
-  vec2 scaledCoord = floor(uv * resolution / pixelSize);
-  int x = int(mod(scaledCoord.x, 8.0));
-  int y = int(mod(scaledCoord.y, 8.0));
-  float threshold = bayerMatrix8x8[y * 8 + x] - 0.25;
-  float step = 1.0 / (colorNum - 1.0);
-  color += threshold * step;
-  float bias = 0.2;
-  color = clamp(color - bias, 0.0, 1.0);
-  return floor(color * (colorNum - 1.0) + 0.5) / (colorNum - 1.0);
-}
-
-void mainImage(in vec4 inputColor, in vec2 uv, out vec4 outputColor) {
-  vec2 normalizedPixelSize = pixelSize / resolution;
-  vec2 uvPixel = normalizedPixelSize * floor(uv / normalizedPixelSize);
-  vec4 color = texture2D(inputBuffer, uvPixel);
-  color.rgb = dither(uv, color.rgb);
-  outputColor = color;
-}
-`;
-
-class RetroEffectImpl extends Effect {
-  uniforms: Map<string, THREE.Uniform<number>>;
-
-  constructor() {
-    const uniforms = new Map([
-      ["colorNum", new THREE.Uniform(4.0)],
-      ["pixelSize", new THREE.Uniform(2.0)],
-    ]);
-    super("RetroEffect", ditherFragmentShader, { uniforms });
-    this.uniforms = uniforms;
-  }
-
-  set colorNum(v: number) {
-    this.uniforms.get("colorNum")!.value = v;
-  }
-
-  get colorNum() {
-    return this.uniforms.get("colorNum")!.value;
-  }
-
-  set pixelSize(v: number) {
-    this.uniforms.get("pixelSize")!.value = v;
-  }
-
-  get pixelSize() {
-    return this.uniforms.get("pixelSize")!.value;
-  }
-}
-
-const WrappedRetro = wrapEffect(RetroEffectImpl);
-
-const RetroEffect = forwardRef<
-  RetroEffectImpl,
-  { colorNum: number; pixelSize: number }
->(({ colorNum, pixelSize }, ref) => {
-  return (
-    <WrappedRetro ref={ref} colorNum={colorNum} pixelSize={pixelSize} />
-  );
-});
-RetroEffect.displayName = "RetroEffect";
 
 type DitheredWavesProps = {
   waveSpeed: number;
@@ -300,11 +246,11 @@ type DitheredWavesProps = {
   disableAnimation: boolean;
   enableMouseInteraction: boolean;
   mouseRadius: number;
-  externalPointer: { clientX: number; clientY: number } | null;
   clickToken: number;
   blastOrigin: [number, number];
   catVisible: boolean;
   active: boolean;
+  maxFps: number;
 };
 
 function DitheredWaves({
@@ -317,14 +263,13 @@ function DitheredWaves({
   disableAnimation,
   enableMouseInteraction,
   mouseRadius,
-  externalPointer,
   clickToken,
   blastOrigin,
   catVisible,
   active,
+  maxFps,
 }: DitheredWavesProps) {
   const mesh = useRef<THREE.Mesh>(null);
-  const retroRef = useRef<RetroEffectImpl>(null);
   const previousClickToken = useRef(clickToken);
   const { viewport, size, gl } = useThree();
 
@@ -342,14 +287,32 @@ function DitheredWaves({
     blastOrigin: new THREE.Uniform(new THREE.Vector2(...blastOrigin)),
     blastAge: new THREE.Uniform(2),
     catPhase: new THREE.Uniform(0),
+    colorNum: new THREE.Uniform(colorNum),
+    pixelSize: new THREE.Uniform(1),
   });
 
   useEffect(() => {
-    if (retroRef.current) {
-      retroRef.current.pixelSize = 1;
-    }
     invalidate();
   }, []);
+
+  useEffect(() => {
+    if (!active) return;
+
+    let raf = 0;
+    let last = 0;
+    const interval = 1000 / maxFps;
+
+    const tick = (now: number) => {
+      if (now - last >= interval) {
+        last = now;
+        invalidate();
+      }
+      raf = requestAnimationFrame(tick);
+    };
+
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [active, maxFps]);
 
   useEffect(() => {
     if (clickToken === previousClickToken.current) return;
@@ -368,6 +331,7 @@ function DitheredWaves({
     const res = waveUniformsRef.current.resolution.value;
     if (res.x !== w || res.y !== h) {
       res.set(w, h);
+      invalidate();
     }
   }, [size, gl]);
 
@@ -394,6 +358,8 @@ function DitheredWaves({
 
     u.enableMouseInteraction.value = enableMouseInteraction ? 1 : 0;
     u.mouseRadius.value = mouseRadius;
+    u.colorNum.value = colorNum;
+
     if (catVisible) {
       u.catPhase.value = THREE.MathUtils.damp(
         u.catPhase.value,
@@ -417,33 +383,20 @@ function DitheredWaves({
       u.blastAge.value = Math.min(1, u.blastAge.value + delta / 0.9);
     }
 
-    if (retroRef.current && retroRef.current.pixelSize < pixelSize) {
-      retroRef.current.pixelSize = Math.min(
-        pixelSize,
-        retroRef.current.pixelSize + delta * 2.5,
-      );
+    if (u.pixelSize.value < pixelSize) {
+      u.pixelSize.value = Math.min(pixelSize, u.pixelSize.value + delta * 2.5);
     }
   });
 
   return (
-    <>
-      <mesh ref={mesh} scale={[viewport.width, viewport.height, 1]}>
-        <planeGeometry args={[1, 1]} />
-        <shaderMaterial
-          vertexShader={waveVertexShader}
-          fragmentShader={waveFragmentShader}
-          uniforms={waveUniformsRef.current}
-        />
-      </mesh>
-
-      <EffectComposer>
-        <RetroEffect
-          ref={retroRef}
-          colorNum={colorNum}
-          pixelSize={pixelSize}
-        />
-      </EffectComposer>
-    </>
+    <mesh ref={mesh} scale={[viewport.width, viewport.height, 1]}>
+      <planeGeometry args={[1, 1]} />
+      <shaderMaterial
+        vertexShader={waveVertexShader}
+        fragmentShader={waveFragmentShader}
+        uniforms={waveUniformsRef.current}
+      />
+    </mesh>
   );
 }
 
@@ -457,11 +410,11 @@ export type DitherProps = {
   disableAnimation?: boolean;
   enableMouseInteraction?: boolean;
   mouseRadius?: number;
-  externalPointer?: { clientX: number; clientY: number } | null;
   clickToken?: number;
   blastOrigin?: [number, number];
   catVisible?: boolean;
   active?: boolean;
+  maxFps?: number;
 };
 
 export default function Dither({
@@ -474,18 +427,18 @@ export default function Dither({
   disableAnimation = false,
   enableMouseInteraction = true,
   mouseRadius = 1,
-  externalPointer = null,
   clickToken = 0,
   blastOrigin = [0.5, 0.5],
   catVisible = false,
   active = true,
+  maxFps = 30,
 }: DitherProps) {
   return (
     <Canvas
       className="dither-container"
       camera={{ position: [0, 0, 6] }}
       dpr={1}
-      frameloop={active ? "always" : "never"}
+      frameloop="demand"
       gl={{ antialias: false, powerPreference: "high-performance" }}
     >
       <DitheredWaves
@@ -498,11 +451,11 @@ export default function Dither({
         disableAnimation={disableAnimation}
         enableMouseInteraction={enableMouseInteraction}
         mouseRadius={mouseRadius}
-        externalPointer={externalPointer}
         clickToken={clickToken}
         blastOrigin={blastOrigin}
         catVisible={catVisible}
         active={active}
+        maxFps={maxFps}
       />
     </Canvas>
   );

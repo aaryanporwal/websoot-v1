@@ -34,7 +34,15 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
 
-    const refreshScrollTrigger = () => ScrollTrigger.refresh();
+    const refreshScrollTrigger = () => {
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => ScrollTrigger.refresh(), {
+          timeout: 2000,
+        });
+      } else {
+        ScrollTrigger.refresh();
+      }
+    };
     const refreshFrame = window.requestAnimationFrame(refreshScrollTrigger);
     window.addEventListener("load", refreshScrollTrigger);
 

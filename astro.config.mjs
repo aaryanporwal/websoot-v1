@@ -7,4 +7,9 @@ export default defineConfig({
   image: {
     layout: "constrained",
   },
+  vite: {
+    build: {
+      target: "es2022",
+    },
+  },
 });
