@@ -1,7 +1,24 @@
 {
   "username": "aaryan7476",
-  "fetchedAt": "2026-07-28T19:54:26.905Z",
+  "fetchedAt": "2026-07-29T09:27:00.070Z",
   "tweets": [
+    {
+      "id": "2082207625392095456",
+      "text": "Shaders are never going out of style. \n\nrevamped bg for my personal website 👾\n\n(theres a cute easter egg hidden somewhere too &gt;.&lt;) https://t.co/qYwlGuIzyn",
+      "createdAt": "2026-07-28T20:52:38+00:00",
+      "url": "https://x.com/aaryan7476/status/2082207625392095456",
+      "media": [
+        {
+          "type": "photo",
+          "url": "https://pbs.twimg.com/media/HOV8ypoawAAQw6p.jpg"
+        }
+      ],
+      "metrics": {
+        "likes": 0,
+        "replies": 1,
+        "views": 61
+      }
+    },
     {
       "id": "2081829079339479439",
       "text": "trying out @Kimi_Moonshot K3 on @digitalocean \n\nmy prompt:\ninvent a startup that is:\n- no LLM wrapper\n- has $10B+ potential\n- 2 enggs can build the MVP\n- users instantly get\n- AI is essential but invisible\n\nThen spend more time criticizing it than selling it. https://t.co/QL3YnpR9rf",
@@ -16,7 +33,7 @@
       "metrics": {
         "likes": 2,
         "replies": 1,
-        "views": 102
+        "views": 114
       }
     },
     {
@@ -26,9 +43,9 @@
       "url": "https://x.com/aaryan7476/status/2081752027626152180",
       "media": [],
       "metrics": {
-        "likes": 13,
+        "likes": 14,
         "replies": 5,
-        "views": 1200
+        "views": 1254
       }
     },
     {
@@ -45,7 +62,7 @@
       "metrics": {
         "likes": 1,
         "replies": 0,
-        "views": 208
+        "views": 209
       }
     },
     {
@@ -62,24 +79,7 @@
       "metrics": {
         "likes": 17,
         "replies": 2,
-        "views": 646
-      }
-    },
-    {
-      "id": "2078080789967986875",
-      "text": "Here at @GoogleOSS ‘s GSoC alumni camp! Excited to meet all the open-sourcerers 🧙\nCome say hi if you’re here too! https://t.co/iCKFZ0bg1Q",
-      "createdAt": "2026-07-17T11:34:03+00:00",
-      "url": "https://x.com/aaryan7476/status/2078080789967986875",
-      "media": [
-        {
-          "type": "photo",
-          "url": "https://pbs.twimg.com/media/HNbTdWOaYAA3uEl.jpg"
-        }
-      ],
-      "metrics": {
-        "likes": 6,
-        "replies": 0,
-        "views": 298
+        "views": 647
       }
     }
   ]

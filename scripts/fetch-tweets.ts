@@ -105,7 +105,29 @@ async function writeTweets(payload: RecentTweetsFile) {
   await writeFile(OUTPUT_PATH, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
 }
 
+function stableSnapshot(payload: RecentTweetsFile) {
+  return JSON.stringify({
+    username: payload.username,
+    tweets: payload.tweets.map(({ id, text, createdAt, url, media }) => ({
+      id,
+      text,
+      createdAt,
+      url,
+      media,
+    })),
+  });
+}
+
+function hasMeaningfulChanges(
+  existing: RecentTweetsFile | null,
+  next: RecentTweetsFile,
+) {
+  if (!existing) return true;
+  return stableSnapshot(existing) !== stableSnapshot(next);
+}
+
 async function main() {
+  const force = process.argv.includes("--force");
   const username = getUsername();
   const existing = await readExisting();
 
@@ -122,6 +144,13 @@ async function main() {
       fetchedAt: new Date().toISOString(),
       tweets: selectDisplayTweets(timeline.data, username),
     };
+
+    if (!force && !hasMeaningfulChanges(existing, payload)) {
+      console.log(
+        `No tweet changes detected; keeping ${path.relative(ROOT, OUTPUT_PATH)}`,
+      );
+      return;
+    }
 
     await writeTweets(payload);
     console.log(

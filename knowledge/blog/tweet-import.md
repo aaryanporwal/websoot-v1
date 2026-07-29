@@ -65,4 +65,10 @@ source_url: "https://x.com/aaryan7476/status/1234567890"
 
 `.github/workflows/tweet-draft.yml` runs daily at 6:00 AM UTC (and on manual dispatch). It runs `tweet:import` and `tweets:fetch`, then auto-commits new drafts to `src/content/blog/tweets/*.md`.
 
-Note: `tweets:fetch` updates `src/data/recent-tweets.json` for the homepage widget. That is separate from blog posts.
+Note: `tweets:fetch` updates `src/data/recent-tweets.json` for the homepage widget. That is separate from blog posts. CI runs this daily; local builds use the committed file. To refresh manually:
+
+```bash
+bun run tweets:fetch
+```
+
+Pass `--force` to rewrite the file even when tweet content is unchanged (for example, to refresh like/view counts).
