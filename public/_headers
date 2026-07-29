@@ -1,0 +1,31 @@
+# Hashed Astro build output — filenames change when content changes
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Self-hosted fonts — rename the file if you ship a new cut
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Static media from public/
+/sounds/*
+  Cache-Control: public, max-age=31536000, immutable
+/works/*
+  Cache-Control: public, max-age=31536000, immutable
+/anya/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Same URL can change across deploys — shorter browser cache
+/favicon.ico
+  Cache-Control: public, max-age=604800
+/favicon.png
+  Cache-Control: public, max-age=604800
+/favicon.svg
+  Cache-Control: public, max-age=604800
+/og-image.jpg
+  Cache-Control: public, max-age=604800
+/cat-treat.out.png
+  Cache-Control: public, max-age=604800
+
+# Feed readers can poll hourly; HTML stays CF default (max-age=0)
+/rss.xml
+  Cache-Control: public, max-age=3600, must-revalidate
