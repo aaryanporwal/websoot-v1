@@ -1,5 +1,6 @@
 import { useEffect, useState, type ComponentType } from "react";
 import type { DitherProps } from "./Dither/Dither";
+import { scheduleDitherLoad } from "./Dither/scheduleDitherLoad";
 import { useTheme } from "./theme/useTheme";
 
 type HeroDitherProps = {
@@ -23,23 +24,6 @@ function accentWaveColor(): [number, number, number] {
 
 function prefersCoarsePointer() {
   return window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-}
-
-function scheduleNonCriticalWork(fn: () => void, delayMs: number, idleTimeout: number) {
-  const run = () => {
-    if ("requestIdleCallback" in window) {
-      window.requestIdleCallback(fn, { timeout: idleTimeout });
-    } else {
-      setTimeout(fn, idleTimeout);
-    }
-  };
-
-  if (document.readyState === "complete") {
-    setTimeout(run, delayMs);
-    return;
-  }
-
-  window.addEventListener("load", () => setTimeout(run, delayMs), { once: true });
 }
 
 export default function HeroDither({
@@ -66,10 +50,11 @@ export default function HeroDither({
 
     const coarse = prefersCoarsePointer();
     setMaxFps(coarse ? 20 : 30);
-    scheduleNonCriticalWork(load, coarse ? 3500 : 2000, coarse ? 8000 : 5000);
+    const cancelLoad = scheduleDitherLoad(load);
 
     return () => {
       cancelled = true;
+      cancelLoad();
     };
   }, [active, Dither]);
 
@@ -84,7 +69,10 @@ export default function HeroDither({
         className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_30%_40%,rgb(var(--color-accent)/0.18),transparent_65%)]"
       />
       {active && Dither ? (
-        <div aria-hidden className="absolute inset-0 z-0 h-full w-full opacity-[0.85]">
+        <div
+          aria-hidden
+          className="absolute inset-0 z-0 h-full w-full opacity-[0.85]"
+        >
           <Dither
             active={active}
             waveColor={waveColor}
