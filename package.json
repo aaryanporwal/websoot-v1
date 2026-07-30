@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "test": "bun test",
     "start": "astro preview",
     "preview": "astro preview",
     "tweets:fetch": "bun run scripts/fetch-tweets.ts",
