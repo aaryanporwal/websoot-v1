@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useEffect } from "react";
+import { useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
@@ -14,7 +14,12 @@ if (typeof window !== "undefined") {
 }
 
 const ROTATING = ["Python", "LLMs", "React", "Agents", "RAG"];
-type DitherBlast = { x: number; y: number; token: number };
+type DitherPoint = { x: number; y: number };
+type DitherPair = {
+  start: DitherPoint | null;
+  end: DitherPoint | null;
+  token: number;
+};
 
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -24,42 +29,37 @@ export default function Hero() {
   const sounds = useSiteSounds();
   const prefersReducedMotion = useReducedMotion();
   const { shouldRun: ditherActive } = useDitherActive(root);
-  const [ditherBlast, setDitherBlast] = useState<DitherBlast>({
-    x: 0.5,
-    y: 0.5,
+  const [ditherPair, setDitherPair] = useState<DitherPair>({
+    start: null,
+    end: null,
     token: 0,
   });
-  const [blastCount, setBlastCount] = useState(0);
-  const [pixelArtVisible, setPixelArtVisible] = useState(false);
-
-  useEffect(() => {
-    if (blastCount < 5) return;
-
-    const reveal = window.setTimeout(() => setPixelArtVisible(true), 520);
-    const hide = window.setTimeout(() => {
-      setPixelArtVisible(false);
-      setBlastCount(0);
-    }, 2520);
-
-    return () => {
-      window.clearTimeout(reveal);
-      window.clearTimeout(hide);
-    };
-  }, [blastCount]);
 
   const handleDitherPointerDown = useCallback(
     (event: React.PointerEvent<HTMLElement>) => {
-      if (!ditherActive || pixelArtVisible || blastCount >= 5) return;
+      if (!ditherActive || !event.isPrimary || event.button !== 0) return;
+      const target = event.target;
+      if (
+        target instanceof Element &&
+        target.closest(
+          "a, button, input, textarea, select, summary, [role='button'], [data-no-dither]",
+        )
+      ) {
+        return;
+      }
 
       const bounds = event.currentTarget.getBoundingClientRect();
-      setBlastCount((count) => count + 1);
-      setDitherBlast((blast) => ({
+      const point = {
         x: (event.clientX - bounds.left) / bounds.width,
         y: (event.clientY - bounds.top) / bounds.height,
-        token: blast.token + 1,
-      }));
+      };
+      setDitherPair((pair) =>
+        pair.start && !pair.end
+          ? { ...pair, end: point, token: pair.token + 1 }
+          : { start: point, end: null, token: pair.token + 1 },
+      );
     },
-    [blastCount, ditherActive, pixelArtVisible],
+    [ditherActive],
   );
 
   useGSAP(
@@ -135,11 +135,7 @@ export default function Hero() {
       className="relative min-h-screen w-full overflow-hidden px-6 pt-32 sm:px-10 lg:px-16"
       onPointerDown={handleDitherPointerDown}
     >
-      <HeroDither
-        active={ditherActive}
-        blast={ditherBlast}
-        pixelArtVisible={pixelArtVisible}
-      />
+      <HeroDither active={ditherActive} pair={ditherPair} />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_28%_42%,rgb(var(--color-body)/0.92),rgb(var(--color-body)/0.55)_55%,transparent_78%)]"
