@@ -2,6 +2,7 @@
 import { useRef, useEffect } from "react";
 import { Canvas, useFrame, useThree, invalidate } from "@react-three/fiber";
 import * as THREE from "three";
+import { createDijkstraField } from "./dijkstraField";
 
 import "./Dither.css";
 
@@ -28,11 +29,14 @@ uniform vec2 mousePos;
 uniform int enableMouseInteraction;
 uniform float mouseRadius;
 uniform float interactionStrength;
-uniform vec2 blastOrigin;
-uniform float blastAge;
-uniform float catPhase;
+uniform vec2 blastOriginA;
+uniform vec2 blastOriginB;
+uniform float blastAgeA;
+uniform float blastAgeB;
+uniform sampler2D algorithmField;
+uniform float algorithmAge;
+uniform int algorithmActive;
 uniform float colorNum;
-uniform float pixelSize;
 
 const float bayerMatrix8x8[64] = float[64](
   0.0/64.0, 48.0/64.0, 12.0/64.0, 60.0/64.0,  3.0/64.0, 51.0/64.0, 15.0/64.0, 63.0/64.0,
@@ -96,78 +100,8 @@ float pattern(vec2 p) {
   return fbm(p + fbm(p2)); 
 }
 
-float sdTriangle(vec2 p, vec2 p0, vec2 p1, vec2 p2) {
-  vec2 e0 = p1 - p0;
-  vec2 e1 = p2 - p1;
-  vec2 e2 = p0 - p2;
-  vec2 v0 = p - p0;
-  vec2 v1 = p - p1;
-  vec2 v2 = p - p2;
-  vec2 pq0 = v0 - e0 * clamp(dot(v0, e0) / dot(e0, e0), 0.0, 1.0);
-  vec2 pq1 = v1 - e1 * clamp(dot(v1, e1) / dot(e1, e1), 0.0, 1.0);
-  vec2 pq2 = v2 - e2 * clamp(dot(v2, e2) / dot(e2, e2), 0.0, 1.0);
-  float s = sign(e0.x * e2.y - e0.y * e2.x);
-  vec2 d = min(
-    min(vec2(dot(pq0, pq0), s * (v0.x * e0.y - v0.y * e0.x)),
-        vec2(dot(pq1, pq1), s * (v1.x * e1.y - v1.y * e1.x))),
-    vec2(dot(pq2, pq2), s * (v2.x * e2.y - v2.y * e2.x))
-  );
-  return -sqrt(d.x) * sign(d.y);
-}
-
-float lineMask(vec2 p, vec2 a, vec2 b, float width) {
-  vec2 pa = p - a;
-  vec2 ba = b - a;
-  float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
-  return 1.0 - smoothstep(width, width + 0.004, length(pa - ba * h));
-}
-
-float ditherCat(vec2 screenUv, float aspect) {
-  vec2 p = screenUv - vec2(aspect > 1.0 ? 0.76 : 0.62, 0.48);
-  p.x *= aspect;
-  p /= aspect > 1.0 ? 0.34 : 0.31;
-
-  float head = 1.0 - smoothstep(0.96, 1.04, length(vec2(p.x / 0.29, (p.y + 0.01) / 0.25)));
-  float cheekL = 1.0 - smoothstep(0.96, 1.04, length(vec2((p.x + 0.13) / 0.20, (p.y + 0.09) / 0.17)));
-  float cheekR = 1.0 - smoothstep(0.96, 1.04, length(vec2((p.x - 0.13) / 0.20, (p.y + 0.09) / 0.17)));
-  float earL = 1.0 - smoothstep(
-    -0.026,
-    0.026,
-    sdTriangle(p, vec2(-0.26, 0.13), vec2(-0.19, 0.39), vec2(-0.04, 0.21))
-  );
-  float earR = 1.0 - smoothstep(
-    -0.026,
-    0.026,
-    sdTriangle(p, vec2(0.26, 0.13), vec2(0.19, 0.39), vec2(0.04, 0.21))
-  );
-  float silhouette = max(max(head, max(cheekL, cheekR)), max(earL, earR));
-
-  float eyeL = 1.0 - smoothstep(0.94, 1.08, length(vec2((p.x + 0.105) / 0.060, (p.y - 0.035) / 0.025)));
-  float eyeR = 1.0 - smoothstep(0.94, 1.08, length(vec2((p.x - 0.105) / 0.060, (p.y - 0.035) / 0.025)));
-  float pupilL = 1.0 - smoothstep(0.86, 1.08, length(vec2((p.x + 0.105) / 0.008, (p.y - 0.035) / 0.020)));
-  float pupilR = 1.0 - smoothstep(0.86, 1.08, length(vec2((p.x - 0.105) / 0.008, (p.y - 0.035) / 0.020)));
-  float nose = 1.0 - smoothstep(0.92, 1.08, length(vec2(p.x / 0.022, (p.y + 0.045) / 0.014)));
-  float muzzleL = lineMask(p, vec2(0.0, -0.057), vec2(-0.028, -0.082), 0.004);
-  float muzzleR = lineMask(p, vec2(0.0, -0.057), vec2(0.028, -0.082), 0.004);
-
-  float whiskers = 0.0;
-  whiskers += lineMask(p, vec2(-0.035, -0.075), vec2(-0.18, -0.065), 0.004);
-  whiskers += lineMask(p, vec2(-0.18, -0.065), vec2(-0.31, -0.035), 0.004);
-  whiskers += lineMask(p, vec2(-0.035, -0.10), vec2(-0.19, -0.115), 0.004);
-  whiskers += lineMask(p, vec2(-0.19, -0.115), vec2(-0.31, -0.145), 0.004);
-  whiskers += lineMask(p, vec2(0.035, -0.075), vec2(0.18, -0.065), 0.004);
-  whiskers += lineMask(p, vec2(0.18, -0.065), vec2(0.31, -0.035), 0.004);
-  whiskers += lineMask(p, vec2(0.035, -0.10), vec2(0.19, -0.115), 0.004);
-  whiskers += lineMask(p, vec2(0.19, -0.115), vec2(0.31, -0.145), 0.004);
-
-  float faceCuts = max(max(eyeL, eyeR), nose);
-  float faceMarks = max(max(pupilL, pupilR), max(max(muzzleL, muzzleR), whiskers));
-  float livingTexture = 0.60 + 0.34 * cnoise(p * 11.0 + time * 0.08);
-  return max((silhouette * livingTexture) - faceCuts, faceMarks);
-}
-
 vec3 applyDither(vec2 uv, vec3 color) {
-  vec2 scaledCoord = floor(uv * resolution / pixelSize);
+  vec2 scaledCoord = floor(uv * resolution);
   int x = int(mod(scaledCoord.x, 8.0));
   int y = int(mod(scaledCoord.y, 8.0));
   float threshold = bayerMatrix8x8[y * 8 + x] - 0.25;
@@ -178,6 +112,22 @@ vec3 applyDither(vec2 uv, vec3 color) {
   return floor(color * (colorNum - 1.0) + 0.5) / (colorNum - 1.0);
 }
 
+float pixelBlast(vec2 uv, vec2 origin, float age) {
+  if (age >= 1.0) return 0.0;
+
+  vec2 blastUv = origin - 0.5;
+  blastUv.y *= -1.0;
+  blastUv.x *= resolution.x / resolution.y;
+  float blastDistance = length(uv - blastUv);
+  float blastRadius = mix(0.0, 0.12, age);
+  float blastWidth = mix(0.12, 0.035, age);
+  float ring = exp(-pow((blastDistance - blastRadius) / blastWidth, 2.0));
+  float core = exp(-blastDistance * 10.0) * (1.0 - smoothstep(0.0, 0.38, age));
+  float decay = pow(1.0 - age, 1.35);
+  float breakup = 0.42 + 0.28 * cnoise(uv * 9.0 - age * 2.0);
+  return (ring * breakup * 0.56 + core * 0.88) * decay;
+}
+
 void main() {
   vec2 screenUv = gl_FragCoord.xy / resolution.xy;
   vec2 uv = screenUv;
@@ -185,43 +135,32 @@ void main() {
   uv.x *= resolution.x / resolution.y;
   float f = pattern(uv);
 
-  if (catPhase > 0.001) {
-    float dissolve = max(catPhase - 1.0, 0.0);
-    float backgroundKeep = catPhase <= 1.0 ? 1.0 - catPhase : dissolve;
-    f *= backgroundKeep;
+  if (algorithmActive == 1) {
+    vec4 field = texture2D(algorithmField, vec2(screenUv.x, 1.0 - screenUv.y));
+    float rankedFromStart = step(0.001, field.r);
+    float rankedFromEnd = step(0.001, field.b);
+    float pathCell = step(0.001, field.g);
+    float frontierProgress = clamp(algorithmAge / 0.9, 0.0, 1.0);
+    float settledFromStart = rankedFromStart * (1.0 - smoothstep(frontierProgress, frontierProgress + 0.018, field.r));
+    float settledFromEnd = rankedFromEnd * (1.0 - smoothstep(frontierProgress, frontierProgress + 0.018, field.b));
+    float frontierFromStart = rankedFromStart * (1.0 - smoothstep(0.018, 0.065, abs(field.r - frontierProgress)));
+    float frontierFromEnd = rankedFromEnd * (1.0 - smoothstep(0.018, 0.065, abs(field.b - frontierProgress)));
+    float settled = max(settledFromStart, settledFromEnd);
+    float frontier = max(frontierFromStart, frontierFromEnd);
+    float routeProgress = clamp((algorithmAge - 0.9) / 0.25, 0.0, 1.0);
+    float route = pathCell * (1.0 - smoothstep(routeProgress, routeProgress + 0.025, field.g));
+    float trailOpacity = 1.0 - smoothstep(0.9, 1.15, algorithmAge);
+    float dissolve = 1.0 - smoothstep(2.05, 2.5, algorithmAge);
+    float terrainTexture = mix(0.62, 1.0, field.a);
 
-    vec2 pixelCell = floor(gl_FragCoord.xy / 3.0);
-    float pixelNoise = fract(sin(dot(pixelCell, vec2(12.9898, 78.233))) * 43758.5453);
-    vec2 dustUv = screenUv;
-    dustUv.x -= (pixelNoise - 0.5) * dissolve * 0.055;
-    dustUv.y -= dissolve * (0.025 + pixelNoise * 0.085);
-
-    float cat = ditherCat(dustUv, resolution.x / resolution.y);
-    float particleKeep = 1.0 - smoothstep(
-      pixelNoise - 0.12,
-      pixelNoise + 0.12,
-      dissolve
-    );
-    float catOpacity = catPhase <= 1.0 ? catPhase : particleKeep;
-    float catMix = catOpacity * smoothstep(0.02, 0.18, cat) * 0.88;
-    f = mix(f, max(f * 0.28, cat), catMix);
+    f = mix(f, f * 0.72, settled * trailOpacity * dissolve * 0.42);
+    f += settled * trailOpacity * terrainTexture * dissolve * 0.18;
+    f += frontier * terrainTexture * dissolve * 0.82;
+    f = max(f, route * (1.12 + 0.08 * sin(time * 5.0)) * dissolve);
   }
 
-  if (blastAge < 1.0) {
-    vec2 blastUv = blastOrigin - 0.5;
-    blastUv.y *= -1.0;
-    blastUv.x *= resolution.x / resolution.y;
-
-    float blastDistance = length(uv - blastUv);
-    float blastRadius = mix(0.0, 0.12, blastAge);
-    float blastWidth = mix(0.12, 0.035, blastAge);
-    float ring = exp(-pow((blastDistance - blastRadius) / blastWidth, 2.0));
-    float core = exp(-blastDistance * 10.0) * (1.0 - smoothstep(0.0, 0.38, blastAge));
-    float decay = pow(1.0 - blastAge, 1.35);
-
-    float breakup = 0.42 + 0.28 * cnoise(uv * 9.0 - blastAge * 2.0);
-    f += (ring * breakup * 0.56 + core * 0.88) * decay;
-  }
+  f += pixelBlast(uv, blastOriginA, blastAgeA);
+  f += pixelBlast(uv, blastOriginB, blastAgeB);
 
   if (enableMouseInteraction == 1) {
     vec2 mouseNDC = (mousePos / resolution - 0.5) * vec2(1.0, -1.0);
@@ -242,13 +181,12 @@ type DitheredWavesProps = {
   waveAmplitude: number;
   waveColor: [number, number, number];
   colorNum: number;
-  pixelSize: number;
   disableAnimation: boolean;
   enableMouseInteraction: boolean;
   mouseRadius: number;
-  clickToken: number;
-  blastOrigin: [number, number];
-  catVisible: boolean;
+  interactionToken: number;
+  pathStart: [number, number] | null;
+  pathEnd: [number, number] | null;
   active: boolean;
   maxFps: number;
 };
@@ -259,18 +197,17 @@ function DitheredWaves({
   waveAmplitude,
   waveColor,
   colorNum,
-  pixelSize,
   disableAnimation,
   enableMouseInteraction,
   mouseRadius,
-  clickToken,
-  blastOrigin,
-  catVisible,
+  interactionToken,
+  pathStart,
+  pathEnd,
   active,
   maxFps,
 }: DitheredWavesProps) {
   const mesh = useRef<THREE.Mesh>(null);
-  const previousClickToken = useRef(clickToken);
+  const previousInteractionToken = useRef(-1);
   const { viewport, size, gl } = useThree();
 
   const waveUniformsRef = useRef({
@@ -284,12 +221,16 @@ function DitheredWaves({
     enableMouseInteraction: new THREE.Uniform(enableMouseInteraction ? 1 : 0),
     mouseRadius: new THREE.Uniform(mouseRadius),
     interactionStrength: new THREE.Uniform(0),
-    blastOrigin: new THREE.Uniform(new THREE.Vector2(...blastOrigin)),
-    blastAge: new THREE.Uniform(2),
-    catPhase: new THREE.Uniform(0),
+    blastOriginA: new THREE.Uniform(new THREE.Vector2(0.5, 0.5)),
+    blastOriginB: new THREE.Uniform(new THREE.Vector2(0.5, 0.5)),
+    blastAgeA: new THREE.Uniform(2),
+    blastAgeB: new THREE.Uniform(2),
+    algorithmField: new THREE.Uniform(null),
+    algorithmAge: new THREE.Uniform(3),
+    algorithmActive: new THREE.Uniform(0),
     colorNum: new THREE.Uniform(colorNum),
-    pixelSize: new THREE.Uniform(1),
   });
+  const algorithmTextureRef = useRef<THREE.DataTexture | null>(null);
 
   useEffect(() => {
     invalidate();
@@ -315,14 +256,81 @@ function DitheredWaves({
   }, [active, maxFps]);
 
   useEffect(() => {
-    if (clickToken === previousClickToken.current) return;
-    previousClickToken.current = clickToken;
+    if (
+      interactionToken <= 0 ||
+      !pathStart ||
+      size.width <= 0 ||
+      size.height <= 0
+    ) {
+      return;
+    }
 
     const uniforms = waveUniformsRef.current;
-    uniforms.blastOrigin.value.set(...blastOrigin);
-    uniforms.blastAge.value = 0;
+    const interactionChanged =
+      interactionToken !== previousInteractionToken.current;
+    if (interactionChanged) {
+      previousInteractionToken.current = interactionToken;
+      uniforms.blastOriginA.value.set(...pathStart);
+      uniforms.blastAgeA.value = 0;
+    }
+
+    if (!pathEnd) {
+      uniforms.blastAgeB.value = 2;
+      uniforms.algorithmActive.value = 0;
+      invalidate();
+      return;
+    }
+
+    if (interactionChanged) {
+      uniforms.blastOriginA.value.set(...pathStart);
+      uniforms.blastOriginB.value.set(...pathEnd);
+      uniforms.blastAgeA.value = 0;
+      uniforms.blastAgeB.value = 0;
+    }
+
+    const landscape = size.width >= size.height;
+    const width = landscape ? 140 : 90;
+    const height = landscape ? 90 : 140;
+    const field = createDijkstraField(
+      width,
+      height,
+      { x: pathEnd[0], y: pathEnd[1] },
+      { x: pathStart[0], y: pathStart[1] },
+    );
+    const texture = new THREE.DataTexture(
+      field.data,
+      field.width,
+      field.height,
+      THREE.RGBAFormat,
+      THREE.UnsignedByteType,
+    );
+    texture.minFilter = THREE.NearestFilter;
+    texture.magFilter = THREE.NearestFilter;
+    texture.generateMipmaps = false;
+    texture.needsUpdate = true;
+
+    algorithmTextureRef.current?.dispose();
+    algorithmTextureRef.current = texture;
+    uniforms.algorithmField.value = texture;
+    uniforms.algorithmAge.value = 0;
+    uniforms.algorithmActive.value = 1;
     invalidate();
-  }, [blastOrigin[0], blastOrigin[1], clickToken]);
+  }, [
+    interactionToken,
+    pathStart?.[0],
+    pathStart?.[1],
+    pathEnd?.[0],
+    pathEnd?.[1],
+    size.width,
+    size.height,
+  ]);
+
+  useEffect(
+    () => () => {
+      algorithmTextureRef.current?.dispose();
+    },
+    [],
+  );
 
   useEffect(() => {
     const dpr = gl.getPixelRatio();
@@ -360,16 +368,9 @@ function DitheredWaves({
     u.mouseRadius.value = mouseRadius;
     u.colorNum.value = colorNum;
 
-    if (catVisible) {
-      u.catPhase.value = THREE.MathUtils.damp(
-        u.catPhase.value,
-        1,
-        7,
-        delta,
-      );
-    } else if (u.catPhase.value > 0) {
-      u.catPhase.value += delta / 0.85;
-      if (u.catPhase.value >= 2) u.catPhase.value = 0;
+    if (u.algorithmActive.value === 1) {
+      u.algorithmAge.value = Math.min(2.5, u.algorithmAge.value + delta);
+      if (u.algorithmAge.value >= 2.5) u.algorithmActive.value = 0;
     }
 
     if (u.interactionStrength.value > 0) {
@@ -379,13 +380,11 @@ function DitheredWaves({
       );
     }
 
-    if (u.blastAge.value < 1) {
-      u.blastAge.value = Math.min(1, u.blastAge.value + delta / 0.9);
-    }
+    if (u.blastAgeA.value < 1)
+      u.blastAgeA.value = Math.min(1, u.blastAgeA.value + delta / 0.9);
+    if (u.blastAgeB.value < 1)
+      u.blastAgeB.value = Math.min(1, u.blastAgeB.value + delta / 0.9);
 
-    if (u.pixelSize.value < pixelSize) {
-      u.pixelSize.value = Math.min(pixelSize, u.pixelSize.value + delta * 2.5);
-    }
   });
 
   return (
@@ -406,13 +405,12 @@ export type DitherProps = {
   waveAmplitude?: number;
   waveColor?: [number, number, number];
   colorNum?: number;
-  pixelSize?: number;
   disableAnimation?: boolean;
   enableMouseInteraction?: boolean;
   mouseRadius?: number;
-  clickToken?: number;
-  blastOrigin?: [number, number];
-  catVisible?: boolean;
+  interactionToken?: number;
+  pathStart?: [number, number] | null;
+  pathEnd?: [number, number] | null;
   active?: boolean;
   maxFps?: number;
 };
@@ -423,13 +421,12 @@ export default function Dither({
   waveAmplitude = 0.3,
   waveColor = [0.5, 0.5, 0.5],
   colorNum = 4,
-  pixelSize = 2,
   disableAnimation = false,
   enableMouseInteraction = true,
   mouseRadius = 1,
-  clickToken = 0,
-  blastOrigin = [0.5, 0.5],
-  catVisible = false,
+  interactionToken = 0,
+  pathStart = null,
+  pathEnd = null,
   active = true,
   maxFps = 30,
 }: DitherProps) {
@@ -447,13 +444,12 @@ export default function Dither({
         waveAmplitude={waveAmplitude}
         waveColor={waveColor}
         colorNum={colorNum}
-        pixelSize={pixelSize}
         disableAnimation={disableAnimation}
         enableMouseInteraction={enableMouseInteraction}
         mouseRadius={mouseRadius}
-        clickToken={clickToken}
-        blastOrigin={blastOrigin}
-        catVisible={catVisible}
+        interactionToken={interactionToken}
+        pathStart={pathStart}
+        pathEnd={pathEnd}
         active={active}
         maxFps={maxFps}
       />

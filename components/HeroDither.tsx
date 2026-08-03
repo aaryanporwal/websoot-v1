@@ -5,8 +5,11 @@ import { useTheme } from "./theme/useTheme";
 
 type HeroDitherProps = {
   active: boolean;
-  blast: { x: number; y: number; token: number };
-  pixelArtVisible: boolean;
+  pair: {
+    start: { x: number; y: number } | null;
+    end: { x: number; y: number } | null;
+    token: number;
+  };
 };
 
 function readCssRgbTriplet(variable: string): [number, number, number] {
@@ -26,11 +29,7 @@ function prefersCoarsePointer() {
   return window.matchMedia("(hover: none) and (pointer: coarse)").matches;
 }
 
-export default function HeroDither({
-  active,
-  blast,
-  pixelArtVisible,
-}: HeroDitherProps) {
+export default function HeroDither({ active, pair }: HeroDitherProps) {
   const { theme } = useTheme();
   const [Dither, setDither] = useState<ComponentType<DitherProps> | null>(null);
   const [waveColor, setWaveColor] = useState<[number, number, number]>([
@@ -78,9 +77,9 @@ export default function HeroDither({
             waveColor={waveColor}
             disableAnimation={false}
             enableMouseInteraction={false}
-            clickToken={blast.token}
-            blastOrigin={[blast.x, blast.y]}
-            catVisible={pixelArtVisible}
+            interactionToken={pair.token}
+            pathStart={pair.start ? [pair.start.x, pair.start.y] : null}
+            pathEnd={pair.end ? [pair.end.x, pair.end.y] : null}
             mouseRadius={0.18}
             colorNum={4}
             waveAmplitude={0.22}
