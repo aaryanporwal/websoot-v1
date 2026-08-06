@@ -13,6 +13,19 @@ describe("extractUrls", () => {
       "https://example.com/diagram.png",
     ]);
   });
+
+  test("extracts bare URLs from source files", () => {
+    const content = 'href: "https://ubuntu.com/blog/tag/ubuntu-summit-2024",';
+    expect(extractUrls(content)).toEqual(["https://ubuntu.com/blog/tag/ubuntu-summit-2024"]);
+  });
+
+  test("extracts markdown links with parentheses in the URL", () => {
+    const content =
+      "[load balance](https://en.wikipedia.org/wiki/Load_balancing_(computing))";
+    expect(extractUrls(content, { includeBareUrls: false })).toEqual([
+      "https://en.wikipedia.org/wiki/Load_balancing_(computing)",
+    ]);
+  });
 });
 
 describe("shouldCheckUrl", () => {

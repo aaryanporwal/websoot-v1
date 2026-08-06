@@ -18,11 +18,11 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
-      - name: Fix dead links in blog posts
+      - name: Fix dead links in site content
         run: bun run links:fix
 
       - name: Commit archive replacements
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: replace dead links with archive.org snapshots"
-          file_pattern: src/content/blog/*.md
+          file_pattern: src/content/blog/*.md src/data/*.ts src/layouts/*.astro src/pages/*

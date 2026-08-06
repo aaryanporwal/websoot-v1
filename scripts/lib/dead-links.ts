@@ -1,6 +1,7 @@
 const USER_AGENT = "websoot-dead-link-checker/1.0 (+https://aaryanporwal.com)";
 const REQUEST_TIMEOUT_MS = 15_000;
-const MARKDOWN_LINK = /!?\[[^\]]*\]\(([^)]+)\)/g;
+const MARKDOWN_LINK = /!?\[[^\]]*\]\(((?:[^()]|\([^)]*\))*)\)/g;
+const BARE_URL = /https?:\/\/[^\s"'`)>\]]+/g;
 
 export type LinkReplacement = {
   original: string;
@@ -8,12 +9,24 @@ export type LinkReplacement = {
   file: string;
 };
 
-export function extractUrls(content: string): string[] {
+function trimTrailingPunctuation(url: string): string {
+  return url.replace(/[.,;:!?]+$/, "");
+}
+
+export function extractUrls(content: string, options?: { includeBareUrls?: boolean }): string[] {
+  const includeBareUrls = options?.includeBareUrls ?? true;
   const urls = new Set<string>();
 
   for (const match of content.matchAll(MARKDOWN_LINK)) {
     const url = match[1]?.trim();
-    if (url) urls.add(url);
+    if (url) urls.add(trimTrailingPunctuation(url));
+  }
+
+  if (includeBareUrls) {
+    for (const match of content.matchAll(BARE_URL)) {
+      const url = match[0]?.trim();
+      if (url) urls.add(trimTrailingPunctuation(url));
+    }
   }
 
   return [...urls];
@@ -64,33 +77,47 @@ export async function isDeadLink(url: string): Promise<boolean> {
   }
 }
 
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export async function getArchiveUrl(url: string): Promise<string | null> {
   const apiUrl = `https://archive.org/wayback/available?url=${encodeURIComponent(url)}`;
 
-  try {
-    const response = await fetch(apiUrl, {
-      headers: { "User-Agent": USER_AGENT },
-      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-    });
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const response = await fetch(apiUrl, {
+        headers: { "User-Agent": USER_AGENT },
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      });
 
-    if (!response.ok) return null;
+      if (response.status === 429) {
+        await sleep(1000 * (attempt + 1));
+        continue;
+      }
 
-    const data = (await response.json()) as {
-      archived_snapshots?: {
-        closest?: {
-          available?: boolean;
-          url?: string;
+      if (!response.ok) return null;
+
+      const data = (await response.json()) as {
+        archived_snapshots?: {
+          closest?: {
+            available?: boolean;
+            url?: string;
+          };
         };
       };
-    };
 
-    const snapshot = data.archived_snapshots?.closest;
-    if (!snapshot?.available || !snapshot.url) return null;
+      const snapshot = data.archived_snapshots?.closest;
+      if (!snapshot?.available || !snapshot.url) return null;
 
-    return snapshot.url.replace(/^http:\/\//, "https://");
-  } catch {
-    return null;
+      return snapshot.url.replace(/^http:\/\//, "https://");
+    } catch {
+      if (attempt === 2) return null;
+      await sleep(1000 * (attempt + 1));
+    }
   }
+
+  return null;
 }
 
 export function replaceUrls(content: string, replacements: Map<string, string>): string {

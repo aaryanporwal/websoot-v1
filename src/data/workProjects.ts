@@ -63,7 +63,7 @@ export const WORK_PROJECTS: WorkProject[] = [
     title: "Ubuntu Summit",
     desc: "Built the official Ubuntu Summit 2024 site in Flask for a 5,000+ attendee, 3-day conference in The Hague.",
     cta: "Read more",
-    href: "https://ubuntu.com/blog/tag/ubuntu-summit-2024",
+    href: "https://ubuntu.com/summit",
     logo: "/works/canonical-favicon.png",
     image: ubuntuSummitImg,
     displayWidth: 544,
