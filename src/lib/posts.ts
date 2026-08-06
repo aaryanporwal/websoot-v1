@@ -38,7 +38,7 @@ export function postSummary(post: BlogPost) {
       const label = match.match(/\[([^\]]+)\]/);
       return label?.[1] || "";
     })
-    .replace(/[#>*_`~<>{}\[\]()-]/g, " ")
+    .replace(/[#>*_`~<>{}[\]()-]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 
