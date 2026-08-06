@@ -5,7 +5,6 @@ import { HERO_CHROME_REVEAL_DELAY } from "./animationTimings";
 import { PaletteIcon } from "./theme/ThemeMenu";
 
 const BLOG_URL = "/blog/";
-const LINKEDIN_URL = "https://www.linkedin.com/in/aaryan-porwal/";
 const SCRAPBOOK_URL = "https://scrapbook.hackclub.com/aaryan";
 const PROJECTS_URL = "https://github.com/aaryanporwal?tab=repositories";
 

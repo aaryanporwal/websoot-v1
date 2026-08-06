@@ -6,6 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "test": "bun test",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "start": "astro preview",
     "preview": "astro preview",
     "tweets:fetch": "bun run scripts/fetch-tweets.ts",
@@ -30,15 +32,23 @@
     "use-sound": "^5.0.0"
   },
   "devDependencies": {
+    "@eslint/js": "9.16.0",
     "@tailwindcss/typography": "^0.5.20",
     "@types/node": "^25.9.2",
     "@types/react": "18",
     "@types/react-dom": "18",
+    "astro-eslint-parser": "^3.0.0",
     "autoprefixer": "^10.4.20",
     "eslint": "9.16.0",
+    "eslint-plugin-astro": "^3.1.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.9.0",
     "postcss": "^8.4.49",
     "prettier": "^3.4.1",
     "tailwindcss": "^3.4.15",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.66.0"
   }
 }
