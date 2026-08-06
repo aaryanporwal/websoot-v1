@@ -13,6 +13,9 @@ type Props = {
   canonicalPath?: string;
   socialImage?: string;
   socialImageAlt?: string;
+  socialImageWidth?: number;
+  socialImageHeight?: number;
+  socialImageType?: string;
   socialType?: "website" | "article";
   bodyClass?: string;
 };
@@ -23,6 +26,9 @@ const {
   canonicalPath = Astro.url.pathname,
   socialImage = "/og-image.jpg",
   socialImageAlt = "Aaryan Porwal — AI Systems & Web Engineer",
+  socialImageWidth = 2496,
+  socialImageHeight = 1569,
+  socialImageType = "image/jpeg",
   socialType = "website",
   bodyClass = "bg-body font-sans text-white antialiased",
 } = Astro.props;
@@ -113,9 +119,9 @@ const commands: CommandItem[] = [
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={socialImageUrl} />
     <meta property="og:image:secure_url" content={socialImageUrl} />
-    <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:image:width" content="2496" />
-    <meta property="og:image:height" content="1569" />
+    <meta property="og:image:type" content={socialImageType} />
+    <meta property="og:image:width" content={String(socialImageWidth)} />
+    <meta property="og:image:height" content={String(socialImageHeight)} />
     <meta property="og:image:alt" content={socialImageAlt} />
 
     <meta name="twitter:card" content="summary_large_image" />

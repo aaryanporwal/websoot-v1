@@ -14,6 +14,11 @@ export function postHref(post: BlogPost) {
   return `/blog/${postSlug(post)}/`;
 }
 
+export function postOgImageHref(post: BlogPost) {
+  if (post.data.ogImage) return post.data.ogImage;
+  return `/og/blog/${postSlug(post)}.png`;
+}
+
 export function formatDate(date: Date) {
   return new Intl.DateTimeFormat("en", {
     month: "long",

@@ -4,6 +4,7 @@ import BlogLayout from "../../layouts/BlogLayout.astro";
 import {
   formatDate,
   postHref,
+  postOgImageHref,
   postSlug,
   postSummary,
   readingTime,
@@ -28,6 +29,8 @@ const description = postSummary(post);
   title={`${post.data.title} · Aaryan Porwal`}
   description={description}
   canonicalPath={postHref(post)}
+  socialImage={postOgImageHref(post)}
+  socialImageAlt={post.data.title}
 >
   <main class="relative mx-auto max-w-5xl px-6 py-20 sm:px-10 lg:px-16">
     <a

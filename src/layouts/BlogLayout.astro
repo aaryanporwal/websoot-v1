@@ -5,9 +5,17 @@ type Props = {
   title: string;
   description?: string;
   canonicalPath?: string;
+  socialImage?: string;
+  socialImageAlt?: string;
 };
 
-const { title, description, canonicalPath } = Astro.props;
+const {
+  title,
+  description,
+  canonicalPath,
+  socialImage,
+  socialImageAlt,
+} = Astro.props;
 
 const links = [
   { label: "Home", href: "/" },
@@ -21,6 +29,11 @@ const links = [
   title={title}
   description={description}
   canonicalPath={canonicalPath}
+  socialImage={socialImage}
+  socialImageAlt={socialImageAlt}
+  socialImageWidth={1200}
+  socialImageHeight={630}
+  socialImageType="image/png"
   socialType="article"
 >
   <div class="relative min-h-screen bg-body text-white">
