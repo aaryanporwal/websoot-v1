@@ -29,8 +29,11 @@ Standard commands live in `package.json` scripts:
 - Dev server: `bun run dev` (Astro serves on `http://localhost:4321`, not the default 3000; add `--host` to expose on the network).
 - Tests: `bun test` (Bun's built-in test runner; specs live next to source, e.g. `components/Dither/*.test.ts`).
 - Build: `bun run build`; preview a build with `bun run preview`.
+- Lint: `bun run lint` (and `bun run lint:fix`). ESLint 9 flat config lives in `eslint.config.js` (TypeScript + React + React Hooks + jsx-a11y + Astro).
 
 Gotchas:
-- There is no working lint step. `.eslintrc.json` is an empty `{}` and is incompatible with ESLint 9, and `astro check` is not wired up (`@astrojs/check` is not a dependency and its installer prompt is interactive). Do not rely on a lint command.
+- Lint is expected to exit 0 with a handful of warnings. Several opinionated rules (`react-hooks/set-state-in-effect`, `react-hooks/refs`, `jsx-a11y/no-static-element-interactions`, `jsx-a11y/no-autofocus`, `exhaustive-deps`) are intentionally set to `warn` because the existing components use patterns (react-three-fiber refs, theme menus) that would need refactors; keep them as warnings unless you are deliberately addressing them.
+- `eslint.config.js` ignores `src/components/posthog.astro` (a vendored minified PostHog snippet). Do not run `--fix` expecting it to touch that file, and avoid auto-fixing vendored snippets.
+- `astro check` is still not wired up (`@astrojs/check` is not a dependency and its installer prompt is interactive), so use `bun run lint` for static checks.
 - Copy `.env.example` to `.env` for local runs; all values in it are public PostHog keys, so no secrets are required to run or build the site.
 - Blog content is Astro content collections under `src/content/blog/*.md`; a post needs `draft: false` to appear on `/blog/`, tag pages, `/rss.xml`, and the ⌘K switcher. The dev server hot-reloads new/edited posts.
