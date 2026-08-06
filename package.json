@@ -11,7 +11,8 @@
     "start": "astro preview",
     "preview": "astro preview",
     "tweets:fetch": "bun run scripts/fetch-tweets.ts",
-    "tweet:import": "bun run scripts/tweet-to-draft.ts"
+    "tweet:import": "bun run scripts/tweet-to-draft.ts",
+    "links:fix": "bun run scripts/fix-dead-links.ts"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.0",

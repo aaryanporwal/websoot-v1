@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { borderReveal } from "./animation/sectionReveal";
+import { WebringEmbed } from "./WebringEmbed";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -55,10 +56,13 @@ export function Footer() {
               </li>
             ))}
           </ul>
-          <p className="font-sans text-sm text-muted">
-            &copy; {new Date().getFullYear()} Aaryan Porwal. Built with Astro,
-            GSAP, and Bun.
-          </p>
+          <div className="flex flex-col items-start gap-4 sm:items-end">
+            <WebringEmbed />
+            <p className="font-sans text-sm text-muted">
+              &copy; {new Date().getFullYear()} Aaryan Porwal. Built with Astro,
+              GSAP, and Bun.
+            </p>
+          </div>
         </div>
       </div>
     </footer>

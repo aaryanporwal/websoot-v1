@@ -1,0 +1,28 @@
+name: Fix dead links
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  fix-dead-links:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Fix dead links in blog posts
+        run: bun run links:fix
+
+      - name: Commit archive replacements
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: replace dead links with archive.org snapshots"
+          file_pattern: src/content/blog/*.md
