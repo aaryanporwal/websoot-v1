@@ -20,3 +20,17 @@ Start at [knowledge/index.md](knowledge/index.md) (Open Knowledge Format bundle)
 | Writing voice | [knowledge/blog/voice.md](knowledge/blog/voice.md) |
 | Product voice (full) | [PRODUCT.md](PRODUCT.md) |
 | Visual design | [DESIGN.md](DESIGN.md) |
+
+## Cursor Cloud specific instructions
+
+This is an Astro + React + GSAP static site that uses **Bun** as the runtime and package manager (see `bun.lock`). Bun is preinstalled at `$HOME/.bun/bin` and on `PATH` in interactive shells via `~/.bashrc`; non-interactive scripts can call it as `$HOME/.bun/bin/bun`.
+
+Standard commands live in `package.json` scripts:
+- Dev server: `bun run dev` (Astro serves on `http://localhost:4321`, not the default 3000; add `--host` to expose on the network).
+- Tests: `bun test` (Bun's built-in test runner; specs live next to source, e.g. `components/Dither/*.test.ts`).
+- Build: `bun run build`; preview a build with `bun run preview`.
+
+Gotchas:
+- There is no working lint step. `.eslintrc.json` is an empty `{}` and is incompatible with ESLint 9, and `astro check` is not wired up (`@astrojs/check` is not a dependency and its installer prompt is interactive). Do not rely on a lint command.
+- Copy `.env.example` to `.env` for local runs; all values in it are public PostHog keys, so no secrets are required to run or build the site.
+- Blog content is Astro content collections under `src/content/blog/*.md`; a post needs `draft: false` to appear on `/blog/`, tag pages, `/rss.xml`, and the ⌘K switcher. The dev server hot-reloads new/edited posts.
