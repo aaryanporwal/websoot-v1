@@ -23,7 +23,7 @@ export const WORK_PROJECTS: WorkProject[] = [
     title: "Fused",
     desc: "Shaped an AI-assisted inline diff review in CodeMirror 6, built full-stack Git version control, and made 10K+ file trees easier to navigate.",
     cta: "fused.io",
-    href: "https://fused.io",
+    href: "https://web.archive.org/web/20260606190821/https://www.fused.io/",
     logo: "/works/fused-logo.png",
     image: fusedImg,
     displayWidth: 544,

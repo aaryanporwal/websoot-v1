@@ -51,7 +51,7 @@ Some things to note:
   -> How UUID is made:
   ![UUID architecture](https://i.stack.imgur.com/goiPw.png)
 
-  -> Also check out this amazing blog about collisions in UUIDs [here](https://www.scaleyourapp.com/uuid-guid-oversimplified-are-they-really-unique/).
+  -> Also check out this amazing blog about collisions in UUIDs [here](https://web.archive.org/web/20230324152504/https://scaleyourapp.com/uuid-guid-oversimplified-are-they-really-unique/).
 
 - Using a <u>**Counter**</u>
 
