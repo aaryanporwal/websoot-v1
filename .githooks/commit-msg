@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Strip Co-authored-by trailers from commit messages (e.g. Cursor auto-attribution).
+set -euo pipefail
+
+MSG_FILE="${1:?commit-msg hook requires a message file}"
+TMP="$(mktemp)"
+trap 'rm -f "$TMP"' EXIT
+
+# Drop any Co-authored-by line (any casing / leading whitespace).
+grep -viE '^[[:space:]]*Co-authored-by:' "$MSG_FILE" >"$TMP" || true
+
+# Trim trailing blank lines; keep a single final newline for git.
+awk '
+  { lines[NR] = $0 }
+  END {
+    end = NR
+    while (end > 0 && lines[end] ~ /^[[:space:]]*$/) end--
+    for (i = 1; i <= end; i++) print lines[i]
+  }
+' "$TMP" >"$MSG_FILE"
