@@ -12,7 +12,8 @@
     "preview": "astro preview",
     "prepare": "git config core.hooksPath .githooks",
     "tweets:fetch": "bun run scripts/fetch-tweets.ts",
-    "tweet:import": "bun run scripts/tweet-to-draft.ts"
+    "tweet:import": "bun run scripts/tweet-to-draft.ts",
+    "links:fix": "bun run scripts/fix-dead-links.ts"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.0",
