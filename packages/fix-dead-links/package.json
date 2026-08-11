@@ -1,0 +1,56 @@
+{
+  "name": "@aaryanporwal/fix-dead-links",
+  "version": "0.1.0",
+  "description": "Find dead links in site content and replace them with archive.org snapshots.",
+  "license": "MIT",
+  "author": "Aaryan Porwal",
+  "keywords": [
+    "dead-links",
+    "link-checker",
+    "archive.org",
+    "wayback",
+    "markdown",
+    "cli"
+  ],
+  "type": "module",
+  "bin": {
+    "fix-dead-links": "./dist/cli.js"
+  },
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "bun test",
+    "prepublishOnly": "bun test && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaryanporwal/websoot-v1.git",
+    "directory": "packages/fix-dead-links"
+  },
+  "homepage": "https://github.com/aaryanporwal/websoot-v1/tree/main/packages/fix-dead-links",
+  "bugs": {
+    "url": "https://github.com/aaryanporwal/websoot-v1/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.2",
+    "typescript": "^6.0.3"
+  }
+}

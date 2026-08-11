@@ -18,6 +18,9 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
+      - name: Run dead-link unit tests
+        run: bun test packages/fix-dead-links infra/blog-redirect/src/index.test.js
+
       - name: Fix dead links in site content
         run: bun run links:fix
 

@@ -8,4 +8,7 @@ export {
   shouldCheckUrl,
   snapshotUrlFromWaybackResponse,
   type LinkReplacement,
-} from "../../packages/fix-dead-links/src/dead-links.ts";
+} from "./dead-links.js";
+
+export { fixDeadLinks, listScannableFiles, type FixDeadLinksOptions } from "./fix.js";
+export { runCli } from "./cli.js";
