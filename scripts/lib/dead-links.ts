@@ -2,6 +2,13 @@ const USER_AGENT = "websoot-dead-link-checker/1.0 (+https://aaryanporwal.com)";
 const REQUEST_TIMEOUT_MS = 15_000;
 const MARKDOWN_LINK = /!?\[[^\]]*\]\(((?:[^()]|\([^)]*\))*)\)/g;
 const BARE_URL = /https?:\/\/[^\s"'`)>\]]+/g;
+const PLACEHOLDER_HOSTS = new Set([
+  "example.com",
+  "example.org",
+  "example.net",
+  "longurl.com",
+  "shorturl.com",
+]);
 
 export type LinkReplacement = {
   original: string;
@@ -32,6 +39,13 @@ export function extractUrls(content: string, options?: { includeBareUrls?: boole
   return [...urls];
 }
 
+export function isDefinitelyDeadStatus(status: number): boolean {
+  if (status < 400) return false;
+  // Bot blocks and rate limits are ambiguous; don't auto-replace these.
+  if (status === 401 || status === 403 || status === 429) return false;
+  return true;
+}
+
 export function shouldCheckUrl(url: string): boolean {
   if (!url || url.startsWith("#") || url.startsWith("/")) return false;
 
@@ -47,6 +61,7 @@ export function shouldCheckUrl(url: string): boolean {
   if (parsed.hostname.includes("archive.org") || parsed.hostname.includes("web.archive.org")) {
     return false;
   }
+  if (PLACEHOLDER_HOSTS.has(parsed.hostname)) return false;
 
   return true;
 }
@@ -71,7 +86,7 @@ export async function isDeadLink(url: string): Promise<boolean> {
       });
     }
 
-    return response.status >= 400;
+    return isDefinitelyDeadStatus(response.status);
   } catch {
     return true;
   }

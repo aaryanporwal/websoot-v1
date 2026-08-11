@@ -1,5 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import { extractUrls, replaceUrls, shouldCheckUrl } from "./dead-links";
+import {
+  extractUrls,
+  isDefinitelyDeadStatus,
+  replaceUrls,
+  shouldCheckUrl,
+} from "./dead-links";
 
 describe("extractUrls", () => {
   test("extracts markdown links and image URLs", () => {
@@ -29,12 +34,23 @@ describe("extractUrls", () => {
 });
 
 describe("shouldCheckUrl", () => {
-  test("skips internal, archive, and non-http URLs", () => {
+  test("skips internal, archive, placeholder, and non-http URLs", () => {
     expect(shouldCheckUrl("/blog/post")).toBe(false);
     expect(shouldCheckUrl("#section")).toBe(false);
     expect(shouldCheckUrl("mailto:hi@example.com")).toBe(false);
     expect(shouldCheckUrl("https://web.archive.org/web/123/https://example.com")).toBe(false);
-    expect(shouldCheckUrl("https://example.com/page")).toBe(true);
+    expect(shouldCheckUrl("https://longurl.com")).toBe(false);
+    expect(shouldCheckUrl("https://canonical.com/page")).toBe(true);
+  });
+});
+
+describe("isDefinitelyDeadStatus", () => {
+  test("treats bot blocks as alive", () => {
+    expect(isDefinitelyDeadStatus(403)).toBe(false);
+    expect(isDefinitelyDeadStatus(401)).toBe(false);
+    expect(isDefinitelyDeadStatus(429)).toBe(false);
+    expect(isDefinitelyDeadStatus(404)).toBe(true);
+    expect(isDefinitelyDeadStatus(522)).toBe(true);
   });
 });
 
