@@ -10,6 +10,7 @@
     "lint:fix": "eslint . --fix",
     "start": "astro preview",
     "preview": "astro preview",
+    "prepare": "git config core.hooksPath .githooks",
     "tweets:fetch": "bun run scripts/fetch-tweets.ts",
     "tweet:import": "bun run scripts/tweet-to-draft.ts"
   },
