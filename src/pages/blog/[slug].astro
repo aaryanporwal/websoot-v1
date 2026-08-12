@@ -81,7 +81,7 @@ const description = postSummary(post);
         {
           tocHeadings.length > 0 ? (
             <aside class="mb-10 lg:sticky lg:top-28 lg:mb-0 lg:self-start">
-              <BlogHeadingThreadList client:load headings={tocHeadings} />
+              <BlogHeadingThreadList client:idle headings={tocHeadings} />
             </aside>
           ) : null
         }

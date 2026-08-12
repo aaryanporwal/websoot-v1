@@ -13,7 +13,6 @@ import {
   headingDepth,
   headingIndentClass,
   headingsToThreads,
-  initialHeadingId,
   type BlogHeading,
 } from "./headings";
 
@@ -74,21 +73,6 @@ export default function BlogHeadingThreadList({ headings }: Props) {
       },
     },
   });
-
-  useEffect(() => {
-    const fromHash = initialHeadingId(toc, window.location.hash);
-    if (fromHash) setActiveId(fromHash);
-  }, [toc]);
-
-  useEffect(() => {
-    const onHashChange = () => {
-      const next = initialHeadingId(toc, window.location.hash);
-      if (next) setActiveId(next);
-    };
-
-    window.addEventListener("hashchange", onHashChange);
-    return () => window.removeEventListener("hashchange", onHashChange);
-  }, [toc]);
 
   useEffect(() => {
     let frame = 0;
