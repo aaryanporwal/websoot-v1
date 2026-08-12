@@ -16,6 +16,7 @@
     "links:fix": "bun run scripts/fix-dead-links.ts"
   },
   "dependencies": {
+    "@assistant-ui/react": "^0.15.14",
     "@astrojs/react": "^6.0.0",
     "@astrojs/rss": "^4.0.18",
     "@fontsource/inter": "^5.3.0",

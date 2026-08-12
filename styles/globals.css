@@ -267,6 +267,7 @@ html.theme-transitioning body {
   font-weight: 600;
   letter-spacing: 0;
   line-height: 1.15;
+  scroll-margin-top: 7rem;
 }
 
 .blog-prose h1 {

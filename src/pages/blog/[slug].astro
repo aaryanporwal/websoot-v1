@@ -1,5 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
+import BlogHeadingThreadList from "../../../components/blog/BlogHeadingThreadList";
+import { blogTocHeadings } from "../../../components/blog/headings";
 import BlogLayout from "../../layouts/BlogLayout.astro";
 import {
   formatDate,
@@ -21,7 +23,8 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
+const tocHeadings = blogTocHeadings(headings);
 const description = postSummary(post);
 ---
 
@@ -67,8 +70,24 @@ const description = postSummary(post);
         }
       </header>
 
-      <div class="blog-prose prose prose-invert mt-12">
-        <Content />
+      <div
+        class:list={[
+          "mt-12",
+          tocHeadings.length > 0
+            ? "lg:grid lg:grid-cols-[minmax(12rem,16rem)_minmax(0,1fr)] lg:items-start lg:gap-16"
+            : null,
+        ]}
+      >
+        {
+          tocHeadings.length > 0 ? (
+            <aside class="mb-10 lg:sticky lg:top-28 lg:mb-0 lg:self-start">
+              <BlogHeadingThreadList client:load headings={tocHeadings} />
+            </aside>
+          ) : null
+        }
+        <div class="blog-prose prose prose-invert">
+          <Content />
+        </div>
       </div>
     </article>
   </main>
