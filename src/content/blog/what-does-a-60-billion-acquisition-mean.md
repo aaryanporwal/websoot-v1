@@ -13,11 +13,7 @@ My first instinct was stupidly simple:
 
 > Could SpaceX basically buy all of Zomato with that?
 
-That question turned out to be a useful way into what a company valuation actually means. $60 billion does not mean someone put $60 billion in a bank account and paid it to Cursor. In this deal, the payment is ownership.
-
 ## What actually happened
-
-SpaceX has not wired $60 billion to Cursor. That was the first thing I had to correct in my own understanding.
 
 On June 16, 2026, SpaceX filed an [8-K with the SEC](https://www.sec.gov/Archives/edgar/data/1181412/000162828026043411/spaceexplorationtechnologi.htm) announcing a merger agreement with Anysphere, the company behind Cursor.<sup>[1](#ref-1)</sup> The structure is pretty straightforward:
 
@@ -26,117 +22,55 @@ On June 16, 2026, SpaceX filed an [8-K with the SEC](https://www.sec.gov/Archive
 - Cursor survives as a wholly owned subsidiary of SpaceX.
 - Every outstanding Cursor common and preferred share is converted into the right to receive SpaceX Class A common stock.
 
-The SEC filing describes the transaction as having an "implied equity value" of $60 billion. It is expected to close in Q3 2026, subject to the closing conditions and regulatory approvals. It is also an all-stock transaction.<sup>[4](#ref-4)</sup> That last detail is what changed how I think about the whole number.
+The filing describes an "implied equity value" of $60 billion. The deal is all-stock,<sup>[4](#ref-4)</sup> expected to close in Q3 2026, subject to closing conditions and regulatory approvals.
 
-## Did SpaceX create $60 billion out of thin air?
+## Dilution, not a suitcase of cash
 
-This was the part that felt most suspicious.
+Suppose SpaceX has 100 shares, each 1 percent of the company. To buy Cursor without spending cash, it creates new shares and gives them to Cursor's shareholders. Maybe there are now 110 shares. The original holders still own their shares, but each share is a smaller slice. That is dilution: new ownership claims on SpaceX, not $60 billion of cash.
 
-Suppose SpaceX has 100 shares, and each share is 1 percent of the company. Now it wants to buy Cursor for $60 billion without spending cash, so it creates new SpaceX shares and gives them to Cursor's shareholders. Maybe there are 110 shares instead of 100. The original shareholders still own their shares, but each share is now a smaller percentage of SpaceX. That is dilution.
+The share count is not even fixed today. It is tied to SpaceX's Class A share price, using the volume-weighted average closing price over the seven trading days before closing.
 
-SpaceX did not create $60 billion of cash. It created new ownership claims on SpaceX. Cursor's shareholders now own part of the future SpaceX. The trade is: Cursor's owners give up Cursor, SpaceX gives them a chunk of SpaceX, both sides agree.
+## What "$60 billion" means
 
-So $60 billion here is a price expressed in shares, not a suitcase containing $60 billion.
+A valuation is the market's guess at what all of the ownership is worth. For a public company, that is shares times stock price: market capitalization.
 
-There is another detail I had missed. The exact amount of SpaceX stock Cursor shareholders receive is tied to SpaceX's Class A share price, using the volume-weighted average closing price over the seven trading days before closing. Even the number of shares comes from that framework, rather than "here are $60 billion worth of shares today."
+Private companies are more awkward. If investors buy 1 percent of a startup for $600 million, people say the company is worth $60 billion. Only 1 percent changed hands. The rest is an extrapolation.
 
-## What "$60 billion" actually means
-
-A company's valuation is basically: how much does the market believe all of the ownership in this company is worth?
-
-For a public company that is easy enough. Take the number of shares, multiply by the stock price, and you get market capitalization.
-
-Private companies are more awkward. Suppose investors buy 1 percent of a startup for $600 million. People then say the company is worth $60 billion. Nobody offered $60 billion for every share. Only 1 percent actually changed hands. The $60 billion is an extrapolation from the price of that small transaction.
-
-An acquisition is different, because the buyer is agreeing to take control of the whole company. In the Cursor deal, the SEC filing is much more meaningful than a normal private-market valuation. SpaceX is exchanging its own shares for all outstanding Cursor shares. That is a real transaction price, still an implied value because the payment is stock.
+An acquisition is different because the buyer is taking the whole company. SpaceX is exchanging its own shares for every outstanding Cursor share, so this is a real transaction price.
 
 ## Could $60 billion buy Zomato?
 
-Yes, roughly. Eternal, the parent company of Zomato and Blinkit, has recently been worth on the order of a few lakh crore rupees depending on the stock price. $60 billion is roughly Rs 5 lakh crore at current-ish exchange rates. So we are talking about something in the neighborhood of two Eternal-sized companies, give or take market movements.
-
-That comparison finally made the number feel real to me. Cursor is a successful developer tool. The agreed price is in the same universe as buying one of India's largest consumer technology companies outright, which is why the deal looks insane at first glance.
+Yes, roughly. Eternal, the parent of Zomato and Blinkit, has recently been worth on the order of a few lakh crore rupees depending on the stock price. $60 billion is about Rs 5 lakh crore at current-ish exchange rates, or something like two Eternal-sized companies. That is why a developer tool at this price looks insane at first glance.
 
 ## Cursor is not making $60 billion
 
-Before the acquisition announcement, Cursor had reportedly reached about [$4 billion in annualized revenue](https://www.forbes.com/sites/richardnieva/2026/06/08/cursor-4-billion-annualized-revenue/).<sup>[2](#ref-2)</sup> That is an extraordinary number for a company this young. Annualized revenue is not profit. It means that if the current revenue pace continued for a year, the company would generate about $4 billion in revenue. It does not mean Cursor makes $4 billion a year.
+Before the announcement, Cursor had reportedly reached about [$4 billion in annualized revenue](https://www.forbes.com/sites/richardnieva/2026/06/08/cursor-4-billion-annualized-revenue/).<sup>[2](#ref-2)</sup> Extraordinary for a company this young, but that only means: if the current pace held for a year, revenue would be about $4 billion. Compute, inference, people, and the rest still have to be paid, and there is no clean public number for net profit.
 
-From that revenue you still have to pay for compute, model inference, employees, sales, infrastructure, research, support, and everything else involved in running the business. We do not have a clean public number for Cursor's net profit.
+That bothered me, until I remembered this is not an IPO. SpaceX shareholders are not necessarily voting on every large acquisition. The board can approve transactions under the company's governing documents, and investors get the material information required by securities law, not Cursor's entire accounting system.
 
-That bothered me. How can somebody put a $60 billion price on a company without telling ordinary investors exactly how profitable it is?
+What we do get is the Form 8-K. The full merger agreement is Exhibit 10.1: representations and warranties, closing conditions, how the different Cursor share classes and equity awards convert, how the consideration is calculated, termination provisions, and restrictions on both parties. We can [read the contract](https://www.sec.gov/Archives/edgar/data/1181412/000162828026043411/spaceexplorationtechnologi.htm).<sup>[1](#ref-1)</sup>
 
-The acquisition process is not an IPO. SpaceX's shareholders are not necessarily voting on every acquisition just because it is large. The board can have authority to approve corporate transactions depending on the company's governing documents, securities structure, and applicable rules. Investors do not get every piece of private-company financial information either. They get the material information required by securities law, which is a long way from publishing Cursor's entire accounting system so everyone can inspect it.
+## Why take SpaceX stock?
 
-## The deal is visible because SpaceX is public
+If I owned a company priced at $60 billion, cash would be more liquid. Stock means I am now invested in SpaceX, which could go much better or much worse. Cursor's founders and investors are betting the SpaceX shares will be worth more than a cash sale, and they stay major owners of the company that bought them.
 
-SpaceX is public now, so the acquisition agreement did not stay hidden behind a press release. The company filed a Form 8-K, and the filing says the full merger agreement is included as Exhibit 10.1. That is where the actual contract lives. It contains the legal machinery behind the transaction:
+For existing SpaceX shareholders, the same trade is a dilution bet: was Cursor worth more than the ownership given away? If Cursor becomes enormously valuable inside SpaceX, issuing the shares looks brilliant. If it stagnates, they overpaid.
 
-- representations and warranties
-- conditions required before closing
-- what happens to the different classes of Cursor shares
-- how the consideration is calculated
-- what happens to equity awards
-- termination provisions
-- restrictions and obligations on both parties
+Paying with stock also says something about SpaceX's own shares. If the stock looks expensive, paying with it is attractive. If it looks cheap, paying with it is painful.
 
-I underestimated this about public markets. A company does not have to tell shareholders every internal conversation that happened in a boardroom. When something is materially important, there is a legal framework around what must be disclosed. In this case, we can literally [read the merger agreement](https://www.sec.gov/Archives/edgar/data/1181412/000162828026043411/spaceexplorationtechnologi.htm).<sup>[1](#ref-1)</sup>
+## Valuation is a claim on the future
 
-## Why take SpaceX stock instead of cash?
+I used to picture a valuation as a pile of money. It is closer to an economic claim on future cash flows. A company making $1 billion a year can still sell for far more than $1 billion if investors think that profit can grow to $10 billion. They are buying tomorrow's earnings. In AI, those assumptions can get extremely aggressive.
 
-SpaceX stock is valuable. Imagine I own a company that someone says is worth $60 billion. I can ask for $60 billion in cash, or $60 billion worth of SpaceX. Cash is more liquid. I could sell the cash tomorrow. Stock means I am now invested in SpaceX, which could turn out much better or much worse.
-
-Cursor's founders and investors are betting that the future value of the SpaceX shares they receive will be greater than what they could have extracted from a cash sale. They do not necessarily walk away with a giant pile of cash. They become major owners of the company that just bought them, so they participate in the upside of the combined company.
-
-## Did SpaceX use fake money?
-
-Not really, though I understand why it feels that way. Imagine your company is worth $1 trillion and you want to buy another company worth $50 billion. You could spend $50 billion of cash, or issue enough new shares that those new shares are worth $50 billion. Existing shareholders then own a slightly smaller percentage of the resulting company, and the company owns another asset.
-
-SpaceX did not create free money. SpaceX shareholders are betting that Cursor was worth more than the economic value of the ownership that was given away. If Cursor becomes enormously valuable inside SpaceX, issuing those shares could have been a brilliant decision. If Cursor stagnates, shareholders got diluted for something that did not justify the price.
-
-## Where valuation gets weird
-
-I used to picture a valuation as a pile of money sitting somewhere. It is closer to an economic claim on future cash flows. That is the model that finally made valuations click for me.
-
-Suppose a company produces $1 billion in profit every year, and investors think it can grow that profit to $10 billion. They may pay far more than $1 billion for the company today. They are buying the right to participate in tomorrow's earnings, not today's. That is how a company can be worth $60 billion without making anything close to $60 billion. In AI companies, the future assumptions can get extremely aggressive.
+A $4 billion annualized-revenue business priced at $60 billion is the same move: we believe this gets much larger and much more profitable. That could be right. It could be wildly wrong. The mistake is treating the price as proof that the future already happened.
 
 ## Why is SpaceX worth so much?
 
-I initially thought of SpaceX as the company that launches rockets. That description is incomplete.
+I thought of SpaceX as the company that launches rockets. Its biggest revenue engine is Starlink. In Q2 2026 it reported about $7.8 billion in total revenue: roughly $4.3 billion from connectivity (primarily Starlink) and $1 billion from the space segment, plus a growing AI business.
 
-Its biggest revenue engine is Starlink. In Q2 2026, SpaceX reported roughly $7.8 billion in total revenue. The connectivity segment, which is primarily Starlink, generated about $4.3 billion. The space segment generated roughly $1 billion. The company is also increasingly building an AI business.
+Starlink works because SpaceX builds the satellites, launches them, operates the constellation, and sells the connectivity. A typical satellite internet company has to pay someone else to launch. Rather than a handful of satellites far away, Starlink uses thousands in low Earth orbit, which means lower latency than geostationary internet and coverage where terrestrial broadband is weak. Customers are households, businesses, governments, militaries, aviation, and ships.
 
-So the rocket company is becoming a launch company, a satellite internet company, a communications infrastructure company, a government and defense contractor, and an AI infrastructure company. That combination matters to investors.
-
-## Starlink was the surprise
-
-Starlink works because SpaceX controls a huge portion of the stack. SpaceX builds the satellites, launches them, operates the constellation, and sells connectivity to customers. A normal satellite internet company would have to pay someone else to launch. SpaceX is both the launch provider and the satellite operator.
-
-Rather than putting a handful of satellites extremely far away, Starlink uses a massive constellation in low Earth orbit. Thousands of satellites are now operating. The result is much lower latency than traditional geostationary satellite internet, while still covering places where terrestrial broadband is weak or nonexistent.
-
-Customers include people in remote houses, plus businesses, governments, militaries, aviation, and maritime users. The business is becoming communications infrastructure rather than simply internet for rural people.
-
-## The part I almost got wrong
-
-I initially thought SpaceX makes so much money because everything is profitable. That is not necessarily true. SpaceX is spending enormous amounts of money on future businesses: AI infrastructure, launch systems, Starship, data centers, satellite infrastructure. The company reported a net loss in Q2 2026 despite generating about $7.8 billion in revenue.
-
-You can generate billions of dollars in revenue and still lose money. That sounds contradictory until you remember that revenue is not profit. A company can be making a lot of money and spending even more trying to build something bigger.
-
-## Is this a bubble?
-
-Maybe, and I think the honest answer is more interesting than either extreme.
-
-There is a speculative component to AI valuations. A company generating billions in revenue can still be worth tens of billions if investors believe that revenue will grow enormously. A company generating $4 billion in annualized revenue, valued at $60 billion, is a way of saying: we believe this business is going to become much larger and much more profitable. That could be correct. It could also be wildly wrong.
-
-The mistake is treating the valuation as proof that the future already happened. It has not. The $60 billion price is a bet, and a very large one.
-
-## The model I came away with
-
-What Cursor's owners receive is ownership in SpaceX, contractually calculated to represent an implied $60 billion value for Cursor. SpaceX does not need $60 billion in cash sitting around. It can issue shares, which dilutes existing SpaceX shareholders, and in exchange SpaceX gets 100 percent ownership of Cursor.
-
-Everyone is betting that the combination will eventually be worth more than the value of the shares SpaceX gave away.
-
-That makes the number more interesting than a cash purchase, because another question sits behind it: what does SpaceX think its own stock is going to be worth? If SpaceX believes its stock is expensive, paying with stock is attractive. If SpaceX believes its stock is cheap, paying with stock is painful.
-
-When I look at the Cursor deal now, I see SpaceX deciding that giving Cursor's owners a huge piece of the future SpaceX was worth more than keeping that ownership for existing shareholders.
+I also assumed all of that was profitable. SpaceX reported a net loss in Q2 2026 on that $7.8 billion of revenue. It is spending heavily on AI infrastructure, launch systems, Starship, data centers, and satellites.
 
 ## Sources and further reading
 
