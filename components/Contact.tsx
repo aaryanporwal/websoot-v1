@@ -433,19 +433,23 @@ export default function Contact({ images }: { images: HomeImages["contact"] }) {
     <section
       ref={root}
       id="contact"
-      className="relative w-full overflow-hidden bg-body px-6 pt-32 pb-8 sm:px-10 sm:pt-40 sm:pb-10 lg:px-16"
+      className="relative flex min-h-0 w-full flex-col overflow-x-hidden bg-body px-6 pb-4 pt-24 sm:px-10 lg:min-h-[calc(100svh-6rem)] lg:px-16 lg:pb-4 lg:pt-28"
     >
-      <div className="relative mx-auto grid max-w-container gap-12 lg:grid-cols-[minmax(320px,0.82fr)_minmax(0,1.18fr)] lg:items-center lg:gap-16">
+      <div
+        className={`relative mx-auto grid w-full min-h-0 max-w-container flex-1 gap-8 lg:grid-cols-[minmax(280px,0.9fr)_minmax(0,1.1fr)] lg:grid-rows-[minmax(0,1fr)_auto] lg:items-stretch lg:gap-x-12 ${
+          phase === STATE.APPROVED ? "lg:gap-y-6" : "lg:gap-y-0"
+        }`}
+      >
         {/* Copy */}
-        <div className="relative">
-          <h2 className="contact-stagger mt-6 font-display text-[clamp(2.5rem,1rem+5.5vw,5.5rem)] font-semibold leading-[0.95] tracking-tightest text-white text-balance">
-            Anya screens my inbox.
+        <div className="relative lg:self-start lg:pt-2">
+          <h2 className="contact-title contact-stagger font-display text-[clamp(2.25rem,0.7rem+4vw,4.25rem)] font-semibold leading-[1.08] tracking-tightest text-white">
+            Anya screens <span className="lg:block">my inbox.</span>
           </h2>
 
-          <p className="contact-stagger mt-8 max-w-md font-sans text-lg text-muted sm:text-xl">
+          <p className="contact-stagger mt-5 max-w-md font-sans text-lg text-muted sm:text-xl">
             Bribe her with a treat and the channels appear.
           </p>
-          <p className="contact-stagger mt-8 max-w-md font-sans text-lg text-muted/70 sm:text-xl">
+          <p className="contact-stagger mt-5 max-w-md font-sans text-lg text-muted/70 sm:text-xl">
             Serious project, quick hello, odd idea: all welcome. She just likes
             to feel involved.
           </p>
@@ -455,7 +459,7 @@ export default function Contact({ images }: { images: HomeImages["contact"] }) {
         <div
           ref={stage}
           onPointerMove={onStagePointerMove}
-          className="contact-stagger relative min-h-[430px] w-full select-none overflow-hidden rounded-2xl border border-line bg-surface/40 sm:min-h-[520px] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:min-h-[620px]"
+          className="contact-stagger contact-stage relative min-h-[280px] w-full select-none overflow-hidden rounded-2xl border border-line bg-surface/40 sm:min-h-[400px] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:h-full lg:min-h-[18rem]"
         >
           <p id="contact-status" className="sr-only" aria-live="polite">
             {statusText}
@@ -600,7 +604,11 @@ export default function Contact({ images }: { images: HomeImages["contact"] }) {
             transform: "translateY(8px)",
             visibility: "hidden",
           }}
-          className={`lg:col-start-1 lg:row-start-2 ${phase === STATE.APPROVED ? "" : "pointer-events-none"}`}
+          className={`lg:col-start-1 lg:row-start-2 ${
+            phase === STATE.APPROVED
+              ? ""
+              : "pointer-events-none max-h-0 overflow-hidden"
+          }`}
         >
           <ul className="flex flex-col divide-y divide-line border-y border-line">
             <li>
