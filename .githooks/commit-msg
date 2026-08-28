@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
-# Strip Co-authored-by trailers from commit messages (e.g. Cursor auto-attribution).
+# Reclaim Cursor Cloud authorship and strip Co-authored-by trailers.
 set -euo pipefail
 
 MSG_FILE="${1:?commit-msg hook requires a message file}"
 TMP="$(mktemp)"
 trap 'rm -f "$TMP"' EXIT
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+if [ -x "$REPO_ROOT/scripts/ensure-git-identity.sh" ]; then
+  "$REPO_ROOT/scripts/ensure-git-identity.sh"
+fi
 
 # Drop any Co-authored-by line (any casing / leading whitespace).
 grep -viE '^[[:space:]]*Co-authored-by:' "$MSG_FILE" >"$TMP" || true
