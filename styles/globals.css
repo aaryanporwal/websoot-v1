@@ -172,6 +172,23 @@ li {
   }
 }
 
+/*
+ * Last fold: keep the contact stage inside the remaining viewport so
+ * "Anya screens my inbox." stays fully below the fixed nav when scrolled
+ * to the bottom, instead of a 620px min-height shoving the headline up.
+ */
+@media (min-width: 1024px) {
+  .contact-stage {
+    height: min(36rem, calc(100svh - 13rem));
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 800px) {
+  .contact-title {
+    font-size: clamp(2rem, 5.5vh, 3.25rem);
+  }
+}
+
 /* Hidden before GSAP reveal; avoids a flash of full images on hydrate */
 .work-card-media__img {
   clip-path: inset(0 0 100% 0);

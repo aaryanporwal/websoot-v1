@@ -32,9 +32,9 @@ export function Footer() {
   return (
     <footer
       ref={root}
-      className="relative w-full bg-body px-6 pb-10 pt-6 sm:px-10 lg:px-16"
+      className="relative w-full bg-body px-6 pb-8 pt-4 sm:px-10 lg:px-16"
     >
-      <div className="relative mx-auto max-w-container pt-8">
+      <div className="relative mx-auto max-w-container pt-6">
         <div
           ref={borderRef}
           aria-hidden="true"
