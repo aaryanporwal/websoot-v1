@@ -20,6 +20,7 @@ Start at [knowledge/index.md](knowledge/index.md) (Open Knowledge Format bundle)
 | Writing voice | [knowledge/blog/voice.md](knowledge/blog/voice.md) |
 | Product voice (full) | [PRODUCT.md](PRODUCT.md) |
 | Visual design | [DESIGN.md](DESIGN.md) |
+| Git authorship | [knowledge/git/authorship.md](knowledge/git/authorship.md) |
 
 ## Cursor Cloud specific instructions
 
@@ -37,4 +38,6 @@ Gotchas:
 - `astro check` is still not wired up (`@astrojs/check` is not a dependency and its installer prompt is interactive), so use `bun run lint` for static checks.
 - Copy `.env.example` to `.env` for local runs; all values in it are public PostHog keys, so no secrets are required to run or build the site.
 - Blog content is Astro content collections under `src/content/blog/*.md`; a post needs `draft: false` to appear on `/blog/`, tag pages, `/rss.xml`, and the ⌘K switcher. The dev server hot-reloads new/edited posts.
-- Git hooks live in `.githooks/` (`core.hooksPath`). `bun install` runs `prepare` to point git at them. The `commit-msg` hook strips any `Co-authored-by` trailers from commit messages.
+- Git hooks live in `.githooks/` (`core.hooksPath`). `bun install` runs `prepare` (`scripts/install-git-hooks.sh`) to point git at them and copy `commit-msg` into `.git/hooks` so Cursor Cloud's dispatcher still runs it.
+- **Never commit as `Cursor Agent <cursoragent@cursor.com>`.** Before the first commit, run `scripts/ensure-git-identity.sh`. It rewrites local `user.name` / `user.email` when the current identity is Cursor Agent. Do not pass `--author`, and do not set `GIT_AUTHOR_*` / `GIT_COMMITTER_*` to Cursor Agent.
+- The `commit-msg` hook also runs that script and strips `Co-authored-by` trailers. Cursor Cloud still appends a trailer *after* our hook; authorship is the part that matters (GitHub squash otherwise attributes the commit to Cursor Agent).
