@@ -10,7 +10,9 @@ resource: scripts/ensure-git-identity.sh
 
 Cursor Cloud VMs default to `Cursor Agent <cursoragent@cursor.com>`. The IDE Attribution toggle only controls a `Made with Cursor` trailer on local/CLI commits. There is no Cloud authorship opt-out.
 
-This repo rewrites that identity to `Aaryan Porwal <aaryanporwal2233@gmail.com>` via local git config (`scripts/ensure-git-identity.sh`). `prepare` / `scripts/install-git-hooks.sh` runs it and installs `.githooks/commit-msg` into `.git/hooks` so Cursor's hook dispatcher still calls it.
+This repo rewrites that identity to `Aaryan Porwal <aaryanporwal2233@gmail.com>` via local git config (`scripts/ensure-git-identity.sh`). `prepare` / `scripts/install-git-hooks.sh` runs it and copies `.githooks/*` into `.git/hooks` so Cursor's hook dispatcher still calls them.
+
+Git caches author identity before hooks run. If the identity is still Cursor Agent, `pre-commit` rewrites local config and aborts so the next `git commit` uses the new author.
 
 ## Why the old hook was not enough
 

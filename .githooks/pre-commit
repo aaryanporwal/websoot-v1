@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Cursor Cloud caches git identity before hooks run. If this clone is still
+# Cursor Agent, rewrite local config and abort so the retry uses the new author.
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+IDENTITY="$REPO_ROOT/scripts/ensure-git-identity.sh"
+[ -x "$IDENTITY" ] || exit 0
+
+email="$(git config --get user.email || true)"
+name="$(git config --get user.name || true)"
+
+if [ "$email" != "cursoragent@cursor.com" ] && [ "$name" != "Cursor Agent" ]; then
+  exit 0
+fi
+
+"$IDENTITY"
+echo "git identity was Cursor Agent; rewritten to Aaryan Porwal. Retry the commit." >&2
+exit 1

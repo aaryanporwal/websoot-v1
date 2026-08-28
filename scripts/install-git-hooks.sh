@@ -7,11 +7,18 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
 git config core.hooksPath .githooks
-chmod +x .githooks/commit-msg scripts/ensure-git-identity.sh scripts/install-git-hooks.sh
+chmod +x scripts/ensure-git-identity.sh scripts/install-git-hooks.sh
+
+if [ -d .githooks ]; then
+  chmod +x .githooks/*
+fi
 
 if [ -d .git/hooks ]; then
-  cp .githooks/commit-msg .git/hooks/commit-msg
-  chmod +x .git/hooks/commit-msg
+  for hook in .githooks/*; do
+    [ -f "$hook" ] || continue
+    cp "$hook" ".git/hooks/$(basename "$hook")"
+    chmod +x ".git/hooks/$(basename "$hook")"
+  done
 fi
 
 "$ROOT/scripts/ensure-git-identity.sh"

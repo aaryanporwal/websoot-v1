@@ -101,8 +101,9 @@ describe("commit-msg hook", () => {
     expect((await Bun.file(messagePath).text()).trim()).toBe("Fix the thing.");
   });
 
-  test("rewrites author on a real commit when only .git/hooks is wired", async () => {
+  test("rewrites author on retry when only .git/hooks is wired", async () => {
     const root = await createRepo();
+    const preCommit = path.join(repoRoot, ".githooks/pre-commit");
     await run(root, [
       "git",
       "config",
@@ -122,12 +123,26 @@ describe("commit-msg hook", () => {
     await mkdir(path.join(root, ".githooks"), { recursive: true });
     await copyFile(identityScript, path.join(root, "scripts/ensure-git-identity.sh"));
     await copyFile(hookScript, path.join(root, ".githooks/commit-msg"));
+    await copyFile(preCommit, path.join(root, ".githooks/pre-commit"));
     await copyFile(hookScript, path.join(root, ".git/hooks/commit-msg"));
+    await copyFile(preCommit, path.join(root, ".git/hooks/pre-commit"));
     await chmod(path.join(root, "scripts/ensure-git-identity.sh"), 0o755);
     await chmod(path.join(root, ".git/hooks/commit-msg"), 0o755);
+    await chmod(path.join(root, ".git/hooks/pre-commit"), 0o755);
 
     await writeFile(path.join(root, "note.txt"), "hello\n");
     await run(root, ["git", "add", "note.txt"]);
+
+    const first = Bun.spawnSync({
+      cmd: ["git", "commit", "-m", "Add a note"],
+      cwd: root,
+      env: process.env,
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    expect(first.exitCode).not.toBe(0);
+    expect(first.stderr.toString()).toContain("rewritten to Aaryan Porwal");
+
     await run(root, ["git", "commit", "-m", "Add a note"]);
 
     const author = await run(root, ["git", "log", "-1", "--format=%an <%ae>"]);
@@ -158,12 +173,19 @@ describe("install-git-hooks", () => {
     await copyFile(identityScript, path.join(root, "scripts/ensure-git-identity.sh"));
     await copyFile(installScript, path.join(root, "scripts/install-git-hooks.sh"));
     await copyFile(hookScript, path.join(root, ".githooks/commit-msg"));
+    await copyFile(
+      path.join(repoRoot, ".githooks/pre-commit"),
+      path.join(root, ".githooks/pre-commit"),
+    );
     await chmod(path.join(root, "scripts/ensure-git-identity.sh"), 0o755);
     await chmod(path.join(root, "scripts/install-git-hooks.sh"), 0o755);
 
     await run(root, ["bash", path.join(root, "scripts/install-git-hooks.sh")]);
 
     expect(await Bun.file(path.join(root, ".git/hooks/commit-msg")).exists()).toBe(
+      true,
+    );
+    expect(await Bun.file(path.join(root, ".git/hooks/pre-commit")).exists()).toBe(
       true,
     );
     expect(await run(root, ["git", "config", "--get", "core.hooksPath"])).toBe(
