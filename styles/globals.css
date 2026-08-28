@@ -173,13 +173,13 @@ li {
 }
 
 /*
- * Last fold: keep the contact stage inside the remaining viewport so
- * "Anya screens my inbox." stays fully below the fixed nav when scrolled
- * to the bottom, instead of a 620px min-height shoving the headline up.
+ * Last fold: the cat stage fills leftover viewport height so the headline
+ * stays fully below the fixed nav when scrolled to the bottom.
  */
 @media (min-width: 1024px) {
   .contact-stage {
-    height: min(36rem, calc(100svh - 13rem));
+    height: 100%;
+    min-height: 18rem;
   }
 }
 

@@ -40,7 +40,7 @@ export function Footer() {
           aria-hidden="true"
           className="absolute inset-x-0 top-0 h-px origin-left bg-line"
         />
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
           <ul className="flex flex-wrap gap-x-8 gap-y-3 font-sans text-base">
             {SOCIALS.map((s) => (
               <li key={s.label}>
