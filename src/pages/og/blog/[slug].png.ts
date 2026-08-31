@@ -25,7 +25,7 @@ export const GET: APIRoute = async ({ props }) => {
   const png = await renderOgImage({
     title: post.data.title,
     description: postSummary(post),
-    meta: `${formatDate(post.data.date)} · ${readingTime(post.body)} min read`,
+    meta: `${formatDate(post.data.date)} - ${readingTime(post.body)} min read`,
   });
 
   return new Response(new Uint8Array(png), {

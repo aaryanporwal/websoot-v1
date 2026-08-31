@@ -153,7 +153,7 @@ export default function NavBar({ onOpenTheme }: Props) {
               }}
               className="rounded-md border border-line bg-surface/30 px-2.5 py-1 font-sans text-[11px] font-semibold text-muted transition-[transform,border-color,color] duration-press ease-out-strong active:scale-[0.97] hover:border-voltage hover:text-voltage focus-visible:border-voltage focus-visible:text-voltage"
             >
-              ⌘K
+              Cmd+K
             </button>
             <a
               href="#contact"

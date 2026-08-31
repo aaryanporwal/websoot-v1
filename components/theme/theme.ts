@@ -43,7 +43,7 @@ export const THEME_OPTIONS: ThemeOption[] = [
   },
   {
     id: "rose-pine",
-    label: "Rosé Pine",
+    label: "Rose Pine",
     swatches: ["#191724", "#1f1d2e", "#ebbcba", "#e0def4"],
   },
 ];

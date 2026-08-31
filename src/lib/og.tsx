@@ -46,7 +46,7 @@ function titleFontSize(title: string) {
 }
 
 function truncate(text: string, max = 140) {
-  return text.length > max ? `${text.slice(0, max - 1).trim()}…` : text;
+  return text.length > max ? `${text.slice(0, max - 1).trim()}...` : text;
 }
 
 export type OgImageOptions = {

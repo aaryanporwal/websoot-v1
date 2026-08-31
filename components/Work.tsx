@@ -164,7 +164,7 @@ export default function Work({ projects }: Props) {
           <span className="work-section-reveal block text-stroke">Work</span>
         </h2>
         <span className="work-section-reveal hidden font-sans text-sm uppercase tracking-[0.3em] text-muted md:block">
-          Scroll →
+          Scroll ->
         </span>
       </div>
 
@@ -223,7 +223,7 @@ export default function Work({ projects }: Props) {
                   className="mt-6 inline-flex items-center gap-2 font-display text-sm font-semibold text-voltage transition-transform duration-200 ease-out-strong active:scale-[0.97] [@media(hover:hover)_and_(pointer:fine)]:hover:translate-x-1.5"
                 >
                   {p.cta}
-                  <span>→</span>
+                  <span>{"->"}</span>
                 </a>
               </div>
             </div>

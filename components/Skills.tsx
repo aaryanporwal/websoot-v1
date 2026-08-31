@@ -24,7 +24,7 @@ type RowProps = {
   separator?: string;
 };
 
-function Row({ items, rowRef, separator = "✺" }: RowProps) {
+function Row({ items, rowRef, separator = "*" }: RowProps) {
   // Duplicate the content so the -50% loop is seamless.
   const content = (
     <div className="flex shrink-0 items-center">
@@ -108,8 +108,8 @@ export default function Skills() {
       className="relative w-full border-y border-line bg-body py-20"
     >
       <div className="flex flex-col gap-4">
-        <Row items={ROW_A} rowRef={rowA} separator="✺" />
-        <Row items={ROW_B} rowRef={rowB} separator="◆" />
+        <Row items={ROW_A} rowRef={rowA} separator="*" />
+        <Row items={ROW_B} rowRef={rowB} separator="+" />
       </div>
     </section>
   );
