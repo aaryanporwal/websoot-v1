@@ -291,7 +291,7 @@ export default function Contact({ images }: { images: HomeImages["contact"] }) {
       gsap.set(neutralRef.current, { autoAlpha: 0 });
       gsap.set(sleepyRef.current, { autoAlpha: 1 });
 
-      // Section reveal (intentional, single staged entrance — not the uniform reflex).
+      // Section reveal (intentional, single staged entrance - not the uniform reflex).
       const reduce = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
       ).matches;
@@ -595,7 +595,7 @@ export default function Contact({ images }: { images: HomeImages["contact"] }) {
           </div>
         </div>
 
-        {/* Reveal panel — after Anya on mobile; below copy on desktop */}
+        {/* Reveal panel - after Anya on mobile; below copy on desktop */}
         <div
           ref={revealRef}
           aria-live="polite"
@@ -632,7 +632,7 @@ export default function Contact({ images }: { images: HomeImages["contact"] }) {
                   aria-hidden
                   className="font-display text-2xl text-voltage transition-transform duration-200 ease-out-strong [@media(hover:hover)_and_(pointer:fine)]:group-hover:translate-x-1"
                 >
-                  ↗
+                  {"->"}
                 </span>
               </a>
             </li>
@@ -657,7 +657,7 @@ export default function Contact({ images }: { images: HomeImages["contact"] }) {
                   aria-hidden
                   className="font-display text-2xl text-voltage transition-transform duration-200 ease-out-strong [@media(hover:hover)_and_(pointer:fine)]:group-hover:translate-x-1"
                 >
-                  ↗
+                  {"->"}
                 </span>
               </a>
             </li>
@@ -678,7 +678,7 @@ export default function Contact({ images }: { images: HomeImages["contact"] }) {
                   aria-hidden
                   className="font-display text-2xl text-voltage transition-transform duration-200 ease-out-strong [@media(hover:hover)_and_(pointer:fine)]:group-hover:translate-x-1"
                 >
-                  ↗
+                  {"->"}
                 </span>
               </a>
             </li>

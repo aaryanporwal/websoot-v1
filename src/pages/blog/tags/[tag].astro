@@ -32,7 +32,7 @@ const { tag, posts } = Astro.props;
 ---
 
 <BlogLayout
-  title={`${tag} · Blog · Aaryan Porwal`}
+  title={`${tag} - Blog - Aaryan Porwal`}
   description={`Posts tagged ${tag} by Aaryan Porwal.`}
   canonicalPath={`/blog/tags/${tagSlug(tag)}/`}
 >
@@ -42,7 +42,7 @@ const { tag, posts } = Astro.props;
       href="/blog/"
       class="font-sans text-sm text-muted outline-none transition-colors hover:text-voltage focus-visible:text-voltage"
     >
-      ← All posts
+      {"<-"} All posts
     </a>
     <h1 class="mt-8 font-display text-fluid-md font-semibold leading-none tracking-tightest text-white">
       {tag}
@@ -69,7 +69,7 @@ const { tag, posts } = Astro.props;
                   </p>
                 </div>
                 <span class="font-display text-2xl text-voltage transition-transform duration-ui ease-out-strong [@media(hover:hover)_and_(pointer:fine)]:group-hover:translate-x-1">
-                  →
+                  {"->"}
                 </span>
               </div>
             </a>

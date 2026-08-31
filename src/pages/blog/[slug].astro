@@ -26,7 +26,7 @@ const description = postSummary(post);
 ---
 
 <BlogLayout
-  title={`${post.data.title} · Aaryan Porwal`}
+  title={`${post.data.title} - Aaryan Porwal`}
   description={description}
   canonicalPath={postHref(post)}
   socialImage={postOgImageHref(post)}
@@ -37,7 +37,7 @@ const description = postSummary(post);
       href="/blog/"
       class="font-sans text-sm text-muted outline-none transition-colors hover:text-voltage focus-visible:text-voltage"
     >
-      ← Back to blog
+      {"<-"} Back to blog
     </a>
 
     <article class="mt-12">

@@ -95,7 +95,7 @@ export default function Tweets() {
             className="tweets-section-reveal inline-flex items-center gap-2 self-start font-display text-sm font-semibold text-voltage transition-transform duration-200 ease-out-strong active:scale-[0.97] [@media(hover:hover)_and_(pointer:fine)]:hover:translate-x-1"
           >
             Follow on X
-            <span aria-hidden>→</span>
+            <span aria-hidden>{"->"}</span>
           </a>
         </div>
 
@@ -154,7 +154,7 @@ export default function Tweets() {
                     className="mt-6 inline-flex items-center gap-2 font-display text-sm font-semibold text-voltage transition-transform duration-200 ease-out-strong active:scale-[0.97] [@media(hover:hover)_and_(pointer:fine)]:hover:translate-x-1"
                   >
                     View on X
-                    <span aria-hidden>↗</span>
+                    <span aria-hidden>{"->"}</span>
                   </a>
                 </div>
               </article>
