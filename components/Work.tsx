@@ -164,7 +164,7 @@ export default function Work({ projects }: Props) {
           <span className="work-section-reveal block text-stroke">Work</span>
         </h2>
         <span className="work-section-reveal hidden font-sans text-sm uppercase tracking-[0.3em] text-muted md:block">
-          Scroll ->
+          Scroll {"->"}
         </span>
       </div>
 
