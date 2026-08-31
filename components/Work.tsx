@@ -160,8 +160,8 @@ export default function Work({ projects }: Props) {
     >
       <div className="flex items-end justify-between px-6 pb-10 pt-8 sm:px-10 md:pt-20 lg:px-16">
         <h2 className="font-display text-fluid-md font-semibold leading-none tracking-tightest text-white">
-          <span className="work-section-reveal block">Featured</span>
-          <span className="work-section-reveal block text-stroke">Work</span>
+          <span className="work-section-reveal block">Work</span>
+          <span className="work-section-reveal block text-stroke">Experience</span>
         </h2>
         <span className="work-section-reveal hidden font-sans text-sm uppercase tracking-[0.3em] text-muted md:block">
           Scroll {"->"}

@@ -89,7 +89,7 @@ export default function About() {
             { n: "5+", l: "Years at the keyboard" },
             { n: "30+", l: "Projects shipped" },
             { n: "1", l: "Cat (my chief architect)" },
-            { n: "inf", l: "Passion" },
+            { n: "∞", l: "Passion" },
           ].map((s) => (
             <div key={s.l} className="about-stat">
               <div className="font-display text-4xl font-semibold text-white sm:text-6xl">
