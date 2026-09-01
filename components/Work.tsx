@@ -181,8 +181,8 @@ export default function Work({ projects }: Props) {
               <ResponsivePicture
                 picture={p.picture}
                 alt={`${p.title} project preview`}
-                loading="eager"
-                fetchPriority={i === 0 ? "high" : "auto"}
+                loading={i === 0 ? "eager" : "lazy"}
+                fetchPriority="auto"
                 sizes={WORK_IMAGE_SIZES}
                 imgClassName="work-card-media__img h-full w-full object-cover transition-transform duration-300 ease-out-strong [@media(hover:hover)_and_(pointer:fine)]:group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
                 className="block h-full w-full"
@@ -204,7 +204,7 @@ export default function Work({ projects }: Props) {
                     alt={`${p.title} logo`}
                     width={44}
                     height={44}
-                    loading="eager"
+                    loading={i === 0 ? "eager" : "lazy"}
                     decoding="async"
                     className="h-11 w-11 shrink-0 rounded-xl object-contain"
                   />

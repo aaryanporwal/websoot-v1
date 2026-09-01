@@ -42,7 +42,7 @@ const workImageSizes = "(min-width: 768px) 34rem, 100vw";
 <SiteLayout>
   <Fragment slot="head">
     {
-      work.map((project, index) => {
+      work.slice(0, 1).map((project) => {
         const avif = project.picture.sources.find(
           (source) => source.type === "image/avif",
         );
@@ -59,7 +59,6 @@ const workImageSizes = "(min-width: 768px) 34rem, 100vw";
             type="image/avif"
             imagesrcset={avif.srcSet}
             imagesizes={workImageSizes}
-            fetchpriority={index === 0 ? "high" : "low"}
           />
         );
       })
