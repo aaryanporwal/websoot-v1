@@ -17,34 +17,37 @@ export const SIGNATURE_PATHS = [
   "M103.231 153.042C126.144 134.313 148.88 115.327 172.64 97.6662C175.307 95.6835 178.046 93.7979 180.758 91.8769C181.757 91.1686 184.466 90.5272 183.652 89.6115C182.537 88.3571 173.664 89.6115 171.759 89.6115",
 ] as const;
 
-const PATH_MARKUP = SIGNATURE_PATHS.map((d) => `<path d="${d}"/>`).join("\n  ");
+function pathMarkup(stroke: string): string {
+  return SIGNATURE_PATHS.map(
+    (d) =>
+      `<path d="${d}" fill="none" stroke="${stroke}" stroke-width="${STROKE_WIDTH}" stroke-linecap="round"/>`,
+  ).join("\n  ");
+}
 
 export function signatureSvg(options: {
   stroke: string;
   adaptive?: boolean;
 }): string {
-  const css = options.adaptive
-    ? `path {
-      fill: none;
-      stroke: ${LIGHT_STROKE};
-      stroke-width: ${STROKE_WIDTH};
-      stroke-linecap: round;
-    }
-    @media (prefers-color-scheme: dark) {
-      path { stroke: ${DARK_STROKE}; }
-    }`
-    : `path {
-      fill: none;
-      stroke: ${options.stroke};
-      stroke-width: ${STROKE_WIDTH};
-      stroke-linecap: round;
-    }`;
+  // Presentation attributes carry the ink. Chrome's favicon rasterizer often
+  // ignores <style> and prefers-color-scheme, so the dark-tab file must be
+  // white in the markup itself — not only inside a media query.
+  const paths = pathMarkup(options.stroke);
+
+  if (!options.adaptive) {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${VIEWBOX}">
+  ${paths}
+</svg>
+`;
+  }
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${VIEWBOX}">
   <style>
-    ${css}
+    path { stroke: ${LIGHT_STROKE}; }
+    @media (prefers-color-scheme: dark) {
+      path { stroke: ${DARK_STROKE}; }
+    }
   </style>
-  ${PATH_MARKUP}
+  ${paths}
 </svg>
 `;
 }
@@ -96,8 +99,9 @@ function encodeIco(images: { size: number; png: Buffer }[]): Buffer {
 }
 
 export async function generateFavicons(outDir = PUBLIC_DIR) {
-  const darkSvg = signatureSvg({ stroke: DARK_STROKE, adaptive: true });
+  const darkSvg = signatureSvg({ stroke: DARK_STROKE });
   const lightSvg = signatureSvg({ stroke: LIGHT_STROKE });
+  const adaptiveSvg = signatureSvg({ stroke: DARK_STROKE, adaptive: true });
 
   const darkPng = await pngFromStroke(DARK_STROKE, 64);
   const lightPng = await pngFromStroke(LIGHT_STROKE, 64);
@@ -111,7 +115,7 @@ export async function generateFavicons(outDir = PUBLIC_DIR) {
   );
 
   await Promise.all([
-    writeFile(path.join(outDir, "favicon.svg"), darkSvg),
+    writeFile(path.join(outDir, "favicon.svg"), adaptiveSvg),
     writeFile(path.join(outDir, "favicon-dark.svg"), darkSvg),
     writeFile(path.join(outDir, "favicon-light.svg"), lightSvg),
     writeFile(path.join(outDir, "favicon.png"), darkPng),

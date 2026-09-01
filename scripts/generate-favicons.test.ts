@@ -52,12 +52,22 @@ describe("adaptive signature favicon", () => {
     expect(svg).toContain(`stroke: ${DARK_STROKE}`);
   });
 
+  test("dark-tab SVG is white in the markup so Chrome does not need CSS", () => {
+    const svg = signatureSvg({ stroke: DARK_STROKE });
+
+    expect(svg).not.toMatch(/<rect\b/);
+    expect(svg).not.toContain("prefers-color-scheme");
+    expect(svg).toContain(`stroke="${DARK_STROKE}"`);
+    expect(svg).not.toContain(LIGHT_STROKE);
+  });
+
   test("light SVG stays dark-ink so a white tab remains readable", () => {
     const svg = signatureSvg({ stroke: LIGHT_STROKE });
 
     expect(svg).not.toMatch(/<rect\b/);
-    expect(svg).toContain(`stroke: ${LIGHT_STROKE}`);
+    expect(svg).toContain(`stroke="${LIGHT_STROKE}"`);
     expect(svg).not.toContain("prefers-color-scheme");
+    expect(svg).not.toContain(DARK_STROKE);
   });
 
   test("layout serves light and dark icons via prefers-color-scheme", async () => {
@@ -68,12 +78,13 @@ describe("adaptive signature favicon", () => {
 
     expect(layout).toContain('media="(prefers-color-scheme: dark)"');
     expect(layout).toContain('media="(prefers-color-scheme: light)"');
-    expect(layout).toContain('href="/favicon-dark.svg"');
-    expect(layout).toContain('href="/favicon-light.svg"');
-    expect(layout).toContain('href="/favicon-dark.png"');
-    expect(layout).toContain('href="/favicon-light.png"');
+    expect(layout).toContain('href="/favicon-dark.svg?v=2"');
+    expect(layout).toContain('href="/favicon-light.svg?v=2"');
+    expect(layout).toContain('href="/favicon-dark.png?v=2"');
+    expect(layout).toContain('href="/favicon-light.png?v=2"');
     expect(layout).not.toContain('href="/favicon.png"');
     expect(layout).not.toContain('href="/favicon.svg"');
+    expect(layout).not.toContain('favicon.ico');
   });
 
   test("raster icons keep a transparent field and readable ink", async () => {
@@ -88,6 +99,11 @@ describe("adaptive signature favicon", () => {
       expect(light.transparentRatio).toBeGreaterThan(0.7);
       expect(dark.mean.r).toBeGreaterThan(240);
       expect(light.mean.r).toBeLessThan(20);
+
+      const darkSvg = await readFile(path.join(tmp, "favicon-dark.svg"), "utf8");
+      expect(darkSvg).toContain(`stroke="${DARK_STROKE}"`);
+      expect(darkSvg).not.toContain(LIGHT_STROKE);
+      expect(darkSvg).not.toContain("prefers-color-scheme");
     } finally {
       await rm(tmp, { recursive: true, force: true });
     }
