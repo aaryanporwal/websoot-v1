@@ -19,7 +19,11 @@
   Cache-Control: public, max-age=604800
 /favicon.png
   Cache-Control: public, max-age=604800
+/favicon-light.png
+  Cache-Control: public, max-age=604800
 /favicon.svg
+  Cache-Control: public, max-age=604800
+/favicon-light.svg
   Cache-Control: public, max-age=604800
 /og-image.jpg
   Cache-Control: public, max-age=604800
