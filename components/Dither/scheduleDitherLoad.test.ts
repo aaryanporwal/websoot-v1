@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import {
-  DITHER_LOAD_BUDGET_MS,
+  DITHER_IDLE_TIMEOUT_MS,
+  DITHER_MIN_DELAY_MS,
   scheduleDitherLoad,
   type DitherLoadScheduler,
 } from "./scheduleDitherLoad";
@@ -35,21 +36,25 @@ function createTimerScheduler() {
 }
 
 describe("scheduleDitherLoad", () => {
-  test("starts the coarse/no-requestIdleCallback path within the 1.5s budget", () => {
+  test("waits out the hero reveal before the idle/fallback path", () => {
     const timer = createTimerScheduler();
     let imports = 0;
 
     scheduleDitherLoad(() => imports++, timer.scheduler);
 
-    const [task] = timer.tasks.values();
-    expect(task).toBeDefined();
-    expect(task!.delay).toBeLessThanOrEqual(DITHER_LOAD_BUDGET_MS);
+    const [delay] = timer.tasks.values();
+    expect(delay).toBeDefined();
+    expect(delay!.delay).toBe(DITHER_MIN_DELAY_MS);
+    expect(imports).toBe(0);
+
+    timer.flush();
+    expect(imports).toBe(0);
 
     timer.flush();
     expect(imports).toBe(1);
   });
 
-  test("cancels a pending fallback and allows reactivation to schedule again", () => {
+  test("cancels a pending delay and allows reactivation to schedule again", () => {
     const timer = createTimerScheduler();
     let imports = 0;
 
@@ -61,16 +66,21 @@ describe("scheduleDitherLoad", () => {
 
     scheduleDitherLoad(() => imports++, timer.scheduler);
     timer.flush();
+    timer.flush();
     expect(imports).toBe(1);
   });
 
-  test("retains and cancels the requestIdleCallback handle", () => {
+  test("idles after the min delay and can cancel that idle handle", () => {
     const cancelled: number[] = [];
     let requestedTimeout: number | undefined;
     let imports = 0;
+    let delayCallback: (() => void) | undefined;
 
     const scheduler: DitherLoadScheduler = {
-      setTimeout: () => 1,
+      setTimeout(callback) {
+        delayCallback = callback;
+        return 7;
+      },
       clearTimeout: () => {},
       requestIdleCallback(_callback, options) {
         requestedTimeout = options.timeout;
@@ -82,9 +92,12 @@ describe("scheduleDitherLoad", () => {
     };
 
     const deactivate = scheduleDitherLoad(() => imports++, scheduler);
-    deactivate();
+    expect(requestedTimeout).toBeUndefined();
 
-    expect(requestedTimeout).toBe(DITHER_LOAD_BUDGET_MS);
+    delayCallback?.();
+    expect(requestedTimeout).toBe(DITHER_IDLE_TIMEOUT_MS);
+
+    deactivate();
     expect(cancelled).toEqual([42]);
     expect(imports).toBe(0);
   });

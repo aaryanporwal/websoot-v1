@@ -1,4 +1,5 @@
 import { getImage, type ImageMetadata } from "astro:assets";
+import { pickFallbackImage } from "./pickFallbackImage";
 
 export type ResolvedPicture = {
   sources: Array<{ type: string; srcSet: string }>;
@@ -27,7 +28,9 @@ export async function resolvePicture({
     formats.map((format) => getImage({ ...transform, format })),
   );
 
-  const fallback = await getImage({ ...transform, format: "png" });
+  const fallback =
+    pickFallbackImage(formats, optimized) ??
+    (await getImage({ ...transform, format: "webp" }));
 
   return {
     sources: optimized.map((image, index) => ({

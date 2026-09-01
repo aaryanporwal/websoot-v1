@@ -1,4 +1,7 @@
-export const DITHER_LOAD_BUDGET_MS = 1_500;
+/** Wait out the hero SplitText + chrome reveal before fetching Three.js. */
+export const DITHER_MIN_DELAY_MS = 2_800;
+/** Idle fallback after the min delay, so a busy main thread cannot stall forever. */
+export const DITHER_IDLE_TIMEOUT_MS = 4_000;
 
 export type DitherLoadScheduler = {
   setTimeout: (callback: () => void, delay: number) => number;
@@ -33,18 +36,26 @@ export function scheduleDitherLoad(
     load();
   };
 
-  if (scheduler.requestIdleCallback && scheduler.cancelIdleCallback) {
-    idleId = scheduler.requestIdleCallback(run, {
-      timeout: DITHER_LOAD_BUDGET_MS,
-    });
-  } else {
+  const startIdle = () => {
+    if (!pending) return;
+
+    if (scheduler.requestIdleCallback && scheduler.cancelIdleCallback) {
+      idleId = scheduler.requestIdleCallback(run, {
+        timeout: DITHER_IDLE_TIMEOUT_MS,
+      });
+      return;
+    }
+
     timeoutId = scheduler.setTimeout(run, 0);
-  }
+  };
+
+  const delayId = scheduler.setTimeout(startIdle, DITHER_MIN_DELAY_MS);
 
   return () => {
     if (!pending) return;
     pending = false;
 
+    scheduler.clearTimeout(delayId);
     if (idleId !== undefined) scheduler.cancelIdleCallback?.(idleId);
     if (timeoutId !== undefined) scheduler.clearTimeout(timeoutId);
   };

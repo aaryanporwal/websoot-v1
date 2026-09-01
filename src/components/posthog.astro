@@ -11,9 +11,16 @@
       defaults: '2026-05-30'
     });
   }
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(initPostHog, { timeout: 3000 });
+  function schedulePostHog() {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(initPostHog);
+    } else {
+      initPostHog();
+    }
+  }
+  if (document.readyState === 'complete') {
+    schedulePostHog();
   } else {
-    window.addEventListener('load', initPostHog, { once: true });
+    window.addEventListener('load', schedulePostHog, { once: true });
   }
 </script>

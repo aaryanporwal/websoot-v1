@@ -16,7 +16,7 @@ resource: public/_headers
 |------|---------------|-------|
 | `/_astro/*` | 1y + `immutable` | Fingerprinted; new content → new URL |
 | `/fonts/*`, `/sounds/*`, `/works/*`, `/anya/*` | 1y + `immutable` | **Stable URLs** — see pitfall |
-| favicons, `og-image.jpg`, `cat-treat.out.png` | 7d | Same URL can change |
+| favicons, `og-image.jpg` | 7d | Same URL can change |
 | `/rss.xml` | 1h | Feed may lag; HTML does not |
 
 # Pitfalls

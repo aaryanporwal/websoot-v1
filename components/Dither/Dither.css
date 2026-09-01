@@ -3,3 +3,9 @@
   height: 100%;
   position: relative;
 }
+
+.dither-container canvas {
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
