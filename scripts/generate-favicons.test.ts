@@ -76,15 +76,13 @@ describe("adaptive signature favicon", () => {
       "utf8",
     );
 
-    expect(layout).toContain('media="(prefers-color-scheme: dark)"');
-    expect(layout).toContain('media="(prefers-color-scheme: light)"');
-    expect(layout).toContain('href="/favicon-dark.svg?v=2"');
-    expect(layout).toContain('href="/favicon-light.svg?v=2"');
-    expect(layout).toContain('href="/favicon-dark.png?v=2"');
-    expect(layout).toContain('href="/favicon-light.png?v=2"');
+    expect(layout).toContain('href="/favicon-dark.svg?v=3"');
+    expect(layout).toContain("/favicon-light.svg?v=3");
+    expect(layout).toContain("prefers-color-scheme: light");
     expect(layout).not.toContain('href="/favicon.png"');
     expect(layout).not.toContain('href="/favicon.svg"');
-    expect(layout).not.toContain('favicon.ico');
+    expect(layout).not.toContain("favicon.ico");
+    expect(layout).toContain('id="favicon"');
   });
 
   test("raster icons keep a transparent field and readable ink", async () => {

@@ -109,7 +109,7 @@ export async function generateFavicons(outDir = PUBLIC_DIR) {
     await Promise.all(
       [16, 32, 48].map(async (size) => ({
         size,
-        png: await pngFromStroke(LIGHT_STROKE, size),
+        png: await pngFromStroke(DARK_STROKE, size),
       })),
     ),
   );
