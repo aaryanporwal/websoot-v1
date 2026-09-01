@@ -3,6 +3,7 @@ import { useRef, useEffect } from "react";
 import { Canvas, useFrame, useThree, invalidate } from "@react-three/fiber";
 import * as THREE from "three";
 import { createDijkstraField } from "./dijkstraField";
+import { ditherRenderDpr } from "./ditherRender";
 
 import "./Dither.css";
 
@@ -413,7 +414,29 @@ export type DitherProps = {
   pathEnd?: [number, number] | null;
   active?: boolean;
   maxFps?: number;
+  pixelSize?: number;
+  onReady?: () => void;
 };
+
+function DitherReadySignal({ onReady }: { onReady?: () => void }) {
+  useEffect(() => {
+    if (!onReady) return;
+
+    let cancelled = false;
+    const id = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (!cancelled) onReady();
+      });
+    });
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(id);
+    };
+  }, [onReady]);
+
+  return null;
+}
 
 export default function Dither({
   waveSpeed = 0.05,
@@ -429,15 +452,18 @@ export default function Dither({
   pathEnd = null,
   active = true,
   maxFps = 30,
+  pixelSize = 1,
+  onReady,
 }: DitherProps) {
   return (
     <Canvas
       className="dither-container"
       camera={{ position: [0, 0, 6] }}
-      dpr={1}
+      dpr={ditherRenderDpr(pixelSize)}
       frameloop="demand"
       gl={{ antialias: false, powerPreference: "high-performance" }}
     >
+      <DitherReadySignal onReady={onReady} />
       <DitheredWaves
         waveSpeed={waveSpeed}
         waveFrequency={waveFrequency}

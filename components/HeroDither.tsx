@@ -1,5 +1,6 @@
-import { useEffect, useState, type ComponentType } from "react";
+import { useCallback, useEffect, useState, type ComponentType } from "react";
 import type { DitherProps } from "./Dither/Dither";
+import { HERO_DITHER_PIXEL_SIZE } from "./Dither/ditherRender";
 import { scheduleDitherLoad } from "./Dither/scheduleDitherLoad";
 import { useTheme } from "./theme/useTheme";
 
@@ -32,10 +33,12 @@ function prefersCoarsePointer() {
 export default function HeroDither({ active, pair }: HeroDitherProps) {
   const { theme } = useTheme();
   const [Dither, setDither] = useState<ComponentType<DitherProps> | null>(null);
+  const [canvasReady, setCanvasReady] = useState(false);
   const [waveColor, setWaveColor] = useState<[number, number, number]>([
     0.35, 0.45, 0.12,
   ]);
   const [maxFps, setMaxFps] = useState(30);
+  const handleReady = useCallback(() => setCanvasReady(true), []);
 
   useEffect(() => {
     if (!active || Dither) return;
@@ -58,6 +61,10 @@ export default function HeroDither({ active, pair }: HeroDitherProps) {
   }, [active, Dither]);
 
   useEffect(() => {
+    if (!active) setCanvasReady(false);
+  }, [active]);
+
+  useEffect(() => {
     setWaveColor(accentWaveColor());
   }, [theme]);
 
@@ -65,12 +72,16 @@ export default function HeroDither({ active, pair }: HeroDitherProps) {
     <>
       <div
         aria-hidden
-        className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_30%_40%,rgb(var(--color-accent)/0.18),transparent_65%)]"
+        className={`absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_30%_40%,rgb(var(--color-accent)/0.18),transparent_65%)] transition-opacity duration-700 ease-out motion-reduce:transition-none ${
+          canvasReady ? "opacity-50" : "opacity-100"
+        }`}
       />
       {active && Dither ? (
         <div
           aria-hidden
-          className="absolute inset-0 z-0 h-full w-full opacity-[0.85]"
+          className={`absolute inset-0 z-0 h-full w-full transition-opacity duration-700 ease-out motion-reduce:transition-none ${
+            canvasReady ? "opacity-[0.88]" : "opacity-0"
+          }`}
         >
           <Dither
             active={active}
@@ -86,6 +97,8 @@ export default function HeroDither({ active, pair }: HeroDitherProps) {
             waveFrequency={3}
             waveSpeed={0.05}
             maxFps={maxFps}
+            pixelSize={HERO_DITHER_PIXEL_SIZE}
+            onReady={handleReady}
           />
         </div>
       ) : null}
