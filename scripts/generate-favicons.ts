@@ -112,8 +112,10 @@ export async function generateFavicons(outDir = PUBLIC_DIR) {
 
   await Promise.all([
     writeFile(path.join(outDir, "favicon.svg"), darkSvg),
+    writeFile(path.join(outDir, "favicon-dark.svg"), darkSvg),
     writeFile(path.join(outDir, "favicon-light.svg"), lightSvg),
     writeFile(path.join(outDir, "favicon.png"), darkPng),
+    writeFile(path.join(outDir, "favicon-dark.png"), darkPng),
     writeFile(path.join(outDir, "favicon-light.png"), lightPng),
     writeFile(path.join(outDir, "favicon.ico"), ico),
   ]);
@@ -121,5 +123,7 @@ export async function generateFavicons(outDir = PUBLIC_DIR) {
 
 if (import.meta.main) {
   await generateFavicons();
-  console.log("Wrote favicon.svg, favicon-light.svg, favicon.png, favicon-light.png, favicon.ico");
+  console.log(
+    "Wrote favicon.svg, favicon-dark.svg, favicon-light.svg, favicon.png, favicon-dark.png, favicon-light.png, favicon.ico",
+  );
 }

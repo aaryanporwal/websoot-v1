@@ -68,13 +68,12 @@ describe("adaptive signature favicon", () => {
 
     expect(layout).toContain('media="(prefers-color-scheme: dark)"');
     expect(layout).toContain('media="(prefers-color-scheme: light)"');
-    expect(layout).toContain('href="/favicon.svg"');
+    expect(layout).toContain('href="/favicon-dark.svg"');
     expect(layout).toContain('href="/favicon-light.svg"');
-    expect(layout).toContain('href="/favicon.png"');
+    expect(layout).toContain('href="/favicon-dark.png"');
     expect(layout).toContain('href="/favicon-light.png"');
-    expect(layout).not.toMatch(
-      /<link rel="icon" href="\/favicon\.png" type="image\/png" \/>/,
-    );
+    expect(layout).not.toContain('href="/favicon.png"');
+    expect(layout).not.toContain('href="/favicon.svg"');
   });
 
   test("raster icons keep a transparent field and readable ink", async () => {
@@ -82,7 +81,7 @@ describe("adaptive signature favicon", () => {
     try {
       await generateFavicons(tmp);
 
-      const dark = await meanOpaquePixel(path.join(tmp, "favicon.png"));
+      const dark = await meanOpaquePixel(path.join(tmp, "favicon-dark.png"));
       const light = await meanOpaquePixel(path.join(tmp, "favicon-light.png"));
 
       expect(dark.transparentRatio).toBeGreaterThan(0.7);
