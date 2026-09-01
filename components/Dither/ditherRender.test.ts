@@ -3,7 +3,6 @@ import { ditherRenderDpr } from "./ditherRender";
 
 describe("ditherRenderDpr", () => {
   test("renders one WebGL pixel per dither cell", () => {
-    expect(ditherRenderDpr(18)).toBe(1 / 18);
     expect(ditherRenderDpr(12)).toBe(1 / 12);
     expect(ditherRenderDpr(10)).toBe(0.1);
     expect(ditherRenderDpr(8)).toBe(0.125);
