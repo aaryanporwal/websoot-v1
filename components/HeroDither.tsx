@@ -80,7 +80,7 @@ export default function HeroDither({ active, pair }: HeroDitherProps) {
         <div
           aria-hidden
           className={`absolute inset-0 z-0 h-full w-full transition-opacity duration-700 ease-out motion-reduce:transition-none ${
-            canvasReady ? "opacity-[0.88]" : "opacity-0"
+            canvasReady ? "opacity-95" : "opacity-0"
           }`}
         >
           <Dither
@@ -92,8 +92,8 @@ export default function HeroDither({ active, pair }: HeroDitherProps) {
             pathStart={pair.start ? [pair.start.x, pair.start.y] : null}
             pathEnd={pair.end ? [pair.end.x, pair.end.y] : null}
             mouseRadius={0.18}
-            colorNum={4}
-            waveAmplitude={0.22}
+            colorNum={3}
+            waveAmplitude={0.28}
             waveFrequency={3}
             waveSpeed={0.05}
             maxFps={maxFps}

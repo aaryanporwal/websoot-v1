@@ -138,7 +138,7 @@ export default function Hero() {
       <HeroDither active={ditherActive} pair={ditherPair} />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_28%_42%,rgb(var(--color-body)/0.78),rgb(var(--color-body)/0.35)_55%,transparent_78%)]"
+        className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_28%_42%,rgb(var(--color-body)/0.62),rgb(var(--color-body)/0.22)_55%,transparent_78%)]"
       />
       <div
         ref={contentRef}
