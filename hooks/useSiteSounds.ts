@@ -1,46 +1,72 @@
-import { useCallback, useRef } from "react";
-import useSound from "use-sound";
+import { useMemo } from "react";
+import { Howl } from "howler";
 
-const SOUND_OPTIONS = {
-  interrupt: true,
-  preload: true,
+export type SiteSoundName = "tick" | "tap" | "off" | "shake" | "chime";
+
+export const SITE_SOUNDS: Record<
+  SiteSoundName,
+  { src: string; volume: number; cooldown: number }
+> = {
+  tick: { src: "/sounds/pop-down.mp3", volume: 0.12, cooldown: 80 },
+  tap: { src: "/sounds/pop-up-on.mp3", volume: 0.16, cooldown: 90 },
+  off: { src: "/sounds/pop-up-off.mp3", volume: 0.16, cooldown: 120 },
+  shake: { src: "/sounds/rising-pops.mp3", volume: 0.22, cooldown: 180 },
+  chime: { src: "/sounds/glug-a.mp3", volume: 0.24, cooldown: 300 },
 };
 
+export type SoundPlayer = { play: () => unknown };
+export type SoundPlayerFactory = (src: string, volume: number) => SoundPlayer;
+
+const defaultPlayerFactory: SoundPlayerFactory = (src, volume) =>
+  new Howl({ src: [src], volume, preload: true });
+
+let playerFactory: SoundPlayerFactory = defaultPlayerFactory;
+let players: Record<SiteSoundName, SoundPlayer> | null = null;
+const lastPlayed: Record<string, number> = {};
+
+function getPlayers() {
+  if (!players) {
+    if (typeof window === "undefined" && playerFactory === defaultPlayerFactory) {
+      return null;
+    }
+    players = {
+      tick: playerFactory(SITE_SOUNDS.tick.src, SITE_SOUNDS.tick.volume),
+      tap: playerFactory(SITE_SOUNDS.tap.src, SITE_SOUNDS.tap.volume),
+      off: playerFactory(SITE_SOUNDS.off.src, SITE_SOUNDS.off.volume),
+      shake: playerFactory(SITE_SOUNDS.shake.src, SITE_SOUNDS.shake.volume),
+      chime: playerFactory(SITE_SOUNDS.chime.src, SITE_SOUNDS.chime.volume),
+    };
+  }
+  return players;
+}
+
+export function playSiteSound(name: SiteSoundName, now = Date.now()) {
+  const spec = SITE_SOUNDS[name];
+  if (now - (lastPlayed[name] || 0) < spec.cooldown) return false;
+  lastPlayed[name] = now;
+  getPlayers()?.[name].play();
+  return true;
+}
+
 export function useSiteSounds() {
-  const lastPlayed = useRef<Record<string, number>>({});
-  const [playTick] = useSound("/sounds/pop-down.mp3", {
-    ...SOUND_OPTIONS,
-    volume: 0.12,
-  });
-  const [playTap] = useSound("/sounds/pop-up-on.mp3", {
-    ...SOUND_OPTIONS,
-    volume: 0.16,
-  });
-  const [playOff] = useSound("/sounds/pop-up-off.mp3", {
-    ...SOUND_OPTIONS,
-    volume: 0.16,
-  });
-  const [playShake] = useSound("/sounds/rising-pops.mp3", {
-    ...SOUND_OPTIONS,
-    volume: 0.22,
-  });
-  const [playChime] = useSound("/sounds/glug-a.mp3", {
-    ...SOUND_OPTIONS,
-    volume: 0.24,
-  });
+  return useMemo(
+    () => ({
+      tick: () => playSiteSound("tick"),
+      tap: () => playSiteSound("tap"),
+      off: () => playSiteSound("off"),
+      shake: () => playSiteSound("shake"),
+      chime: () => playSiteSound("chime"),
+    }),
+    [],
+  );
+}
 
-  const play = useCallback((name: string, player: () => void, cooldown = 90) => {
-    const now = Date.now();
-    if (now - (lastPlayed.current[name] || 0) < cooldown) return;
-    lastPlayed.current[name] = now;
-    player();
-  }, []);
+export function resetSiteSoundsForTests(factory?: SoundPlayerFactory) {
+  players = null;
+  for (const key of Object.keys(lastPlayed)) delete lastPlayed[key];
+  playerFactory = factory ?? defaultPlayerFactory;
+}
 
-  return {
-    tick: useCallback(() => play("tick", playTick, 80), [play, playTick]),
-    tap: useCallback(() => play("tap", playTap, 90), [play, playTap]),
-    off: useCallback(() => play("off", playOff, 120), [play, playOff]),
-    shake: useCallback(() => play("shake", playShake, 180), [play, playShake]),
-    chime: useCallback(() => play("chime", playChime, 300), [play, playChime]),
-  };
+export function getSiteSoundPlayersForTests() {
+  return players;
 }
