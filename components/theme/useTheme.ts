@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   applyTheme,
   DEFAULT_THEME,
@@ -6,6 +6,7 @@ import {
   THEME_STORAGE_KEY,
   type ThemeId,
 } from "./theme";
+import { THEME_CHANGE_EVENT } from "../../src/lib/siteEvents";
 
 export function useTheme(storageKey = THEME_STORAGE_KEY) {
   const [theme, setThemeState] = useState<ThemeId>(() => {
@@ -30,6 +31,18 @@ export function useTheme(storageKey = THEME_STORAGE_KEY) {
     },
     [storageKey],
   );
+
+  useEffect(() => {
+    const onThemeChange = (event: Event) => {
+      const themeId = normalizeTheme(
+        event instanceof CustomEvent ? event.detail?.theme : null,
+      );
+      setThemeState(themeId);
+    };
+
+    window.addEventListener(THEME_CHANGE_EVENT, onThemeChange);
+    return () => window.removeEventListener(THEME_CHANGE_EVENT, onThemeChange);
+  }, []);
 
   return { theme, setTheme };
 }

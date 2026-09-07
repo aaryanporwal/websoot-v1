@@ -1,12 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  filterCommands,
+  type CommandItem,
+} from "../src/lib/commands";
 
-export type CommandItem = {
-  title: string;
-  href: string;
-  section: "Navigation" | "Writing" | "Social";
-  description?: string;
-  external?: boolean;
-};
+export type { CommandItem };
 
 type Props = {
   commands: CommandItem[];
@@ -23,18 +21,6 @@ function isTypingTarget(target: EventTarget | null) {
   );
 }
 
-function normalize(value: string) {
-  return value.trim().toLowerCase();
-}
-
-function commandText(command: CommandItem) {
-  return normalize(
-    [command.title, command.section, command.description, command.href]
-      .filter(Boolean)
-      .join(" "),
-  );
-}
-
 export default function CommandSwitcher({ commands }: Props) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -42,12 +28,10 @@ export default function CommandSwitcher({ commands }: Props) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
 
-  const filteredCommands = useMemo(() => {
-    const needle = normalize(query);
-    if (!needle) return commands;
-
-    return commands.filter((command) => commandText(command).includes(needle));
-  }, [commands, query]);
+  const filteredCommands = useMemo(
+    () => filterCommands(commands, query),
+    [commands, query],
+  );
   const selectedIndex =
     filteredCommands.length === 0
       ? 0
