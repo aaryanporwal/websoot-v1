@@ -8,18 +8,17 @@ import HeroDither from "./HeroDither";
 import { useSiteSounds } from "../hooks/useSiteSounds";
 import { useDitherActive } from "../hooks/useDitherActive";
 import { HERO_CHROME_REVEAL_DELAY } from "./animationTimings";
+import {
+  clickDitherPair,
+  EMPTY_DITHER_PAIR,
+  forgetFinishedDitherPair,
+} from "./Dither/ditherPair";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP, SplitText);
 }
 
 const ROTATING = ["Python", "LLMs", "React", "Agents", "RAG"];
-type DitherPoint = { x: number; y: number };
-type DitherPair = {
-  start: DitherPoint | null;
-  end: DitherPoint | null;
-  token: number;
-};
 
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -29,11 +28,7 @@ export default function Hero() {
   const sounds = useSiteSounds();
   const prefersReducedMotion = useReducedMotion();
   const { shouldRun: ditherActive } = useDitherActive(root);
-  const [ditherPair, setDitherPair] = useState<DitherPair>({
-    start: null,
-    end: null,
-    token: 0,
-  });
+  const [ditherPair, setDitherPair] = useState(EMPTY_DITHER_PAIR);
 
   const handleDitherPointerDown = useCallback(
     (event: React.PointerEvent<HTMLElement>) => {
@@ -53,14 +48,14 @@ export default function Hero() {
         x: (event.clientX - bounds.left) / bounds.width,
         y: (event.clientY - bounds.top) / bounds.height,
       };
-      setDitherPair((pair) =>
-        pair.start && !pair.end
-          ? { ...pair, end: point, token: pair.token + 1 }
-          : { start: point, end: null, token: pair.token + 1 },
-      );
+      setDitherPair((pair) => clickDitherPair(pair, point));
     },
     [ditherActive],
   );
+
+  const handleDitherPairFinished = useCallback(() => {
+    setDitherPair(forgetFinishedDitherPair);
+  }, []);
 
   useGSAP(
     () => {
@@ -135,7 +130,11 @@ export default function Hero() {
       className="relative min-h-screen w-full overflow-hidden px-6 pt-32 sm:px-10 lg:px-16"
       onPointerDown={handleDitherPointerDown}
     >
-      <HeroDither active={ditherActive} pair={ditherPair} />
+      <HeroDither
+        active={ditherActive}
+        pair={ditherPair}
+        onPairFinished={handleDitherPairFinished}
+      />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_28%_42%,rgb(var(--color-body)/0.92),rgb(var(--color-body)/0.55)_55%,transparent_78%)]"

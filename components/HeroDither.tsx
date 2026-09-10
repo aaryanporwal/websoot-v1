@@ -10,6 +10,7 @@ type HeroDitherProps = {
     end: { x: number; y: number } | null;
     token: number;
   };
+  onPairFinished?: () => void;
 };
 
 function readCssRgbTriplet(variable: string): [number, number, number] {
@@ -29,7 +30,11 @@ function prefersCoarsePointer() {
   return window.matchMedia("(hover: none) and (pointer: coarse)").matches;
 }
 
-export default function HeroDither({ active, pair }: HeroDitherProps) {
+export default function HeroDither({
+  active,
+  pair,
+  onPairFinished,
+}: HeroDitherProps) {
   const { theme } = useTheme();
   const [Dither, setDither] = useState<ComponentType<DitherProps> | null>(null);
   const [waveColor, setWaveColor] = useState<[number, number, number]>([
@@ -80,6 +85,7 @@ export default function HeroDither({ active, pair }: HeroDitherProps) {
             interactionToken={pair.token}
             pathStart={pair.start ? [pair.start.x, pair.start.y] : null}
             pathEnd={pair.end ? [pair.end.x, pair.end.y] : null}
+            onPairFinished={onPairFinished}
             mouseRadius={0.18}
             colorNum={4}
             waveAmplitude={0.22}

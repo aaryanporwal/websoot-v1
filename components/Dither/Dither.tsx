@@ -3,6 +3,7 @@ import { useRef, useEffect } from "react";
 import { Canvas, useFrame, useThree, invalidate } from "@react-three/fiber";
 import * as THREE from "three";
 import { createDijkstraField } from "./dijkstraField";
+import { shouldStartDitherInteraction } from "./ditherPair";
 
 import "./Dither.css";
 
@@ -34,6 +35,7 @@ uniform vec2 blastOriginB;
 uniform float blastAgeA;
 uniform float blastAgeB;
 uniform sampler2D algorithmField;
+uniform vec2 algorithmResolution;
 uniform float algorithmAge;
 uniform int algorithmActive;
 uniform float colorNum;
@@ -128,6 +130,37 @@ float pixelBlast(vec2 uv, vec2 origin, float age) {
   return (ring * breakup * 0.56 + core * 0.88) * decay;
 }
 
+// Interpolate visibility, not packed ranks: interpolating ranks would create
+// false path cells between unvisited terrain and the actual shortest route.
+vec4 algorithmVisibility(vec2 fieldUv) {
+  vec4 field = texture2D(algorithmField, fieldUv);
+  float rankedFromStart = step(0.001, field.r);
+  float rankedFromEnd = step(0.001, field.b);
+  float pathCell = step(0.001, field.g);
+  float frontierProgress = clamp(algorithmAge / 0.9, 0.0, 1.0);
+  float settledFromStart = rankedFromStart * (1.0 - smoothstep(frontierProgress, frontierProgress + 0.018, field.r));
+  float settledFromEnd = rankedFromEnd * (1.0 - smoothstep(frontierProgress, frontierProgress + 0.018, field.b));
+  float frontierFromStart = rankedFromStart * (1.0 - smoothstep(0.018, 0.065, abs(field.r - frontierProgress)));
+  float frontierFromEnd = rankedFromEnd * (1.0 - smoothstep(0.018, 0.065, abs(field.b - frontierProgress)));
+  float settled = max(settledFromStart, settledFromEnd);
+  float frontier = max(frontierFromStart, frontierFromEnd);
+  float routeProgress = clamp((algorithmAge - 0.9) / 0.25, 0.0, 1.0);
+  float route = pathCell * (1.0 - smoothstep(routeProgress, routeProgress + 0.025, field.g));
+  return vec4(settled, frontier, route, mix(0.62, 1.0, field.a));
+}
+
+vec4 smoothAlgorithmVisibility(vec2 fieldUv) {
+  vec2 cell = fieldUv * algorithmResolution - 0.5;
+  vec2 corner = (floor(cell) + 0.5) / algorithmResolution;
+  vec2 texel = 1.0 / algorithmResolution;
+  vec2 blend = smoothstep(0.0, 1.0, fract(cell));
+  return mix(
+    mix(algorithmVisibility(corner), algorithmVisibility(corner + vec2(texel.x, 0.0)), blend.x),
+    mix(algorithmVisibility(corner + vec2(0.0, texel.y)), algorithmVisibility(corner + texel), blend.x),
+    blend.y
+  );
+}
+
 void main() {
   vec2 screenUv = gl_FragCoord.xy / resolution.xy;
   vec2 uv = screenUv;
@@ -136,31 +169,26 @@ void main() {
   float f = pattern(uv);
 
   if (algorithmActive == 1) {
-    vec4 field = texture2D(algorithmField, vec2(screenUv.x, 1.0 - screenUv.y));
-    float rankedFromStart = step(0.001, field.r);
-    float rankedFromEnd = step(0.001, field.b);
-    float pathCell = step(0.001, field.g);
-    float frontierProgress = clamp(algorithmAge / 0.9, 0.0, 1.0);
-    float settledFromStart = rankedFromStart * (1.0 - smoothstep(frontierProgress, frontierProgress + 0.018, field.r));
-    float settledFromEnd = rankedFromEnd * (1.0 - smoothstep(frontierProgress, frontierProgress + 0.018, field.b));
-    float frontierFromStart = rankedFromStart * (1.0 - smoothstep(0.018, 0.065, abs(field.r - frontierProgress)));
-    float frontierFromEnd = rankedFromEnd * (1.0 - smoothstep(0.018, 0.065, abs(field.b - frontierProgress)));
-    float settled = max(settledFromStart, settledFromEnd);
-    float frontier = max(frontierFromStart, frontierFromEnd);
-    float routeProgress = clamp((algorithmAge - 0.9) / 0.25, 0.0, 1.0);
-    float route = pathCell * (1.0 - smoothstep(routeProgress, routeProgress + 0.025, field.g));
+    vec4 visibility = smoothAlgorithmVisibility(vec2(screenUv.x, 1.0 - screenUv.y));
+    float settled = visibility.r;
+    float frontier = visibility.g;
+    float route = visibility.b;
     float trailOpacity = 1.0 - smoothstep(0.9, 1.15, algorithmAge);
     float dissolve = 1.0 - smoothstep(2.05, 2.5, algorithmAge);
-    float terrainTexture = mix(0.62, 1.0, field.a);
+    float terrainTexture = visibility.a;
 
-    f = mix(f, f * 0.72, settled * trailOpacity * dissolve * 0.42);
-    f += settled * trailOpacity * terrainTexture * dissolve * 0.18;
-    f += frontier * terrainTexture * dissolve * 0.82;
-    f = max(f, route * (1.12 + 0.08 * sin(time * 5.0)) * dissolve);
+    // Reveal the search and route by changing the existing wave's density.
+    // A brightness floor would fill its dark gaps and read as a separate line.
+    float density = 1.0 - settled * trailOpacity * dissolve * 0.12;
+    density += frontier * terrainTexture * dissolve * 0.82;
+    density += route * (1.12 + 0.08 * sin(time * 5.0)) * dissolve;
+    f *= density;
   }
 
-  f += pixelBlast(uv, blastOriginA, blastAgeA);
-  f += pixelBlast(uv, blastOriginB, blastAgeB);
+  float blast = pixelBlast(uv, blastOriginA, blastAgeA)
+              + pixelBlast(uv, blastOriginB, blastAgeB);
+  // Keep the single-click blast; paired circles share the wave's light/dark texture.
+  f = algorithmActive == 1 ? f * (1.0 + blast) : f + blast;
 
   if (enableMouseInteraction == 1) {
     vec2 mouseNDC = (mousePos / resolution - 0.5) * vec2(1.0, -1.0);
@@ -189,6 +217,7 @@ type DitheredWavesProps = {
   pathEnd: [number, number] | null;
   active: boolean;
   maxFps: number;
+  onPairFinished?: () => void;
 };
 
 function DitheredWaves({
@@ -205,9 +234,12 @@ function DitheredWaves({
   pathEnd,
   active,
   maxFps,
+  onPairFinished,
 }: DitheredWavesProps) {
   const mesh = useRef<THREE.Mesh>(null);
   const previousInteractionToken = useRef(-1);
+  const onPairFinishedRef = useRef(onPairFinished);
+  onPairFinishedRef.current = onPairFinished;
   const { viewport, size, gl } = useThree();
 
   const waveUniformsRef = useRef({
@@ -226,6 +258,7 @@ function DitheredWaves({
     blastAgeA: new THREE.Uniform(2),
     blastAgeB: new THREE.Uniform(2),
     algorithmField: new THREE.Uniform(null),
+    algorithmResolution: new THREE.Uniform(new THREE.Vector2(1, 1)),
     algorithmAge: new THREE.Uniform(3),
     algorithmActive: new THREE.Uniform(0),
     colorNum: new THREE.Uniform(colorNum),
@@ -257,22 +290,22 @@ function DitheredWaves({
 
   useEffect(() => {
     if (
-      interactionToken <= 0 ||
       !pathStart ||
-      size.width <= 0 ||
-      size.height <= 0
+      !shouldStartDitherInteraction(
+        interactionToken,
+        previousInteractionToken.current,
+        true,
+        size.width,
+        size.height,
+      )
     ) {
       return;
     }
 
+    previousInteractionToken.current = interactionToken;
     const uniforms = waveUniformsRef.current;
-    const interactionChanged =
-      interactionToken !== previousInteractionToken.current;
-    if (interactionChanged) {
-      previousInteractionToken.current = interactionToken;
-      uniforms.blastOriginA.value.set(...pathStart);
-      uniforms.blastAgeA.value = 0;
-    }
+    uniforms.blastOriginA.value.set(...pathStart);
+    uniforms.blastAgeA.value = 0;
 
     if (!pathEnd) {
       uniforms.blastAgeB.value = 2;
@@ -281,12 +314,8 @@ function DitheredWaves({
       return;
     }
 
-    if (interactionChanged) {
-      uniforms.blastOriginA.value.set(...pathStart);
-      uniforms.blastOriginB.value.set(...pathEnd);
-      uniforms.blastAgeA.value = 0;
-      uniforms.blastAgeB.value = 0;
-    }
+    uniforms.blastOriginB.value.set(...pathEnd);
+    uniforms.blastAgeB.value = 0;
 
     const landscape = size.width >= size.height;
     const width = landscape ? 140 : 90;
@@ -312,6 +341,7 @@ function DitheredWaves({
     algorithmTextureRef.current?.dispose();
     algorithmTextureRef.current = texture;
     uniforms.algorithmField.value = texture;
+    uniforms.algorithmResolution.value.set(field.width, field.height);
     uniforms.algorithmAge.value = 0;
     uniforms.algorithmActive.value = 1;
     invalidate();
@@ -370,7 +400,10 @@ function DitheredWaves({
 
     if (u.algorithmActive.value === 1) {
       u.algorithmAge.value = Math.min(2.5, u.algorithmAge.value + delta);
-      if (u.algorithmAge.value >= 2.5) u.algorithmActive.value = 0;
+      if (u.algorithmAge.value >= 2.5) {
+        u.algorithmActive.value = 0;
+        onPairFinishedRef.current?.();
+      }
     }
 
     if (u.interactionStrength.value > 0) {
@@ -413,6 +446,7 @@ export type DitherProps = {
   pathEnd?: [number, number] | null;
   active?: boolean;
   maxFps?: number;
+  onPairFinished?: () => void;
 };
 
 export default function Dither({
@@ -429,6 +463,7 @@ export default function Dither({
   pathEnd = null,
   active = true,
   maxFps = 30,
+  onPairFinished,
 }: DitherProps) {
   return (
     <Canvas
@@ -452,6 +487,7 @@ export default function Dither({
         pathEnd={pathEnd}
         active={active}
         maxFps={maxFps}
+        onPairFinished={onPairFinished}
       />
     </Canvas>
   );
