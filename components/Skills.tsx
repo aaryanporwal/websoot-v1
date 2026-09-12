@@ -3,20 +3,11 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SKILL_ROW_A, SKILL_ROW_B } from "../src/lib/siteIdentity";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP, ScrollTrigger);
 }
-
-const ROW_A = ["JavaScript", "TypeScript", "React", "Astro", "Node.js", "GSAP"];
-const ROW_B = [
-  "Tailwind CSS",
-  "Docker",
-  "AWS",
-  "CI/CD",
-  "PostgreSQL",
-  "GraphQL",
-];
 
 type RowProps = {
   items: string[];
@@ -108,8 +99,8 @@ export default function Skills() {
       className="relative w-full border-y border-line bg-body py-20"
     >
       <div className="flex flex-col gap-4">
-        <Row items={ROW_A} rowRef={rowA} separator="✺" />
-        <Row items={ROW_B} rowRef={rowB} separator="◆" />
+        <Row items={[...SKILL_ROW_A]} rowRef={rowA} separator="✺" />
+        <Row items={[...SKILL_ROW_B]} rowRef={rowB} separator="◆" />
       </div>
     </section>
   );

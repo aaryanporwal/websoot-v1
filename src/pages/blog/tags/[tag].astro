@@ -35,6 +35,7 @@ const { tag, posts } = Astro.props;
   title={`${tag} - Blog - Aaryan Porwal`}
   description={`Posts tagged ${tag} by Aaryan Porwal.`}
   canonicalPath={`/blog/tags/${tagSlug(tag)}/`}
+  webmcpPage={{ kind: "blog-tag", tag }}
 >
   <BlogScrollAnimations client:load />
   <main class="relative mx-auto max-w-container px-6 py-24 sm:px-10 lg:px-16">
