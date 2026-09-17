@@ -1,5 +1,6 @@
 ---
 import SiteLayout from "./SiteLayout.astro";
+import type { SitePage } from "../lib/webmcp";
 
 type Props = {
   title: string;
@@ -7,6 +8,7 @@ type Props = {
   canonicalPath?: string;
   socialImage?: string;
   socialImageAlt?: string;
+  webmcpPage?: SitePage;
 };
 
 const {
@@ -15,6 +17,7 @@ const {
   canonicalPath,
   socialImage,
   socialImageAlt,
+  webmcpPage,
 } = Astro.props;
 
 const links = [
@@ -35,6 +38,7 @@ const links = [
   socialImageHeight={630}
   socialImageType="image/png"
   socialType="article"
+  webmcpPage={webmcpPage}
 >
   <div class="relative min-h-screen bg-body text-white">
     <header class="sticky top-0 z-50 border-b border-line/80 bg-body/80 backdrop-blur-xl">

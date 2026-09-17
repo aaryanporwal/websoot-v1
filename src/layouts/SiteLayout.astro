@@ -1,10 +1,12 @@
 ---
 import { getCollection } from "astro:content";
-import CommandSwitcher, {
-  type CommandItem,
-} from "../../components/CommandSwitcher";
+import CommandSwitcher from "../../components/CommandSwitcher";
+import WebMcp from "../../components/WebMcp";
 import "../../styles/globals.css";
+import { WORK_ENTRIES } from "../data/work";
+import { buildSiteCommands } from "../lib/commands";
 import { postHref, postSummary, sortPosts } from "../lib/posts";
+import { buildSiteCatalog, pageFromPath, type SitePage } from "../lib/webmcp";
 import PostHog from "../components/posthog.astro";
 
 type Props = {
@@ -18,6 +20,7 @@ type Props = {
   socialImageType?: string;
   socialType?: "website" | "article";
   bodyClass?: string;
+  webmcpPage?: SitePage;
 };
 
 const {
@@ -31,6 +34,7 @@ const {
   socialImageType = "image/jpeg",
   socialType = "website",
   bodyClass = "bg-body font-sans text-white antialiased",
+  webmcpPage,
 } = Astro.props;
 
 const canonical = new URL(canonicalPath, Astro.site ?? "https://aaryanporwal.com");
@@ -40,65 +44,26 @@ const posts = sortPosts(
   await getCollection("blog", ({ data }) => data.draft !== true),
 );
 
-const commands: CommandItem[] = [
-  {
-    title: "Home",
-    href: "/",
-    section: "Navigation",
-    description: "Back to the top",
-  },
-  {
-    title: "Work",
-    href: "/#work",
-    section: "Navigation",
-    description: "Work experience",
-  },
-  {
-    title: "Skills",
-    href: "/#skills",
-    section: "Navigation",
-    description: "Tools and technologies",
-  },
-  {
-    title: "Blog",
-    href: "/blog/",
-    section: "Navigation",
-    description: "Writing archive",
-  },
-  {
-    title: "Contact",
-    href: "/#contact",
-    section: "Navigation",
-    description: "Get in touch",
-  },
-  {
-    title: "GitHub",
-    href: "https://github.com/aaryanporwal?tab=repositories",
-    section: "Social",
-    description: "Projects and repositories",
-    external: true,
-  },
-  {
-    title: "LinkedIn",
-    href: "https://www.linkedin.com/in/aaryan-porwal/",
-    section: "Social",
-    description: "Professional profile",
-    external: true,
-  },
-  {
-    title: "Scrapbook",
-    href: "https://scrapbook.hackclub.com/aaryan",
-    section: "Social",
-    description: "Build notes and updates",
-    external: true,
-  },
-  ...posts.map((post) => ({
-    title: post.data.title,
-    href: postHref(post),
-    section: "Writing" as const,
-    description: postSummary(post),
+const writing = posts.map((post) => ({
+  title: post.data.title,
+  href: postHref(post),
+  date: post.data.date.toISOString(),
+  tags: post.data.tags,
+  summary: postSummary(post),
+}));
+const commands = buildSiteCommands(writing);
+const catalog = buildSiteCatalog({
+  destinations: commands,
+  writing,
+  work: WORK_ENTRIES.map((project) => ({
+    title: project.title,
+    tag: project.tag,
+    description: project.desc,
+    href: project.href,
   })),
-];
+  page: webmcpPage ?? pageFromPath(canonicalPath),
+});
+const originTrialToken = import.meta.env.PUBLIC_WEBMCP_ORIGIN_TRIAL_TOKEN;
 ---
 
 <!doctype html>
@@ -185,6 +150,11 @@ const commands: CommandItem[] = [
         document.documentElement.dataset.theme = theme;
       })();
     </script>
+    {
+      originTrialToken ? (
+        <meta http-equiv="origin-trial" content={originTrialToken} />
+      ) : null
+    }
     <PostHog />
     <slot name="head" />
   </head>
@@ -200,5 +170,6 @@ const commands: CommandItem[] = [
       });
     </script>
     <CommandSwitcher client:idle commands={commands} />
+    <WebMcp client:idle catalog={catalog} />
   </body>
 </html>

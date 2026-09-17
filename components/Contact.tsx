@@ -1,5 +1,5 @@
 import type { KeyboardEvent, PointerEvent } from "react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { Draggable } from "gsap/Draggable";
@@ -10,6 +10,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { HomeImages } from "../src/types/homeImages";
 import { useSiteSounds } from "../hooks/useSiteSounds";
 import ResponsivePicture from "./ResponsivePicture";
+import { SITE_CONTACT } from "../src/lib/siteIdentity";
+import {
+  CONTACT_UNLOCK_EVENT,
+  CONTACT_UNLOCK_STORAGE_KEY,
+} from "../src/lib/siteEvents";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(
@@ -25,9 +30,9 @@ if (typeof window !== "undefined") {
   }
 }
 
-const LINKEDIN_URL = "https://www.linkedin.com/in/aaryan-porwal/";
-const CAL_URL = "https://cal.com/aaryan";
-const EMAIL = "aaryan@aaryanporwal.com";
+const LINKEDIN_URL = SITE_CONTACT.linkedin;
+const CAL_URL = SITE_CONTACT.calendar;
+const EMAIL = SITE_CONTACT.email;
 
 const STATE = {
   IDLE: "idle",
@@ -133,6 +138,22 @@ export default function Contact({ images }: { images: HomeImages["contact"] }) {
       });
     }
   }, [chime, resetCatPosition, setHeadFrame, setPhase]);
+
+  useEffect(() => {
+    const unlock = () => triggerApproval();
+
+    try {
+      if (window.sessionStorage.getItem(CONTACT_UNLOCK_STORAGE_KEY) === "1") {
+        window.sessionStorage.removeItem(CONTACT_UNLOCK_STORAGE_KEY);
+        unlock();
+      }
+    } catch {
+      // sessionStorage can be unavailable; the event path still works on home.
+    }
+
+    window.addEventListener(CONTACT_UNLOCK_EVENT, unlock);
+    return () => window.removeEventListener(CONTACT_UNLOCK_EVENT, unlock);
+  }, [triggerApproval]);
 
   const hasTreatReachedAnya = useCallback(() => {
     if (!bagRef.current || !catTargetRef.current) return false;
